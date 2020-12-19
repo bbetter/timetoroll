@@ -1,13 +1,13 @@
 buildscript {
     repositories {
         gradlePluginPortal()
-        jcenter()
         google()
+        jcenter()
         mavenCentral()
     }
     dependencies {
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.10")
-        classpath("com.android.tools.build:gradle:4.0.1")
+        classpath("com.android.tools.build:gradle:7.0.0-alpha03")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.20")
     }
 }
 
@@ -16,5 +16,6 @@ allprojects {
         google()
         jcenter()
         mavenCentral()
+        maven(url = "https://jitpack.io")
     }
 }
