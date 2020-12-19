@@ -12,4 +12,3 @@ rootProject.name = "turntoroll"
 
 include(":androidApp")
 include(":shared")
-

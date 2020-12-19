@@ -1,20 +1,17 @@
 package com.owlsoft.turntoroll.androidApp
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.owlsoft.turntoroll.shared.Greeting
-import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import com.owlsoft.turntoroll.androidApp.databinding.ActivityMainBinding
 
-fun greet(): String {
-    return Greeting().greeting()
-}
+class MainActivity : AppCompatActivity(R.layout.encounter_fragment) {
 
-class MainActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityMainBinding;
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
-        val tv: TextView = findViewById(R.id.text_view)
-        tv.text = greet()
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        setSupportActionBar(binding.toolbar)
     }
 }
