@@ -1,4 +1,5 @@
 buildscript {
+
     repositories {
         gradlePluginPortal()
         google()
@@ -6,8 +7,10 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath("com.android.tools.build:gradle:7.0.0-alpha03")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.4.20")
+        classpath(Plugins.gradle)
+        classpath(Plugins.kotlin)
+        classpath(Plugins.koin)
+        classpath(Plugins.kotlinSerialization)
     }
 }
 
@@ -16,6 +19,6 @@ allprojects {
         google()
         jcenter()
         mavenCentral()
-        maven(url = "https://jitpack.io")
+        maven(url = "https://dl.bintray.com/ekito/koin")
     }
 }

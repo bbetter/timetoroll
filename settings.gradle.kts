@@ -1,15 +1,4 @@
-pluginManagement {
-    repositories {
-        google()
-        jcenter()
-        gradlePluginPortal()
-        mavenCentral()
-    }
-    
-}
+include(":androidApp", ":shared", ":backend")
 rootProject.name = "turntoroll"
 
-
-include(":androidApp")
-include(":shared")
-
+enableFeaturePreview("GRADLE_METADATA")

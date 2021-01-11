@@ -2,10 +2,14 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 
 plugins {
     kotlin("multiplatform")
+
+    id("kotlinx-serialization")
     id("com.android.library")
+    id("koin")
 }
 
 kotlin {
+    jvm()
     android()
     ios {
         binaries {
@@ -14,36 +18,52 @@ kotlin {
             }
         }
     }
+
     sourceSets {
-        val commonMain by getting
-        val commonTest by getting {
+        val commonMain by getting {
             dependencies {
-                implementation(kotlin("test-common"))
-                implementation(kotlin("test-annotations-common"))
+                api(Libs.Koin.core)
+
+                implementation(Libs.KtorClient.core)
+                implementation(Libs.KtorClient.logging)
+                implementation(Libs.KtorClient.serialization)
+                implementation(Libs.KtorClient.json)
+                implementation(Libs.KtorClient.websockets)
+
+                // Kotlinx Serialization
+                implementation(Libs.kotlinSerialization)
+
+                implementation(Libs.Coroutines.core) {
+                    isForce = true
+                }
             }
         }
-        val androidMain by getting {
+        val commonTest by getting
+        val androidMain by getting{
             dependencies {
-                implementation("com.google.android.material:material:1.2.1")
+                implementation(Libs.Koin.android)
+                implementation(Libs.KtorClient.android)
+                implementation(Libs.KtorClient.okhttp)
+
             }
         }
-        val androidTest by getting {
-            dependencies {
-                implementation(kotlin("test-junit"))
-                implementation("junit:junit:4.13.1")
-            }
-        }
+        val androidTest by getting
         val iosMain by getting
         val iosTest by getting
     }
 }
 
 android {
-    compileSdkVersion(30)
+    compileSdkVersion(App.Android.compileSDKVersion)
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
+
     defaultConfig {
-        minSdkVersion(21)
-        targetSdkVersion(30)
+        minSdkVersion(App.Android.minSDKVersion)
+        targetSdkVersion(App.Android.targetSDKVersion)
+        versionCode = App.Version.code
+        versionName = App.Version.name
+
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 }
 
@@ -52,7 +72,8 @@ val packForXcode by tasks.creating(Sync::class) {
     val mode = System.getenv("CONFIGURATION") ?: "DEBUG"
     val sdkName = System.getenv("SDK_NAME") ?: "iphonesimulator"
     val targetName = "ios" + if (sdkName.startsWith("iphoneos")) "Arm64" else "X64"
-    val framework = kotlin.targets.getByName<KotlinNativeTarget>(targetName).binaries.getFramework(mode)
+    val framework =
+        kotlin.targets.getByName<KotlinNativeTarget>(targetName).binaries.getFramework(mode)
     inputs.property("mode", mode)
     dependsOn(framework.linkTask)
     val targetDir = File(buildDir, "xcode-frameworks")
