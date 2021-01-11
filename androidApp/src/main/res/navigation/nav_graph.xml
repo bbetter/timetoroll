@@ -1,11 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
-    app:startDestination="@id/encounterFragment">
+    app:startDestination="@id/menuFragment">
 
     <fragment
+        tools:layout="@layout/encounter_fragment"
         android:id="@+id/encounterFragment"
-        android:name="com.owlsoft.turntoroll.androidApp.encounter.EncounterFragment"
-        android:label="EncounterFragment" />
+        android:name="com.owlsoft.turntoroll.encounter.EncounterFragment"
+        android:label="EncounterFragment">
+        <argument
+            android:name="code"
+            app:argType="string" />
+        <action
+            android:id="@+id/action_encounterFragment_to_encounterDetailsFragment"
+            app:destination="@id/encounterDetailsFragment"
+            app:popUpTo="@id/menuFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+
+    <fragment
+        tools:layout="@layout/menu_fragment"
+        android:id="@+id/menuFragment"
+        android:name="com.owlsoft.turntoroll.MenuFragment"
+        android:label="MenuFragment">
+        <action
+            android:id="@+id/action_menuFragment_to_encounterJoinFragment"
+            app:destination="@id/encounterJoinFragment" />
+        <action
+            android:id="@+id/action_menuFragment_to_encounterDetailsFragment"
+            app:destination="@id/encounterDetailsFragment" />
+    </fragment>
+
+    <fragment
+        tools:layout="@layout/encounter_join_fragment"
+        android:id="@+id/encounterJoinFragment"
+        android:name="com.owlsoft.turntoroll.encounter_join.EncounterJoinFragment"
+        android:label="EncounterJoinFragment">
+        <action
+            android:id="@+id/action_encounterJoinFragment_to_encounterFragment"
+            app:destination="@id/encounterFragment">
+        </action>
+    </fragment>
+
+    <fragment
+        tools:layout="@layout/encounter_details_fragment"
+        android:id="@+id/encounterDetailsFragment"
+        android:name="com.owlsoft.turntoroll.encounter.EncounterDetailsFragment"
+        android:label="EncounterDetailsFragment">
+        <action
+            android:id="@+id/action_encounterDetailsFragment_to_encounterFragment"
+            app:destination="@id/encounterFragment" />
+    </fragment>
+
 </navigation>

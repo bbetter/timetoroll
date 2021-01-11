@@ -5,31 +5,27 @@
     android:layout_gravity="center">
 
     <LinearLayout
-        android:layout_width="256dp"
+        android:padding="@dimen/menu_content_padding"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:orientation="vertical">
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/create_encounter_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/colorPrimary"
-            android:text="Create Encounter"
-            android:textAllCaps="true"
-            android:textColor="@android:color/white"
-            android:textSize="16sp" />
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/joinEncounter"
+        <Button
+            android:id="@+id/create_encounter_button"
+            style="@style/AppTheme.LargeButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:background="@color/colorPrimary"
-            android:text="Join Encounter"
-            android:textAllCaps="true"
-            android:textColor="@android:color/white"
-            android:textSize="16sp" />
+            android:text="@string/create_encounter_button_title" />
+
+        <Button
+            android:id="@+id/join_encounter_button"
+            style="@style/AppTheme.LargeButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/menu_second_button_top_margin"
+            android:text="@string/join_encounter_button_title" />
 
     </LinearLayout>
 </FrameLayout>

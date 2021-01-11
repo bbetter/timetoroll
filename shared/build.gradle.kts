@@ -2,11 +2,14 @@ import org.jetbrains.kotlin.gradle.plugin.mpp.KotlinNativeTarget
 
 plugins {
     kotlin("multiplatform")
+
+    id("kotlinx-serialization")
     id("com.android.library")
     id("koin")
 }
 
 kotlin {
+    jvm()
     android()
     ios {
         binaries {
@@ -15,28 +18,33 @@ kotlin {
             }
         }
     }
+
     sourceSets {
         val commonMain by getting {
             dependencies {
-                implementation(Dependencies.Libs.coroutinesCore) {
-                    version {
-                        strictly(Dependencies.Libs.coroutinesMTVersion)
-                    }
-                }
-                implementation(Dependencies.Libs.koinCore)
-            }
-        }
-        val commonTest by getting {
-            dependencies {
-                implementation(kotlin("test-common"))
-                implementation(kotlin("test-annotations-common"))
+                api(Libs.Koin.core)
 
+                implementation(Libs.KtorClient.core)
+                implementation(Libs.KtorClient.logging)
+                implementation(Libs.KtorClient.serialization)
+                implementation(Libs.KtorClient.json)
+                implementation(Libs.KtorClient.websockets)
+
+                // Kotlinx Serialization
+                implementation(Libs.kotlinSerialization)
+
+                implementation(Libs.Coroutines.core) {
+                    isForce = true
+                }
             }
         }
-        val androidMain by getting {
+        val commonTest by getting
+        val androidMain by getting{
             dependencies {
-                implementation(Dependencies.Libs.koinAndroid)
-                implementation(Dependencies.Libs.koinAndroidViewModel)
+                implementation(Libs.Koin.android)
+                implementation(Libs.KtorClient.android)
+                implementation(Libs.KtorClient.okhttp)
+
             }
         }
         val androidTest by getting
@@ -46,11 +54,16 @@ kotlin {
 }
 
 android {
-    compileSdkVersion(30)
+    compileSdkVersion(App.Android.compileSDKVersion)
     sourceSets["main"].manifest.srcFile("src/androidMain/AndroidManifest.xml")
+
     defaultConfig {
-        minSdkVersion(21)
-        targetSdkVersion(30)
+        minSdkVersion(App.Android.minSDKVersion)
+        targetSdkVersion(App.Android.targetSDKVersion)
+        versionCode = App.Version.code
+        versionName = App.Version.name
+
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 }
 

@@ -1,35 +1,36 @@
+
 plugins {
     id("com.android.application")
     kotlin("android")
 }
 
-val kotlin_version = "1.4.21"
-
 dependencies {
+    implementation(Libs.Lifecycle.livedata)
+
+    implementation(Libs.Widgets.recyclerView)
+    implementation(Libs.Widgets.cardView)
+    implementation(Libs.Widgets.constraintLayout)
+
+    implementation(Libs.Navigation.ui)
+    implementation(Libs.Navigation.fragment)
+
+    implementation(Libs.Koin.android)
+    implementation(Libs.Koin.androidViewModel)
+
     implementation(project(":shared"))
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.2.0")
-    implementation("androidx.appcompat:appcompat:1.2.0")
-    implementation("androidx.recyclerview:recyclerview:1.1.0")
-    implementation("androidx.cardview:cardview:1.0.0")
-    implementation("androidx.navigation:navigation-fragment-ktx:2.3.2")
-    implementation("androidx.navigation:navigation-ui-ktx:2.3.2")
-    implementation("androidx.constraintlayout:constraintlayout:2.0.4")
 }
 
 android {
-    compileSdkVersion(30)
+
+    compileSdkVersion(App.Android.compileSDKVersion)
     defaultConfig {
         applicationId = App.ID
-        minSdkVersion(24)
-        targetSdkVersion(30)
+        minSdkVersion(App.Android.minSDKVersion)
+        targetSdkVersion(App.Android.targetSDKVersion)
         versionCode = App.Version.code
         versionName = App.Version.name
     }
-    buildTypes {
-        getByName("release") {
-            isMinifyEnabled = false
-        }
-    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
@@ -42,4 +43,7 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+}
+repositories {
+    mavenCentral()
 }

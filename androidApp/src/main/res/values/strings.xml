@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">TTR</string>
+    <string name="initiative">%d.%d</string>
+
+    <string name="encounter_join_button_title">JOIN</string>
+    <string name="encounter_join_code_field_hint">ENCOUNTER CODE</string>
+    <string name="encounter_join_char_name_field_hint">CHARACTER NAME</string>
+    <string name="encounter_join_char_initiative_hint">CHARACTER INITIATIVE</string>
+    <string name="encounter_join_char_dex_hint">CHARACTER DEX MODIFIER</string>
+
+    <string name="create_menu_item_title">CREATE</string>
+    <string name="update_menu_item_title">UPDATE</string>
+    <string name="create_encounter_button_title">Create Encounter</string>
+    <string name="join_encounter_button_title">Join Encounter</string>
+    <string name="add_participant_button_title">ADD</string>
+    <string name="participant_name_hint">Name</string>
+    <string name="participant_initiative_hint">INI</string>
+    <string name="participant_dexterity_hint">DEX</string>
+
+    <string name="skip_menu_item_title">Skip</string>
+    <string name="round_index">Round #%d</string>
+</resources>

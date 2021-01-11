@@ -1,4 +1,5 @@
 buildscript {
+
     repositories {
         gradlePluginPortal()
         google()
@@ -6,9 +7,10 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath(Dependencies.Plugins.gradlePlugin)
-        classpath(Dependencies.Plugins.kotlinPlugin)
-        classpath(Dependencies.Plugins.koinPlugin)
+        classpath(Plugins.gradle)
+        classpath(Plugins.kotlin)
+        classpath(Plugins.koin)
+        classpath(Plugins.kotlinSerialization)
     }
 }
 

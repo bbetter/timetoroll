@@ -2,9 +2,25 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorPrimary">@color/primary</item>
+        <item name="colorPrimaryDark">@color/primary_dark</item>
+        <item name="colorAccent">@color/accent</item>
+
+        <item name="toolbarStyle">@style/AppTheme.Toolbar</item>
+    </style>
+
+    <style name="AppTheme.LargeButton" parent="Widget.MaterialComponents.Button">
+        <item name="textAllCaps">true</item>
+        <item name="backgroundTint">?colorPrimary</item>
+        <item name="android:textSize">24sp</item>
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="AppTheme.Toolbar" parent="Widget.MaterialComponents.Toolbar">
+        <item name="navigationIcon">@drawable/abc_vector_test</item>
+        <item name="android:background">@color/primary</item>
+        <item name="titleTextColor">@color/on_primary</item>
     </style>
 
 </resources>
