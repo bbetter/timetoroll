@@ -1,13 +1,11 @@
 package com.owlsoft.shared.usecases
 
-import com.owlsoft.shared.managers.EncounterManager
-import kotlinx.coroutines.flow.Flow
+import com.owlsoft.shared.remote.TrackerAPI
 
 class SkipTurnUseCase(
-    private val encounterManager: EncounterManager
+    private val api: TrackerAPI
 ) {
     suspend fun execute() {
-        encounterManager.skipTurn()
-        encounterManager.resetTimer()
+        api.skipTurn()
     }
 }

@@ -1,10 +1,9 @@
 package com.owlsoft.shared.di
 
 import com.owlsoft.shared.UUIDRepository
-import com.owlsoft.shared.managers.EncounterManager
-import com.owlsoft.shared.managers.EncounterManagerImpl
 import com.owlsoft.shared.remote.EncounterAPI
-import com.owlsoft.shared.remote.EncounterTurnAPI
+import com.owlsoft.shared.remote.TrackerAPI
+import com.owlsoft.shared.sockets.AppSocket
 import com.owlsoft.shared.usecases.*
 import io.ktor.client.*
 import io.ktor.client.features.json.*
@@ -16,6 +15,7 @@ import org.koin.core.module.Module
 import org.koin.dsl.KoinAppDeclaration
 import org.koin.dsl.module
 
+
 fun initKoin(koinAppDeclaration: KoinAppDeclaration) = startKoin {
     koinAppDeclaration()
     modules(PlatformModuleProvider.provide(), coreModule)
@@ -26,9 +26,12 @@ private val coreModule = module {
     single { createHttpClient() }
 
     single { EncounterAPI(get()) }
-    single { EncounterTurnAPI() }
 
-    single<EncounterManager> { EncounterManagerImpl() }
+    single { params ->
+        val code = params.component1<Pair<String, String>>().second
+        TrackerAPI(code)
+    }
+
     single { UUIDRepository(get(), get()) }
 
     useCases()
@@ -36,7 +39,6 @@ private val coreModule = module {
 
 
 private fun createHttpClient() = HttpClient {
-
     install(JsonFeature) {
         val json = kotlinx.serialization.json.Json {
             isLenient = true
@@ -52,13 +54,12 @@ private fun createHttpClient() = HttpClient {
 }
 
 private fun Module.useCases() {
-    single { GetCurrentEncounterParticipantsUseCase(get()) }
-    single { ObserveTimerTickUseCase(get()) }
-    single { SkipTurnUseCase(get()) }
-    single { ResetTimerUseCase(get()) }
-    single { SetupEncounterUseCase(get(), get()) }
+    single { GetEncounterUseCase(get()) }
     single { CreateEncounterUseCase(get(), get()) }
     single { JoinEncounterUseCase(get(), get()) }
-    single { ObserveRoundUseCase(get()) }
+
+    single { params -> SkipTurnUseCase(get { params }) }
+
+    single { params -> ObserveRoundUseCase(get { params }) }
 }
 

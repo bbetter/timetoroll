@@ -74,6 +74,8 @@ object Libs {
     }
 
     object KtorServer {
+        const val test = "io.ktor:ktor-server-test-host:${Versions.Libs.ktor}"
+
         const val core = "io.ktor:ktor-server-core:${Versions.Libs.ktor}"
         const val netty = "io.ktor:ktor-server-netty:${Versions.Libs.ktor}"
         const val websockets = "io.ktor:ktor-websockets:${Versions.Libs.ktor}"

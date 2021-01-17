@@ -77,7 +77,7 @@ class EncounterDetailsFragment : Fragment(R.layout.encounter_details_fragment) {
 
         addParticipantButton.setOnClickListener {
             val encounter = Participant(
-                ownerID = "",
+                "",
                 nameEditText.text.toString(),
                 initiativeEditText.text.toString().toIntOrNull() ?: 0,
                 dexterityEditText.text.toString().toIntOrNull() ?: 0

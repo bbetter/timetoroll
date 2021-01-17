@@ -7,5 +7,5 @@ data class Encounter(
     val code: String = "",
     val ownerID: String,
     val participants: List<Participant>,
-    val startTimeStamp: Long
+    val singleTurnSeconds: Int = 60,
 )

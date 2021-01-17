@@ -3,6 +3,7 @@ package com.owlsoft.shared.usecases
 import com.owlsoft.shared.UUIDRepository
 import com.owlsoft.shared.model.Participant
 import com.owlsoft.shared.remote.EncounterAPI
+import com.owlsoft.shared.remote.TrackerAPI
 
 class JoinEncounterUseCase(
     private val idUUIDRepository: UUIDRepository,

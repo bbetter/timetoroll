@@ -4,7 +4,6 @@ import com.owlsoft.shared.model.Encounter
 import com.owlsoft.shared.model.Participant
 import io.ktor.client.*
 import io.ktor.client.request.*
-import kotlinx.serialization.Serializable
 
 class EncounterAPI(
     private val httpClient: HttpClient
@@ -26,8 +25,8 @@ class EncounterAPI(
             body = Encounter(
                 code = "",
                 ownerID,
-                participants.map { it.copy(ownerID = ownerID) },
-                startTimeStamp = 0L
+                participants.map { it.copy(playerID = ownerID) },
+                60
             )
         }
     }
@@ -37,9 +36,5 @@ class EncounterAPI(
             jsonHeader()
             body = newParticipant
         }
-    }
-
-    private fun HttpRequestBuilder.jsonHeader() {
-        header("Content-Type", "application/json")
     }
 }
