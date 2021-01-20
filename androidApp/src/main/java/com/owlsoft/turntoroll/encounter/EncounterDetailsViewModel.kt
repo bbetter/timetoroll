@@ -3,23 +3,23 @@ package com.owlsoft.turntoroll.encounter
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.owlsoft.shared.model.Participant
+import com.owlsoft.shared.model.Character
 import com.owlsoft.shared.usecases.CreateEncounterUseCase
 
 class EncounterDetailsViewModel(
     private val createEncounterUseCase: CreateEncounterUseCase
 ) : ViewModel() {
-    private val participants: MutableList<Participant> = mutableListOf()
+    private val characters: MutableList<Character> = mutableListOf()
 
-    private val _participantsLiveData = MutableLiveData<List<Participant>>()
-    val participantsLiveData: LiveData<List<Participant>> = _participantsLiveData
+    private val _participantsLiveData = MutableLiveData<List<Character>>()
+    val participantsLiveData: LiveData<List<Character>> = _participantsLiveData
 
     suspend fun createEncounter(): String {
-        return createEncounterUseCase.execute(participants)
+        return createEncounterUseCase.execute(characters)
     }
 
-    fun addParticipant(participant: Participant) {
-        participants.add(participant)
-        _participantsLiveData.postValue(participants)
+    fun addParticipant(character: Character) {
+        characters.add(character)
+        _participantsLiveData.postValue(characters)
     }
 }

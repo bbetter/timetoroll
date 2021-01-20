@@ -1,6 +1,9 @@
 *.iml
-.gradle
 /local.properties
+/.idea/misc.xml
+/.idea/jarRepositories.xml
+/.idea/gradle.xml
+/.idea/compiler.xml
 /.idea/caches
 /.idea/libraries
 /.idea/modules.xml
@@ -13,4 +16,10 @@
 .externalNativeBuild
 .cxx
 local.properties
-*build*
+build
+androidApp/build
+shared/build
+backend/build
+.gradle/*
+buildSrc/.gradle
+*.hprof

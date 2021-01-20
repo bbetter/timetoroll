@@ -6,6 +6,6 @@ import kotlinx.serialization.Serializable
 data class Encounter(
     val code: String = "",
     val ownerID: String,
-    val participants: List<Participant>,
-    val singleTurnSeconds: Int = 60,
+    val characters: List<Character>,
+    val timePerTurn: Int = 60,
 )

@@ -3,15 +3,22 @@ package com.owlsoft.shared.sockets
 import platform.Foundation.*
 import platform.darwin.NSObject
 
-internal actual class PlatformSocket actual constructor(url: String) {
+internal actual class PlatformSocket actual constructor(
+    private val url: String,
+    private val authID: String
+) {
 
     private val socketEndpoint = NSURL.URLWithString(url)!!
 
     private var webSocket: NSURLSessionWebSocketTask? = null
 
     actual fun openSocket(listener: PlatformSocketListener) {
+        val configuration = NSURLSessionConfiguration.defaultSessionConfiguration()
+        configuration.HTTPAdditionalHeaders = mapOf(
+            "Authentication" to authID
+        )
         val urlSession = NSURLSession.sessionWithConfiguration(
-            configuration = NSURLSessionConfiguration.defaultSessionConfiguration(),
+            configuration = configuration,
             delegate = object : NSObject(), NSURLSessionWebSocketDelegateProtocol {
                 fun URLSession(
                     session: NSURLSession,

@@ -2,8 +2,8 @@ package com.owlsoft.shared.di
 
 import com.owlsoft.shared.UUIDRepository
 import com.owlsoft.shared.remote.EncounterAPI
-import com.owlsoft.shared.remote.TrackerAPI
-import com.owlsoft.shared.sockets.AppSocket
+import com.owlsoft.shared.remote.RemoteEncounterManager
+import com.owlsoft.shared.remote.RemoteEncounterTracker
 import com.owlsoft.shared.usecases.*
 import io.ktor.client.*
 import io.ktor.client.features.json.*
@@ -28,8 +28,12 @@ private val coreModule = module {
     single { EncounterAPI(get()) }
 
     single { params ->
-        val code = params.component1<Pair<String, String>>().second
-        TrackerAPI(code)
+        val (_, code) = params.component1<Pair<String, String>>()
+        RemoteEncounterTracker(code, get())
+    }
+
+    single { params ->
+        RemoteEncounterManager(get { params })
     }
 
     single { UUIDRepository(get(), get()) }
@@ -57,9 +61,5 @@ private fun Module.useCases() {
     single { GetEncounterUseCase(get()) }
     single { CreateEncounterUseCase(get(), get()) }
     single { JoinEncounterUseCase(get(), get()) }
-
-    single { params -> SkipTurnUseCase(get { params }) }
-
-    single { params -> ObserveRoundUseCase(get { params }) }
 }
 

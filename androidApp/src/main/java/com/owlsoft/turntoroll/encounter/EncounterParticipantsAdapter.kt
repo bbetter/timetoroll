@@ -5,12 +5,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.owlsoft.shared.model.Participant
+import com.owlsoft.shared.model.Character
 import com.owlsoft.turntoroll.R
 import com.owlsoft.turntoroll.databinding.EncounterParticipantItemBinding
 
 class EncounterParticipantsAdapter(
-    private var data: List<Participant> = emptyList(),
+    private var data: List<Character> = emptyList(),
     private var activeParticipantIndex: Int = 0
 ) : RecyclerView.Adapter<EncounterParticipantsAdapter.EncounterParticipantViewHolder>() {
 
@@ -29,8 +29,8 @@ class EncounterParticipantsAdapter(
 
     override fun getItemCount() = data.size
 
-    fun updateParticipants(participants: List<Participant>) {
-        this.data = participants
+    fun updateParticipants(characters: List<Character>) {
+        this.data = characters
         notifyDataSetChanged()
     }
 
@@ -46,21 +46,21 @@ class EncounterParticipantsAdapter(
             ContextCompat.getColor(binding.root.context, android.R.color.holo_orange_light)
         private val whiteColor = ContextCompat.getColor(binding.root.context, android.R.color.white)
 
-        fun bind(participant: Participant, index: Int) {
+        fun bind(character: Character, index: Int) {
             with(binding) {
                 setupActiveParticipant(index)
-                setupParticipantInitiative(participant)
-                nameTextView.text = participant.name
+                setupParticipantInitiative(character)
+                nameTextView.text = character.name
             }
         }
 
         private fun EncounterParticipantItemBinding.setupParticipantInitiative(
-            participant: Participant
+            character: Character
         ) {
             val initiative = root.context.resources.getString(
                 R.string.initiative,
-                participant.initiative,
-                participant.dexterity
+                character.initiative,
+                character.dexterity
             )
 
             initiativeView.text = initiative

@@ -1,38 +1,48 @@
 package com.owlsoft.turntoroll.encounter
 
 import androidx.lifecycle.*
+import com.owlsoft.shared.model.Character
 import com.owlsoft.shared.model.EncounterData
-import com.owlsoft.shared.model.Participant
-import com.owlsoft.shared.usecases.GetEncounterUseCase
-import com.owlsoft.shared.usecases.ObserveRoundUseCase
-import com.owlsoft.shared.usecases.SkipTurnUseCase
+import com.owlsoft.shared.remote.RemoteEncounterManager
+import com.owlsoft.shared.usecases.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 
 class EncounterViewModel(
-    observeRoundUseCase: ObserveRoundUseCase,
-    private val skipTurnUseCase: SkipTurnUseCase,
+    private val remoteEncounterManager: RemoteEncounterManager,
     private val getEncounterUseCase: GetEncounterUseCase,
 ) : ViewModel() {
 
-    private val _participantsLiveData = MutableLiveData<List<Participant>>()
-    val participantsLiveData: LiveData<List<Participant>> = _participantsLiveData
+    private val _participantsLiveData = MutableLiveData<List<Character>>()
+    val participantsLiveData: LiveData<List<Character>> = _participantsLiveData
 
-    val encounterData: LiveData<EncounterData> = observeRoundUseCase.execute()
+    val encounterData: LiveData<EncounterData> = remoteEncounterManager.trackEncounter()
         .flowOn(Dispatchers.IO)
         .asLiveData(viewModelScope.coroutineContext)
 
     fun requestParticipants(code: String) {
         viewModelScope.launch(Dispatchers.Default) {
             val result = getEncounterUseCase.execute(code)
-            _participantsLiveData.postValue(result.participants)
+            _participantsLiveData.postValue(result.characters)
         }
     }
 
     fun skipTurn() {
         viewModelScope.launch(Dispatchers.Default) {
-            skipTurnUseCase.execute()
+            remoteEncounterManager.skipTurn()
+        }
+    }
+
+    fun resume() {
+        viewModelScope.launch(Dispatchers.Default) {
+            remoteEncounterManager.resume()
+        }
+    }
+
+    fun pause() {
+        viewModelScope.launch(Dispatchers.Default) {
+            remoteEncounterManager.pause()
         }
     }
 }

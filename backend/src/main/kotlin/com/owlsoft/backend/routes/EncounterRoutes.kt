@@ -1,7 +1,7 @@
 package com.owlsoft.backend.routes
 
 import com.owlsoft.backend.data.*
-import com.owlsoft.backend.managers.TrackersManager
+import com.owlsoft.backend.managers.EncountersManager
 
 import io.ktor.application.*
 import io.ktor.http.*
@@ -13,7 +13,7 @@ import java.util.*
 const val encountersPath = "/encounters"
 
 fun Route.encounterByCodeRoute(
-    encountersDataSource: EncountersDataSource,
+    encountersDataSource: EncountersDataSource
 ) {
     get("$encountersPath/{code}") {
         val code = call.parameters["code"] ?: kotlin.run {
@@ -32,7 +32,8 @@ fun Route.encounterByCodeRoute(
 }
 
 fun Route.createEncounterRoute(
-    encountersDataSource: EncountersDataSource
+    encountersDataSource: EncountersDataSource,
+    encountersManager: EncountersManager
 ) {
     post(encountersPath) {
         val requestEncounter = call.receive<Encounter>()
@@ -42,14 +43,15 @@ fun Route.createEncounterRoute(
         )
 
         encountersDataSource.add(resultEncounter)
+        encountersManager.createTracker(resultEncounter)
 
-        TrackersManager.newTracker(resultEncounter)
         call.respond(resultEncounter)
     }
 }
 
 fun Route.joinEncounterRoute(
-    encountersDataSource: EncountersDataSource
+    encountersDataSource: EncountersDataSource,
+    encountersManager: EncountersManager
 ) {
     post("$encountersPath/{code}/join") {
         val code = call.parameters["code"] ?: kotlin.run {
@@ -61,10 +63,10 @@ fun Route.joinEncounterRoute(
             return@post
         }
 
-        val participant = call.receive<Participant>()
+        val participant = call.receive<Character>()
 
         val newEncounter = encounter.copy(
-            participants = encounter.participants + participant
+            characters = encounter.characters + participant
         )
 
         encountersDataSource.updateByCode(
@@ -72,7 +74,7 @@ fun Route.joinEncounterRoute(
             newEncounter
         )
 
-        TrackersManager.updateTrackerConfig(code, newEncounter)
+        encountersManager.updateTracker(newEncounter)
 
         call.respond(HttpStatusCode.OK, encounter)
     }

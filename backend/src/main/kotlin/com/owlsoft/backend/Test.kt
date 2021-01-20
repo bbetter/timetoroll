@@ -1,22 +1,20 @@
+import com.owlsoft.backend.data.Character
+import com.owlsoft.backend.data.Encounter
+import com.owlsoft.backend.data.LocalEncountersDataSource
+import com.owlsoft.backend.managers.EncountersManager
 import kotlinx.coroutines.channels.ticker
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.runBlocking
 
 
 fun main() = runBlocking {
+    val manager = EncountersManager(LocalEncountersDataSource)
 
-    val mutableSwitch = MutableSharedFlow<Boolean>(1)
-        .apply { emit(false) }
-
-    mutableSwitch.flatMapLatest {
-        var i = 0
-        ticker(1000).consumeAsFlow()
-            .map { i++ }
-    }
-        .collectLatest {
-            println(it)
-            if (it > 5) {
-                mutableSwitch.emit(false)
-            }
-        }
+    val encounter = Encounter(
+        "abcde", "1", 60, listOf(
+            Character("1", "Archie", 1, 1),
+        )
+    )
+    LocalEncountersDataSource.add(encounter)
+    manager.listenToTrackerEvents()
 }

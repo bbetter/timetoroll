@@ -1,9 +1,12 @@
 package com.owlsoft.shared.sockets
 
 //Common
-class AppSocket(url: String) {
+class AppSocket(
+    url: String,
+    authID: String
+) {
 
-    private val ws = PlatformSocket(url)
+    private val ws = PlatformSocket(url, authID)
 
     var socketError: Throwable? = null
         private set

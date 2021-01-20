@@ -1,7 +1,7 @@
 package com.owlsoft.backend
 
 import com.owlsoft.backend.data.*
-import com.owlsoft.backend.managers.TrackersManager
+import com.owlsoft.backend.managers.EncountersManager
 import com.owlsoft.backend.routes.*
 
 import io.ktor.application.*
@@ -16,19 +16,20 @@ import kotlinx.coroutines.launch
 
 @OptIn(InternalCoroutinesApi::class)
 fun main() {
+    val encountersManager = EncountersManager(LocalEncountersDataSource)
 
     val embeddedServer = embeddedServer(Netty, 8080) {
         setupFeatures()
 
         routing {
             encounterByCodeRoute(LocalEncountersDataSource)
-            createEncounterRoute(LocalEncountersDataSource)
-            joinEncounterRoute(LocalEncountersDataSource)
+            createEncounterRoute(LocalEncountersDataSource, encountersManager)
+            joinEncounterRoute(LocalEncountersDataSource, encountersManager)
 
-            trackRoute()
+            trackRoute(encountersManager)
 
             launch {
-                TrackersManager.listenToTrackers(application)
+                encountersManager.listenToTrackerEvents()
             }
         }
 

@@ -1,7 +1,6 @@
 package com.owlsoft.backend.managers
 
 import com.owlsoft.backend.data.TrackerData
-import io.ktor.server.engine.*
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.ConflatedBroadcastChannel
 import kotlinx.coroutines.channels.ticker
@@ -20,10 +19,12 @@ class TurnTracker(
     private val turnsPerRoundChannel = ConflatedBroadcastChannel(turnsPerRound)
     private val timePerTurnChannel = ConflatedBroadcastChannel(timePerTurn)
 
+
+    private var isPaused = true
     private var _turnIndex = 0
     private var _roundIndex = 1
 
-    fun observeResults(): Flow<TrackerData> =
+    fun track(): Flow<TrackerData> =
         combine(
             turnsPerRoundChannel.asFlow(),
             timePerTurnChannel.asFlow()
@@ -33,14 +34,17 @@ class TurnTracker(
                 ticker(TIMER_TICK)
                     .consumeAsFlow()
                     .map {
+                        val newTimerValue = if (isPaused) timerTick else timerTick--
+
                         if (timerTick == 0) {
-                            timerTick = turnTime
                             nextTurn()
                         }
+
                         TrackerData(
-                            timerTick--,
+                            newTimerValue,
                             _turnIndex,
-                            _roundIndex
+                            _roundIndex,
+                            isPaused
                         )
                     }
             }
@@ -61,4 +65,14 @@ class TurnTracker(
         timePerTurnChannel.send(singleTurnSeconds)
         turnsPerRoundChannel.send(turnsPerRound)
     }
+
+    fun pause() {
+        isPaused = true
+    }
+
+    fun resume() {
+        isPaused = true
+    }
+
+    fun currentTurn() = _turnIndex
 }

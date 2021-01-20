@@ -2,7 +2,8 @@ package com.owlsoft.shared.sockets
 
 //Common
 internal expect class PlatformSocket(
-    url: String
+    url: String,
+    authID: String
 ) {
     fun openSocket(listener: PlatformSocketListener)
     fun closeSocket(code: Int, reason: String)

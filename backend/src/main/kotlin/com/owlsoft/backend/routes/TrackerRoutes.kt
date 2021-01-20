@@ -1,6 +1,6 @@
 package com.owlsoft.backend.routes
 
-import com.owlsoft.backend.managers.TrackersManager
+import com.owlsoft.backend.managers.EncountersManager
 
 import io.ktor.application.*
 import io.ktor.http.*
@@ -13,20 +13,21 @@ import kotlinx.coroutines.InternalCoroutinesApi
 const val trackerPath = "/tracker"
 
 @OptIn(InternalCoroutinesApi::class)
-fun Route.trackRoute() {
+fun Route.trackRoute(
+    encountersManager: EncountersManager
+) {
     webSocket("$trackerPath/{code}") {
         val code = call.parameters["code"] ?: kotlin.run {
             call.respond(HttpStatusCode.NoContent)
             return@webSocket
         }
 
-        TrackersManager.join(code, this)
-        for (frame in incoming) {
-            if(frame !is Frame.Text) continue
-
-            if (frame.readText() == "skip") {
-                TrackersManager.skipTurn(code)
-            }
+        val auth = call.request.headers["Authentication"] ?: kotlin.run {
+            call.respond(HttpStatusCode.Unauthorized)
+            return@webSocket
         }
+
+        encountersManager.join(code, auth, this)
+
     }
 }

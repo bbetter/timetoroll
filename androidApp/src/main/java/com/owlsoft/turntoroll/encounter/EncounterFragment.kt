@@ -79,16 +79,23 @@ class EncounterFragment : Fragment(R.layout.encounter_fragment) {
         }
 
         viewModel.encounterData.observe(viewLifecycleOwner) {
-            val (timerTick, turnIndex, roundIndex) = it
+            val (timerTick, turnIndex, roundIndex, isPaused: Boolean) = it
 
             updateRound(roundIndex)
             updateTimer(timerTick)
+            updatePaused(isPaused)
             updateCurrentTurnMarker(turnIndex)
         }
     }
 
     private fun EncounterFragmentBinding.updateRound(roundIndex: Int) {
         roundNumberTextView.text = getString(R.string.round_index, roundIndex)
+    }
+
+    private fun EncounterFragmentBinding.updatePaused(isPaused: Boolean) {
+        val resource =
+            if (!isPaused) R.drawable.ic_baseline_pause_circle_filled_24 else R.drawable.ic_baseline_play_arrow_24
+        playPauseButton.setImageResource(resource)
     }
 
     private fun updateCurrentTurnMarker(turnIndex: Int) {
@@ -115,6 +122,17 @@ class EncounterFragment : Fragment(R.layout.encounter_fragment) {
                 viewModel.requestParticipants(code)
             } catch (ex: Exception) {
                 swipeRefreshLayout.isRefreshing = false
+            }
+        }
+
+        playPauseButton.setOnClickListener {
+            val currentState = viewModel.encounterData.value ?: return@setOnClickListener
+
+            if (currentState.isPaused) {
+                viewModel.resume()
+            }
+            else{
+                viewModel.pause()
             }
         }
 
