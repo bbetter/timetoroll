@@ -11,11 +11,14 @@ import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.flow.*
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import org.slf4j.Logger
 import java.lang.Exception
+import kotlin.math.log
 
 @OptIn(ExperimentalCoroutinesApi::class, ObsoleteCoroutinesApi::class)
 class EncountersManager(
-    private val encountersDataSource: EncountersDataSource
+    private val encountersDataSource: EncountersDataSource,
+    private val logger: Logger
 ) {
 
     private val _trackersUpdateChannel = BroadcastChannel<String>(1)
@@ -27,6 +30,7 @@ class EncountersManager(
     suspend fun listenToTrackerEvents() {
         _trackersUpdateChannel.consumeEach {
             combine(observeTrackerEvents(it), observeSessions(it)) { trackerData, sessions ->
+                logger.debug("### TICK $trackerData; SESSIONS = [$sessions]")
                 for (session in sessions) {
                     val text = Json.encodeToString(trackerData)
                     try {
@@ -35,7 +39,7 @@ class EncountersManager(
 
                     }
                 }
-            }
+            }.collectLatest { }
         }
     }
 
@@ -55,17 +59,16 @@ class EncountersManager(
     }
 
     suspend fun join(code: String, auth: String, webSocketSession: WebSocketSession) {
-        val existingSessions = sessions[code]
-        val existingIndex = existingSessions?.indexOfFirst { it.ownerID == auth }
-        val authorizedWebSocketSession = AuthorizedWebSocketSession(auth, webSocketSession)
-        if (existingIndex != -1) {
-            sessions[code]?.add(authorizedWebSocketSession)
-        } else {
-            sessions[code]?.set(existingIndex, authorizedWebSocketSession)
-        }
+
+        val authSession = AuthorizedWebSocketSession(auth, webSocketSession)
+        sessions.putIfAbsent(code, mutableListOf())
+        sessions[code]?.add(authSession)
+
+        logger.debug("JOIN WITH $code; AUTH = $auth; SESSIONS = [${sessions[code]}]")
+
         _sessionsUpdateChannel.offer(code)
 
-        authorizedWebSocketSession.commands.collect { frame ->
+        authSession.commands.collect { frame ->
             when (frame.readText()) {
                 "skip" -> skipTurn(auth, code)
                 "resume" -> resume(auth, code)

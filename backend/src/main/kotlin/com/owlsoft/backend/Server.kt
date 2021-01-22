@@ -16,10 +16,11 @@ import kotlinx.coroutines.launch
 
 @OptIn(InternalCoroutinesApi::class)
 fun main() {
-    val encountersManager = EncountersManager(LocalEncountersDataSource)
 
     val embeddedServer = embeddedServer(Netty, 8080) {
         setupFeatures()
+
+        val encountersManager = EncountersManager(LocalEncountersDataSource, log)
 
         routing {
             encounterByCodeRoute(LocalEncountersDataSource)

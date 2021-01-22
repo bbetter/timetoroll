@@ -31,6 +31,7 @@ class TurnTracker(
         ) { _, turnTime -> turnTime }
             .flatMapLatest { turnTime ->
                 var timerTick = turnTime
+
                 ticker(TIMER_TICK)
                     .consumeAsFlow()
                     .map {
@@ -71,7 +72,7 @@ class TurnTracker(
     }
 
     fun resume() {
-        isPaused = true
+        isPaused = false
     }
 
     fun currentTurn() = _turnIndex

@@ -2,8 +2,8 @@ package com.owlsoft.shared.sockets
 
 //Common
 class AppSocket(
-    url: String,
-    authID: String
+    authID: String,
+    url: String
 ) {
 
     private val ws = PlatformSocket(url, authID)

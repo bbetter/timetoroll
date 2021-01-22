@@ -33,7 +33,7 @@ private val coreModule = module {
     }
 
     single { params ->
-        RemoteEncounterManager(get { params })
+        RemoteEncounterManager(get { params } )
     }
 
     single { UUIDRepository(get(), get()) }
