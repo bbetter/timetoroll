@@ -27,13 +27,14 @@ private val coreModule = module {
 
     single { EncounterAPI(get()) }
 
-    single { params ->
+    factory { params ->
         val (_, code) = params.component1<Pair<String, String>>()
         RemoteEncounterTracker(code, get())
     }
 
-    single { params ->
-        RemoteEncounterManager(get { params } )
+    factory { params ->
+        val remoteEncounterTracker = get<RemoteEncounterTracker> { params }
+        RemoteEncounterManager(remoteEncounterTracker)
     }
 
     single { UUIDRepository(get(), get()) }

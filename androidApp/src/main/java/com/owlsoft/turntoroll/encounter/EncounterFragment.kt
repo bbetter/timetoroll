@@ -47,8 +47,6 @@ class EncounterFragment : Fragment(R.layout.encounter_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.track()
-
         binding = EncounterFragmentBinding.bind(view)
 
         (requireActivity() as MainActivity).hideKeyboard()

@@ -1,6 +1,7 @@
 package com.owlsoft.backend.managers
 
 import io.ktor.http.cio.websocket.*
+import io.ktor.server.cio.backend.*
 import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.channels.SendChannel
 import kotlinx.coroutines.channels.map
@@ -15,7 +16,7 @@ class AuthorizedWebSocketSession(
     private val webSocketSession: WebSocketSession
 ) {
 
-    val commands = webSocketSession.incoming.receiveAsFlow()
+    val commands = webSocketSession.incoming.consumeAsFlow()
         .filterIsInstance<Frame.Text>()
 
     suspend fun send(msg: String) {

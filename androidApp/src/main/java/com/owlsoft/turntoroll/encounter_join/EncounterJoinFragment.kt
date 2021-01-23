@@ -34,7 +34,6 @@ class EncounterJoinFragment : Fragment(R.layout.encounter_join_fragment) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.encounter_join_menu, menu)
     }
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.encounterDetailsActionButton) {
             lifecycleScope.launchWhenResumed {
@@ -83,7 +82,6 @@ class EncounterJoinFragment : Fragment(R.layout.encounter_join_fragment) {
         }
 
         participantsList.adapter = adapter
-
         participantsList.layoutManager = LinearLayoutManager(
             context,
             LinearLayoutManager.VERTICAL,

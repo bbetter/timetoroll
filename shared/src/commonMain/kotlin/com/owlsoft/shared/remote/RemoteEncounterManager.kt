@@ -11,7 +11,7 @@ class RemoteEncounterManager(
     private val remoteEncounterTracker: RemoteEncounterTracker
 ) {
 
-    fun trackEncounter(): Flow<EncounterData> = remoteEncounterTracker.messages()
+    fun track(): Flow<EncounterData> = remoteEncounterTracker.messages()
         .map { Json.decodeFromString(it) }
 
 

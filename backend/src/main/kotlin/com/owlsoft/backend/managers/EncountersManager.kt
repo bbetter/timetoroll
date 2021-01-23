@@ -18,12 +18,11 @@ import java.util.concurrent.CopyOnWriteArrayList
 
 @OptIn(ExperimentalCoroutinesApi::class, ObsoleteCoroutinesApi::class)
 class EncountersManager(
-    private val encountersDataSource: EncountersDataSource,
+    private val dataSource: EncountersDataSource,
     private val logger: Logger
 ) {
 
-    private val _trackersUpdateChannel = BroadcastChannel<String>(1)
-    private val _sessionsUpdateChannel = BroadcastChannel<String>(1)
+    private val _encounterBroadcastChannel = BroadcastChannel<String>(1)
 
     private val sessionsData =
         mutableMapOf<String, CopyOnWriteArrayList<AuthorizedWebSocketSession>>()
@@ -31,53 +30,56 @@ class EncountersManager(
     private val trackersData = mutableMapOf<String, TurnTracker>()
 
     suspend fun trackTurns() {
-        _trackersUpdateChannel.consumeEach { code ->
-            logger.debug("### TRACKERS UPDATE EVENT. CODE = $code")
+        _encounterBroadcastChannel.consumeEach { code ->
 
-            combine(observeTracker(code), observeSessions(code)) { trackerData, sessions ->
-                logger.debug("### TICK ${trackerData.timerTick}; SESSIONS = [${sessions.map { it.deviceID }}]")
-                val encounter = encountersDataSource.get(code) ?: return@combine
+            logger.debug("### ENCOUNTER UPDATE EVENT. CODE = $code")
 
-                for (session in sessions) {
-                    val data = EncounterTrackerData(
-                        trackerData.timerTick,
-                        trackerData.turnIndex,
-                        trackerData.roundIndex,
-                        trackerData.isPaused,
-                        session.deviceID == encounter.ownerID,
-                        session.deviceID == encounter.ownerID || encounter.participants[trackerData.turnIndex].ownerID == session.deviceID,
-                        encounter.participants
-                            .sortedWith(
-                                compareByDescending(Participant::initiative)
-                                    .thenByDescending(Participant::dexterity)
-                            )
-                    )
+            observeTracker(code)
+                .collectLatest { trackerData ->
 
-                    val text = Json.encodeToString(data)
+                    val encounter = dataSource.findByCode(code) ?: return@collectLatest
+                    val sessions = sessionsData[code] ?: return@collectLatest
 
-                    try {
-                        session.send(text)
-                    } catch (ex: Exception) {
-                        sessionsData[code]?.remove(session)
+                    logger.debug("### ENCOUNTER $code. TICK = ${trackerData.timerTick}")
+
+                    for (session in sessions) {
+                        val data = EncounterTrackerData(
+                            trackerData.timerTick,
+                            trackerData.turnIndex,
+                            trackerData.roundIndex,
+                            trackerData.isPaused,
+                            session.deviceID == encounter.ownerID,
+                            session.deviceID == encounter.ownerID || encounter.participants[trackerData.turnIndex].ownerID == session.deviceID,
+                            encounter.participants
+                                .sortedWith(
+                                    compareByDescending(Participant::initiative)
+                                        .thenByDescending(Participant::dexterity)
+                                )
+                        )
+
+                        val text = Json.encodeToString(data)
+
+                        try {
+                            session.send(text)
+                        } catch (ex: Exception) {
+
+                        }
                     }
                 }
-            }
-                .collectLatest { }
-
         }
     }
 
-    fun saveEncounter(encounter: Encounter) {
-        encountersDataSource.addOrUpdate(encounter)
+    fun getEncounter(code: String) = dataSource.findByCode(code)
 
-        logger.debug("SAVED ENCOUNTER TO DATASOURCE $encounter")
-
+    suspend fun saveEncounter(encounter: Encounter) {
+        dataSource.addOrUpdate(encounter)
 
         val tracker = trackersData[encounter.code]
 
         if (tracker != null) {
             tracker.pause()
             tracker.updateTurnCount(encounter.participants.size)
+            logger.debug("UPDATE TRACKER ${encounter.code}")
         } else {
 
             trackersData[encounter.code] = TurnTracker(
@@ -85,8 +87,7 @@ class EncountersManager(
                 encounter.participants.size,
                 true
             )
-
-            _trackersUpdateChannel.offer(encounter.code)
+            logger.debug("NEW TRACKER ${encounter.code}")
         }
     }
 
@@ -97,15 +98,13 @@ class EncountersManager(
         sessionsData.putIfAbsent(code, CopyOnWriteArrayList())
         sessionsData[code]?.add(authSession)
 
-        logger.debug("SESSION $auth joining...")
-        _sessionsUpdateChannel.offer(code)
+        logger.debug("ENCOUNTER $code SESSION ${authSession.deviceID} started. ")
+
+        _encounterBroadcastChannel.send(code)
 
         authSession.commands
-            .catch { logger.debug("SESSION $auth failed") }
             .collect { frame ->
                 try {
-                    logger.debug("SESSION $auth input $frame")
-
                     when (frame.readText()) {
                         "skip" -> skipTurn(auth, code)
                         "resume" -> resume(auth, code)
@@ -115,11 +114,26 @@ class EncountersManager(
 
                 }
             }
+
+        logger.debug("SESSION ${authSession.deviceID} completed")
+
+        val sessions = sessionsData[code] ?: return
+
+        sessions.remove(authSession)
+
+        if (sessions.isEmpty()) {
+            dataSource.remove(code)
+            trackersData[code]?.cancel()
+            trackersData.remove(code)
+        }
+
+        _encounterBroadcastChannel.send(code)
     }
 
     private fun skipTurn(auth: String, code: String) {
         val turn = trackersData[code]?.currentTurn() ?: return
-        val encounter = encountersDataSource.get(code) ?: return
+        val encounter = dataSource.findByCode(code) ?: return
+
         val currentCharacter = encounter.participants[turn]
 
         logger.debug("SESSION $auth try skip turn")
@@ -131,7 +145,7 @@ class EncountersManager(
     }
 
     private fun pause(auth: String, code: String) {
-        val encounter = encountersDataSource.get(code) ?: return
+        val encounter = dataSource.findByCode(code) ?: return
 
         logger.debug("SESSION $auth try pause")
         if (auth == encounter.ownerID) {
@@ -142,7 +156,7 @@ class EncountersManager(
     }
 
     private fun resume(auth: String, code: String) {
-        val encounter = encountersDataSource.get(code) ?: return
+        val encounter = dataSource.findByCode(code) ?: return
 
         logger.debug("SESSION $auth try resume")
         if (auth == encounter.ownerID) {
@@ -153,12 +167,17 @@ class EncountersManager(
     }
 
     private fun observeTracker(code: String): Flow<TrackerData> {
+        if (trackersData[code] == null) {
+            logger.debug("NO TRACKER $code")
+            return flow { }
+        }
+
         return trackersData[code]!!.track()
-            .catch { logger.debug("FAILED TRACKER FLOW. ${it.message}") }
+            .catch { logger.debug("FAILED TRACKER FLOW. $code; ${it.message}") }
     }
 
-    private fun observeSessions(code: String): Flow<List<AuthorizedWebSocketSession>> {
-        return _sessionsUpdateChannel.asFlow().map { sessionsData[code] ?: emptyList() }
-            .catch { logger.debug("FAILED SESSIONS FLOW. ${it.message}") }
-    }
+//    private fun observeSessions(code: String): Flow<List<AuthorizedWebSocketSession>> {
+//        return _sessionsUpdateChannel.map { sessionsData[code] ?: emptyList() }
+//            .catch { log.debug("FAILED SESSIONS FLOW. ${it.message}") }
+//    }
 }
