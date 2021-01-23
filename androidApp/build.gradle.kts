@@ -1,7 +1,8 @@
-
 plugins {
     id("com.android.application")
     kotlin("android")
+    id("com.google.gms.google-services")
+    id("com.google.firebase.crashlytics")
 }
 
 dependencies {
@@ -16,6 +17,9 @@ dependencies {
 
     implementation(Libs.Koin.android)
     implementation(Libs.Koin.androidViewModel)
+
+    implementation(platform(Libs.Analytics.platform))
+    implementation(Libs.Analytics.crashlytics)
 
     implementation(project(":shared"))
 }

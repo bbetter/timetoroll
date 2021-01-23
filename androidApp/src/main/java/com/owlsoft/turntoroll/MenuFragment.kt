@@ -14,6 +14,7 @@ class MenuFragment : Fragment(R.layout.menu_fragment) {
         super.onViewCreated(view, savedInstanceState)
 
         binding = MenuFragmentBinding.bind(view)
+
         val navController = findNavController()
 
         with(binding) {

@@ -2,7 +2,7 @@ package com.owlsoft.turntoroll.encounter
 
 import androidx.lifecycle.*
 import com.owlsoft.shared.model.Character
-import com.owlsoft.shared.model.EncounterData
+import com.owlsoft.shared.model.TrackerData
 import com.owlsoft.shared.remote.RemoteEncounterManager
 import com.owlsoft.shared.usecases.*
 import kotlinx.coroutines.Dispatchers
@@ -17,7 +17,7 @@ class EncounterViewModel(
     private val _participantsLiveData = MutableLiveData<List<Character>>()
     val participantsLiveData: LiveData<List<Character>> = _participantsLiveData
 
-    val encounterData: LiveData<EncounterData> = remoteEncounterManager.trackEncounter()
+    val trackerData: LiveData<TrackerData> = remoteEncounterManager.trackEncounter()
         .flowOn(Dispatchers.IO)
         .asLiveData(viewModelScope.coroutineContext)
 

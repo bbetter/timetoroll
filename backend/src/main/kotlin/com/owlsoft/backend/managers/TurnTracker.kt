@@ -10,6 +10,7 @@ import kotlinx.coroutines.flow.*
 class TurnTracker(
     turnsPerRound: Int,
     timePerTurn: Int,
+    private var isPaused: Boolean = true
 ) {
 
     companion object {
@@ -19,10 +20,10 @@ class TurnTracker(
     private val turnsPerRoundChannel = ConflatedBroadcastChannel(turnsPerRound)
     private val timePerTurnChannel = ConflatedBroadcastChannel(timePerTurn)
 
-
-    private var isPaused = true
     private var _turnIndex = 0
     private var _roundIndex = 1
+
+    private val ticker = ticker(TIMER_TICK)
 
     fun track(): Flow<TrackerData> =
         combine(
@@ -32,7 +33,7 @@ class TurnTracker(
             .flatMapLatest { turnTime ->
                 var timerTick = turnTime
 
-                ticker(TIMER_TICK)
+                ticker
                     .consumeAsFlow()
                     .map {
                         val newTimerValue = if (isPaused) timerTick else timerTick--
@@ -76,4 +77,9 @@ class TurnTracker(
     }
 
     fun currentTurn() = _turnIndex
+
+    fun complete() {
+        ticker.cancel()
+    }
+
 }

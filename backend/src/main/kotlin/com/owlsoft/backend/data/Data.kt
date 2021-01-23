@@ -1,10 +1,9 @@
 package com.owlsoft.backend.data
 
-import io.ktor.http.cio.websocket.*
 import kotlinx.serialization.Serializable
 
 @Serializable
-class Character(
+data class Character(
     val ownerID: String,
     val name: String,
     val initiative: Int,

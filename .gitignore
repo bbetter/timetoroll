@@ -18,8 +18,10 @@
 local.properties
 build
 androidApp/build
-shared/build
-backend/build
+shared/build/*
+backend/build/*
 .gradle/*
-buildSrc/.gradle
+buildSrc/.gradle/*
 *.hprof
+*.class
+*.lock

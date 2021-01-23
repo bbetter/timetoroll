@@ -5,6 +5,7 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -12,6 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.owlsoft.shared.model.Character
+import com.owlsoft.shared.usecases.EncounterCreateResult
 import com.owlsoft.turntoroll.R
 import com.owlsoft.turntoroll.databinding.EncounterDetailsFragmentBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -47,13 +49,27 @@ class EncounterDetailsFragment : Fragment(R.layout.encounter_details_fragment) {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.encounterDetailsActionButton) {
             lifecycleScope.launchWhenResumed {
-                val code = viewModel.createEncounter()
-                findNavController().navigate(
-                    R.id.action_encounterDetailsFragment_to_encounterFragment,
-                    bundleOf(
-                        "code" to code
-                    )
-                )
+
+                when (val result = viewModel.createEncounter()) {
+                    is EncounterCreateResult.Success -> {
+                        findNavController().navigate(
+                            R.id.action_encounterDetailsFragment_to_encounterFragment,
+                            bundleOf(
+                                "code" to result.code
+                            )
+                        )
+                    }
+                    is EncounterCreateResult.Error -> {
+                        AlertDialog.Builder(requireContext())
+                            .setTitle("Error")
+                            .setMessage(result.message)
+                            .setPositiveButton("Cancel") { d, _ ->
+                                d.dismiss()
+                            }
+                            .create()
+                            .show()
+                    }
+                }
             }
         }
         return true

@@ -14,15 +14,12 @@ import androidx.recyclerview.widget.LinearLayoutManager.VERTICAL
 import com.owlsoft.turntoroll.MainActivity
 import com.owlsoft.turntoroll.R
 import com.owlsoft.turntoroll.databinding.EncounterFragmentBinding
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.InternalCoroutinesApi
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
 
-@OptIn(InternalCoroutinesApi::class, ExperimentalCoroutinesApi::class)
 class EncounterFragment : Fragment(R.layout.encounter_fragment) {
 
     private lateinit var binding: EncounterFragmentBinding
@@ -32,6 +29,7 @@ class EncounterFragment : Fragment(R.layout.encounter_fragment) {
     private val timerFormatter = SimpleDateFormat("mm:ss", Locale.getDefault())
 
     private val code by lazy { arguments?.getString("code") ?: "" }
+
     private val viewModel: EncounterViewModel by viewModel {
         parametersOf(
             "code" to arguments?.getString(
@@ -53,6 +51,7 @@ class EncounterFragment : Fragment(R.layout.encounter_fragment) {
         binding = EncounterFragmentBinding.bind(view)
 
         (requireActivity() as MainActivity).hideKeyboard()
+
         with(binding) {
             toolbar.title = "Encounter : $code"
             setupView()
@@ -78,7 +77,7 @@ class EncounterFragment : Fragment(R.layout.encounter_fragment) {
             adapter.updateParticipants(it)
         }
 
-        viewModel.encounterData.observe(viewLifecycleOwner) {
+        viewModel.trackerData.observe(viewLifecycleOwner) {
             val (timerTick, turnIndex, roundIndex, isPaused: Boolean) = it
 
             updateRound(roundIndex)
@@ -126,7 +125,7 @@ class EncounterFragment : Fragment(R.layout.encounter_fragment) {
         }
 
         playPauseButton.setOnClickListener {
-            val currentState = viewModel.encounterData.value ?: return@setOnClickListener
+            val currentState = viewModel.trackerData.value ?: return@setOnClickListener
 
             if (currentState.isPaused) {
                 viewModel.resume()

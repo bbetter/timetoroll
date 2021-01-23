@@ -21,7 +21,7 @@ fun Route.encounterByCodeRoute(
             return@get
         }
 
-        val encounter = encountersDataSource.getByCode(code) ?: kotlin.run {
+        val encounter = encountersDataSource.get(code) ?: kotlin.run {
             call.respond(HttpStatusCode.NoContent)
             return@get
         }
@@ -32,7 +32,6 @@ fun Route.encounterByCodeRoute(
 }
 
 fun Route.createEncounterRoute(
-    encountersDataSource: EncountersDataSource,
     encountersManager: EncountersManager
 ) {
     post(encountersPath) {
@@ -42,8 +41,7 @@ fun Route.createEncounterRoute(
             code = UUID.randomUUID().toString().take(5),
         )
 
-        encountersDataSource.add(resultEncounter)
-        encountersManager.createTracker(resultEncounter)
+        encountersManager.saveEncounter(resultEncounter)
 
         call.respond(resultEncounter)
     }
@@ -58,7 +56,7 @@ fun Route.joinEncounterRoute(
             call.respond(HttpStatusCode.NoContent)
             return@post
         }
-        val encounter = encountersDataSource.getByCode(code) ?: kotlin.run {
+        val encounter = encountersDataSource.get(code) ?: kotlin.run {
             call.respond(HttpStatusCode.NoContent)
             return@post
         }
@@ -69,12 +67,7 @@ fun Route.joinEncounterRoute(
             characters = encounter.characters + participant
         )
 
-        encountersDataSource.updateByCode(
-            code,
-            newEncounter
-        )
-
-        encountersManager.updateTracker(newEncounter)
+        encountersManager.saveEncounter(newEncounter)
 
         call.respond(HttpStatusCode.OK, encounter)
     }

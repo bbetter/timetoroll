@@ -40,6 +40,8 @@ object Plugins {
     const val gradle = "com.android.tools.build:gradle:${Versions.Plugins.android}"
     const val kotlin = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.Plugins.kotlin}"
     const val koin = "org.koin:koin-gradle-plugin:${Versions.Plugins.koin}"
+    const val googleServices = "com.google.gms:google-services:4.3.4"
+    const val crashlytics = "com.google.firebase:firebase-crashlytics-gradle:2.4.1"
 }
 
 object Libs {
@@ -90,6 +92,11 @@ object Libs {
         val websockets = "io.ktor:ktor-client-websockets:${Versions.Libs.ktor}"
         val android = "io.ktor:ktor-client-android:${Versions.Libs.ktor}"
         val okhttp = "io.ktor:ktor-client-okhttp:${Versions.Libs.ktor}"
+    }
+
+    object Analytics {
+        val platform = "com.google.firebase:firebase-bom:26.3.0"
+        val crashlytics = "com.google.firebase:firebase-crashlytics-ktx"
     }
 }
 

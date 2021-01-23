@@ -20,17 +20,17 @@ fun main() {
     val embeddedServer = embeddedServer(Netty, 8080) {
         setupFeatures()
 
-        val encountersManager = EncountersManager(LocalEncountersDataSource, log)
+        val encountersManager = EncountersManager(LocalEncountersDataSource)
 
         routing {
             encounterByCodeRoute(LocalEncountersDataSource)
-            createEncounterRoute(LocalEncountersDataSource, encountersManager)
+            createEncounterRoute(encountersManager)
             joinEncounterRoute(LocalEncountersDataSource, encountersManager)
 
             trackRoute(encountersManager)
 
             launch {
-                encountersManager.listenToTrackerEvents()
+                encountersManager.trackTurns()
             }
         }
 

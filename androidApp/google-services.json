@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "849469439243",
+    "project_id": "time-to-roll-24002",
+    "storage_bucket": "time-to-roll-24002.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:849469439243:android:b1e6ff78cf4ff35c6a360e",
+        "android_client_info": {
+          "package_name": "com.owlsoft.turntoroll"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "849469439243-rg8rtcf0peh942k9nsjtamrtnddirh6g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDsLiZ2OeAyWXlmkh5VBpgPHyUPGunjr0g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "849469439243-rg8rtcf0peh942k9nsjtamrtnddirh6g.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

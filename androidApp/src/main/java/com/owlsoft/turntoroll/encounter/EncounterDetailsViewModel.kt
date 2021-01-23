@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.owlsoft.shared.model.Character
 import com.owlsoft.shared.usecases.CreateEncounterUseCase
+import com.owlsoft.shared.usecases.EncounterCreateResult
 
 class EncounterDetailsViewModel(
     private val createEncounterUseCase: CreateEncounterUseCase
@@ -14,7 +15,7 @@ class EncounterDetailsViewModel(
     private val _participantsLiveData = MutableLiveData<List<Character>>()
     val participantsLiveData: LiveData<List<Character>> = _participantsLiveData
 
-    suspend fun createEncounter(): String {
+    suspend fun createEncounter(): EncounterCreateResult {
         return createEncounterUseCase.execute(characters)
     }
 

@@ -6,11 +6,14 @@ buildscript {
         jcenter()
         mavenCentral()
     }
+
     dependencies {
         classpath(Plugins.gradle)
         classpath(Plugins.kotlin)
         classpath(Plugins.koin)
         classpath(Plugins.kotlinSerialization)
+        classpath(Plugins.googleServices)
+        classpath(Plugins.crashlytics)
     }
 }
 

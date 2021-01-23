@@ -1,6 +1,6 @@
 package com.owlsoft.shared.remote
 
-import com.owlsoft.shared.model.EncounterData
+import com.owlsoft.shared.model.TrackerData
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.serialization.decodeFromString
@@ -10,7 +10,7 @@ class RemoteEncounterManager(
     private val remoteEncounterTracker: RemoteEncounterTracker
 ) {
 
-    fun trackEncounter(): Flow<EncounterData> = remoteEncounterTracker.messages()
+    fun trackEncounter(): Flow<TrackerData> = remoteEncounterTracker.messages()
         .map { Json.decodeFromString(it) }
 
     fun skipTurn() = remoteEncounterTracker.skipTurn()
