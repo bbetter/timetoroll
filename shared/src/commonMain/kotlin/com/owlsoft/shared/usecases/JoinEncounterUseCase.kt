@@ -10,23 +10,18 @@ sealed class JoinEncounterResult {
 }
 
 class JoinEncounterUseCase(
-    private val idUUIDRepository: UUIDRepository,
+    private val identityRepository: UUIDRepository,
     private val encounterAPI: EncounterAPI
 ) {
     suspend fun execute(
         code: String,
-        name: String,
-        initiative: Int,
-        dexterity: Int
+        participants: List<Participant>
     ): JoinEncounterResult {
         return try {
-            val encounterParticipant = Participant(
-                idUUIDRepository.getUUID(),
-                name,
-                initiative,
-                dexterity
-            )
-            encounterAPI.join(code, encounterParticipant)
+            val deviceID = identityRepository.getUUID()
+            val deviceParticipants = participants.map { it.copy(ownerID = deviceID) }
+
+            encounterAPI.join(code, deviceParticipants)
             JoinEncounterResult.Success
         } catch (ex: Exception) {
             JoinEncounterResult.Error(ex.message ?: "Unknown Error")

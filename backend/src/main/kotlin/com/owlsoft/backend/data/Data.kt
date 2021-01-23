@@ -20,7 +20,7 @@ data class Encounter(
 )
 
 @Serializable
-data class EncounterData(
+data class EncounterTrackerData(
     val tick: Int,
     val turnIndex: Int,
     val roundIndex: Int,

@@ -23,4 +23,8 @@
         <item name="titleTextColor">@color/on_primary</item>
     </style>
 
+    <style name="AppTheme.ToolbarMenu" parent="Widget.AppCompat.PopupMenu">
+        <item name="android:textColor">@color/on_primary</item>
+    </style>
+
 </resources>

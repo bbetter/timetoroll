@@ -10,7 +10,8 @@
     <string name="encounter_join_char_dex_hint">CHARACTER DEX MODIFIER</string>
 
     <string name="create_menu_item_title">CREATE</string>
-    <string name="update_menu_item_title">UPDATE</string>
+    <string name="join_menu_item_title">JOIN</string>
+
     <string name="create_encounter_button_title">Create Encounter</string>
     <string name="join_encounter_button_title">Join Encounter</string>
     <string name="add_participant_button_title">ADD</string>

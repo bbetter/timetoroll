@@ -95,7 +95,7 @@
 
 
         <Button
-            android:id="@+id/addParticipantButton"
+            android:id="@+id/add_button"
             style="@style/AppTheme.LargeButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.owlsoft.shared.model.Participant
@@ -52,22 +53,10 @@ class EncounterDetailsFragment : Fragment(R.layout.encounter_details_fragment) {
 
                 when (val result = viewModel.createEncounter()) {
                     is EncounterCreateResult.Success -> {
-                        findNavController().navigate(
-                            R.id.action_encounterDetailsFragment_to_encounterFragment,
-                            bundleOf(
-                                "code" to result.code
-                            )
-                        )
+                        findNavController().goToEncounter(result.code)
                     }
                     is EncounterCreateResult.Error -> {
-                        AlertDialog.Builder(requireContext())
-                            .setTitle("Error")
-                            .setMessage(result.message)
-                            .setPositiveButton("Cancel") { d, _ ->
-                                d.dismiss()
-                            }
-                            .create()
-                            .show()
+                        showCreateEncounterError(result)
                     }
                 }
             }
@@ -75,8 +64,18 @@ class EncounterDetailsFragment : Fragment(R.layout.encounter_details_fragment) {
         return true
     }
 
+    private fun showCreateEncounterError(result: EncounterCreateResult.Error) {
+        AlertDialog.Builder(requireContext())
+            .setTitle("Error")
+            .setMessage(result.message)
+            .setPositiveButton("Cancel") { d, _ ->
+                d.dismiss()
+            }
+            .create()
+            .show()
+    }
+
     private fun EncounterDetailsFragmentBinding.setupView() {
-        (requireActivity() as AppCompatActivity).setSupportActionBar(toolbar)
 
         toolbar.setNavigationOnClickListener {
             val navController = findNavController()
@@ -91,15 +90,12 @@ class EncounterDetailsFragment : Fragment(R.layout.encounter_details_fragment) {
             false
         )
 
-        addParticipantButton.setOnClickListener {
-            val encounter = Participant(
-                "",
-                nameEditText.text.toString(),
-                initiativeEditText.text.toString().toIntOrNull() ?: 0,
-                dexterityEditText.text.toString().toIntOrNull() ?: 0
-            )
+        addButton.setOnClickListener {
+            val name = nameEditText.text.toString()
+            val initiative = initiativeEditText.text.toString()
+            val dexterity = dexterityEditText.text.toString()
 
-            viewModel.addParticipant(encounter)
+            viewModel.addParticipant(name, initiative, dexterity)
         }
     }
 
@@ -107,5 +103,12 @@ class EncounterDetailsFragment : Fragment(R.layout.encounter_details_fragment) {
         viewModel.participantsLiveData.observe(viewLifecycleOwner) {
             adapter.updateParticipants(it)
         }
+    }
+
+    private fun NavController.goToEncounter(encounterCode: String) {
+        navigate(
+            R.id.action_encounterJoinFragment_to_encounterFragment,
+            bundleOf("code" to encounterCode)
+        )
     }
 }
