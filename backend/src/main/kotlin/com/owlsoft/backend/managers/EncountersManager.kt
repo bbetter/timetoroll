@@ -1,8 +1,8 @@
 package com.owlsoft.backend.managers
 
 import com.owlsoft.backend.data.Encounter
+import com.owlsoft.backend.data.EncounterData
 import com.owlsoft.backend.data.EncountersDataSource
-import com.owlsoft.backend.data.TrackerData
 import io.ktor.http.cio.websocket.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.ObsoleteCoroutinesApi
@@ -11,108 +11,164 @@ import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.flow.*
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
+import org.slf4j.Logger
 import java.lang.Exception
+import java.util.concurrent.CopyOnWriteArrayList
 
 @OptIn(ExperimentalCoroutinesApi::class, ObsoleteCoroutinesApi::class)
 class EncountersManager(
-    private val encountersDataSource: EncountersDataSource
+    private val encountersDataSource: EncountersDataSource,
+    private val logger: Logger
 ) {
 
     private val _trackersUpdateChannel = BroadcastChannel<String>(1)
     private val _sessionsUpdateChannel = BroadcastChannel<String>(1)
 
-    private val sessions = mutableMapOf<String, MutableList<AuthorizedWebSocketSession>>()
-    private val trackers = mutableMapOf<String, TurnTracker>()
+    private val sessionsData =
+        mutableMapOf<String, CopyOnWriteArrayList<AuthorizedWebSocketSession>>()
+    private val trackersData = mutableMapOf<String, TurnTracker>()
 
     suspend fun trackTurns() {
-        _trackersUpdateChannel.consumeEach {
-            combine(observeTrackerEvents(it), observeSessions(it)) { trackerData, sessions ->
+        _trackersUpdateChannel.consumeEach { code ->
+            logger.debug("### TRACKERS UPDATE EVENT. CODE = $code")
+
+            combine(observeTrackerEvents(code), observeSessions(code)) { trackerData, sessions ->
+                logger.debug("### TICK ${trackerData.timerTick}; SESSIONS = [${sessions.map { it.deviceID }}]")
+                val encounter = encountersDataSource.get(code) ?: return@combine
                 for (session in sessions) {
-                    val text = Json.encodeToString(trackerData)
+                    val data = EncounterData(
+                        trackerData.timerTick,
+                        trackerData.turnIndex,
+                        trackerData.roundIndex,
+                        trackerData.isPaused,
+                        session.deviceID == encounter.ownerID,
+                        session.deviceID == encounter.ownerID || encounter.participants[trackerData.turnIndex].ownerID == session.deviceID,
+                        encounter.participants
+                    )
+
+                    val text = Json.encodeToString(data)
                     try {
                         session.send(text)
                     } catch (ex: Exception) {
+                        logger.debug("SESSION ${session.deviceID} failed to send message for encounter $code")
+                        sessionsData[code]?.remove(session)
 
+                        _sessionsUpdateChannel.offer(code)
                     }
                 }
-            }.collectLatest { }
+            }
+                .collectLatest { }
+
         }
     }
 
     fun saveEncounter(encounter: Encounter) {
         encountersDataSource.addOrUpdate(encounter)
 
-        trackers[encounter.code] = TurnTracker(
-            encounter.characters.size,
-            encounter.timePerTurn
-        )
+        logger.debug("SAVED ENCOUNTER TO DATASOURCE $encounter")
 
-        _trackersUpdateChannel.offer(encounter.code)
+        val tracker = trackersData[encounter.code]
+
+        if (tracker != null) {
+            tracker.pause()
+            tracker.updateTurnCount(encounter.participants.size)
+        } else {
+
+            trackersData[encounter.code] = TurnTracker(
+                encounter.timePerTurn,
+                encounter.participants.size,
+                true
+            )
+
+            _trackersUpdateChannel.offer(encounter.code)
+        }
     }
 
     suspend fun join(code: String, auth: String, webSocketSession: WebSocketSession) {
 
         val authSession = AuthorizedWebSocketSession(auth, webSocketSession)
 
-        sessions.putIfAbsent(code, mutableListOf())
-        sessions[code]?.add(authSession)
+        sessionsData.putIfAbsent(code, CopyOnWriteArrayList())
+        sessionsData[code]?.add(authSession)
 
+        logger.debug("SESSION $auth joining...")
         _sessionsUpdateChannel.offer(code)
 
-        authSession.commands.collect { frame ->
-            try {
-                when (frame.readText()) {
-                    "skip" -> skipTurn(auth, code)
-                    "resume" -> resume(auth, code)
-                    "pause" -> pause(auth, code)
-                }
-            } catch (exception: Exception) {
-                val encounter = encountersDataSource.get(code) ?: return@collect
-                val updatedEncounter = encounter.copy(
-                    characters = encounter.characters.map {
-                        it.copy(ownerID = if (it.ownerID == auth) encounter.ownerID else it.ownerID)
-                    }
-                )
-                encountersDataSource.addOrUpdate(updatedEncounter)
+        authSession.commands
+            .catch { logger.debug("SESSION $auth failed") }
+            .collect { frame ->
+                try {
+                    logger.debug("SESSION $auth input $frame")
 
-                //todo: make it work
+                    when (frame.readText()) {
+                        "skip" -> skipTurn(auth, code)
+                        "resume" -> resume(auth, code)
+                        "pause" -> pause(auth, code)
+                    }
+                } catch (exception: Exception) {
+                    logger.debug("SESSION ${auth} FAILED. ${exception.message}")
+                    val encounter = encountersDataSource.get(code) ?: return@collect
+
+                    val updatedEncounter = encounter.copy(
+                        participants = encounter.participants.map {
+                            it.copy(ownerID = if (it.ownerID == auth) encounter.ownerID else it.ownerID)
+                        }
+                    )
+                    encountersDataSource.addOrUpdate(updatedEncounter)
+
+                    //todo: make it work
 //                pause(encounter.ownerID, code)
-                _trackersUpdateChannel.offer(code)
+                    _trackersUpdateChannel.offer(code)
+                }
             }
-        }
     }
 
-    private suspend fun skipTurn(auth: String, code: String) {
-        val turn = trackers[code]?.currentTurn() ?: return
+    private fun skipTurn(auth: String, code: String) {
+        val turn = trackersData[code]?.currentTurn() ?: return
         val encounter = encountersDataSource.get(code) ?: return
-        val currentCharacter = encounter.characters[turn]
+        val currentCharacter = encounter.participants[turn]
+
+        logger.debug("SESSION $auth try skip turn")
         if (currentCharacter.ownerID == auth || auth == encounter.ownerID) {
-            trackers[code]?.nextTurn()
+            trackersData[code]?.nextTurn()
+        } else {
+            logger.debug("SESSION $auth failed to skip turn")
         }
     }
 
     private fun pause(auth: String, code: String) {
         val encounter = encountersDataSource.get(code) ?: return
 
+        logger.debug("SESSION $auth try pause")
         if (auth == encounter.ownerID) {
-            trackers[code]?.pause()
+            trackersData[code]?.pause()
+        } else {
+            logger.debug("SESSION $auth failed to pause")
         }
     }
 
     private fun resume(auth: String, code: String) {
         val encounter = encountersDataSource.get(code) ?: return
 
+        logger.debug("SESSION $auth try resume")
         if (auth == encounter.ownerID) {
-            trackers[code]?.resume()
+            trackersData[code]?.resume()
+        } else {
+            logger.debug("SESSION $auth failed to resume")
         }
     }
 
     private fun observeTrackerEvents(code: String): Flow<TrackerData> {
-        return trackers[code]!!.track()
+        return trackersData[code]!!.track()
+            .catch {
+                logger.debug("FAILED TRACKER EVENTS FLOW. ${it.message}")
+                emitAll(trackersData[code]!!.track())
+            }
     }
 
     private fun observeSessions(code: String): Flow<List<AuthorizedWebSocketSession>> {
-        return _sessionsUpdateChannel.asFlow().map { sessions[code] ?: emptyList() }
+        return _sessionsUpdateChannel.asFlow().map { sessionsData[code] ?: emptyList() }
+            .catch { logger.debug("FAILED SESSIONS FLOW. ${it.message}") }
     }
 
 }

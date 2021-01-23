@@ -12,7 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.owlsoft.shared.model.Character
+import com.owlsoft.shared.model.Participant
 import com.owlsoft.shared.usecases.EncounterCreateResult
 import com.owlsoft.turntoroll.R
 import com.owlsoft.turntoroll.databinding.EncounterDetailsFragmentBinding
@@ -92,7 +92,7 @@ class EncounterDetailsFragment : Fragment(R.layout.encounter_details_fragment) {
         )
 
         addParticipantButton.setOnClickListener {
-            val encounter = Character(
+            val encounter = Participant(
                 "",
                 nameEditText.text.toString(),
                 initiativeEditText.text.toString().toIntOrNull() ?: 0,

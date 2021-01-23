@@ -1,7 +1,7 @@
 package com.owlsoft.shared.remote
 
 import com.owlsoft.shared.model.Encounter
-import com.owlsoft.shared.model.Character
+import com.owlsoft.shared.model.Participant
 import io.ktor.client.*
 import io.ktor.client.request.*
 
@@ -19,23 +19,23 @@ class EncounterAPI(
 
     suspend fun createEncounter(
         ownerID: String,
-        characters: List<Character>
+        participants: List<Participant>
     ): Encounter {
         return httpClient.post("$baseUrl/encounters") {
             jsonHeader()
             body = Encounter(
                 code = "",
                 ownerID,
-                characters.map { it.copy(ownerID = ownerID) },
+                participants.map { it.copy(ownerID = ownerID) },
                 60
             )
         }
     }
 
-    suspend fun join(code: String, newCharacter: Character) {
+    suspend fun join(code: String, newParticipant: Participant) {
         return httpClient.post("$baseUrl/encounters/$code/join") {
             jsonHeader()
-            body = newCharacter
+            body = newParticipant
         }
     }
 }

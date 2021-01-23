@@ -1,30 +1,31 @@
 package com.owlsoft.turntoroll.encounter
 
-import androidx.lifecycle.*
-import com.owlsoft.shared.model.Character
-import com.owlsoft.shared.model.TrackerData
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.owlsoft.shared.model.EncounterData
 import com.owlsoft.shared.remote.RemoteEncounterManager
-import com.owlsoft.shared.usecases.*
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 
 class EncounterViewModel(
     private val remoteEncounterManager: RemoteEncounterManager,
-    private val getEncounterUseCase: GetEncounterUseCase,
 ) : ViewModel() {
 
-    private val _participantsLiveData = MutableLiveData<List<Character>>()
-    val participantsLiveData: LiveData<List<Character>> = _participantsLiveData
+    private val _trackerLiveData = MutableLiveData<EncounterData>()
+    val trackerLiveData: LiveData<EncounterData> = _trackerLiveData
 
-    val trackerData: LiveData<TrackerData> = remoteEncounterManager.trackEncounter()
-        .flowOn(Dispatchers.IO)
-        .asLiveData(viewModelScope.coroutineContext)
-
-    fun requestParticipants(code: String) {
+    fun track() {
         viewModelScope.launch(Dispatchers.Default) {
-            val result = getEncounterUseCase.execute(code)
-            _participantsLiveData.postValue(result.characters)
+
+            remoteEncounterManager.trackEncounter()
+                .distinctUntilChanged()
+                .flowOn(Dispatchers.IO)
+                .collectLatest { _trackerLiveData.postValue(it) }
         }
     }
 

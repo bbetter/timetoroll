@@ -16,7 +16,6 @@ import com.owlsoft.turntoroll.R
 import com.owlsoft.turntoroll.databinding.EncounterFragmentBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
-import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -30,11 +29,13 @@ class EncounterFragment : Fragment(R.layout.encounter_fragment) {
 
     private val code by lazy { arguments?.getString("code") ?: "" }
 
+    private var skipItem: MenuItem? = null
+
     private val viewModel: EncounterViewModel by viewModel {
         parametersOf(
             "code" to arguments?.getString(
                 "code"
-            ) ?: ""
+            )
         )
     }
 
@@ -46,7 +47,7 @@ class EncounterFragment : Fragment(R.layout.encounter_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel.requestParticipants(code)
+        viewModel.track()
 
         binding = EncounterFragmentBinding.bind(view)
 
@@ -61,6 +62,7 @@ class EncounterFragment : Fragment(R.layout.encounter_fragment) {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.encounter_menu, menu)
+        skipItem = menu.findItem(R.id.skipItem)
         super.onCreateOptionsMenu(menu, inflater)
     }
 
@@ -72,29 +74,39 @@ class EncounterFragment : Fragment(R.layout.encounter_fragment) {
     }
 
     private fun EncounterFragmentBinding.setupSubscriptions() {
-        viewModel.participantsLiveData.observe(viewLifecycleOwner) {
-            swipeRefreshLayout.isRefreshing = false
-            adapter.updateParticipants(it)
-        }
 
-        viewModel.trackerData.observe(viewLifecycleOwner) {
-            val (timerTick, turnIndex, roundIndex, isPaused: Boolean) = it
+        viewModel.trackerLiveData.observe(viewLifecycleOwner) {
+            val (tick, turnIndex, roundIndex, isPaused, isPlayPauseAllowed, isSkipTurnAllowed, participants) = it
 
             updateRound(roundIndex)
-            updateTimer(timerTick)
-            updatePaused(isPaused)
+            updateTimer(tick)
+            updatePlayPauseButton(isPlayPauseAllowed, isPaused)
+            updateSkipTurnButton(isSkipTurnAllowed)
             updateCurrentTurnMarker(turnIndex)
+            adapter.updateParticipants(participants)
         }
+    }
+
+    private fun updateSkipTurnButton(skipTurnAllowed: Boolean) {
+        skipItem?.isVisible = skipTurnAllowed
     }
 
     private fun EncounterFragmentBinding.updateRound(roundIndex: Int) {
         roundNumberTextView.text = getString(R.string.round_index, roundIndex)
     }
 
-    private fun EncounterFragmentBinding.updatePaused(isPaused: Boolean) {
-        val resource =
-            if (!isPaused) R.drawable.ic_baseline_pause_circle_filled_24 else R.drawable.ic_baseline_play_arrow_24
-        playPauseButton.setImageResource(resource)
+    private fun EncounterFragmentBinding.updatePlayPauseButton(
+        isPlayPauseAllowed: Boolean,
+        isPaused: Boolean
+    ) {
+        if (isPlayPauseAllowed) {
+            playPauseButton.visibility = View.VISIBLE
+            val resource =
+                if (!isPaused) R.drawable.ic_baseline_pause_circle_filled_24 else R.drawable.ic_baseline_play_arrow_24
+            playPauseButton.setImageResource(resource)
+        } else {
+            playPauseButton.visibility = View.GONE
+        }
     }
 
     private fun updateCurrentTurnMarker(turnIndex: Int) {
@@ -116,21 +128,12 @@ class EncounterFragment : Fragment(R.layout.encounter_fragment) {
             navController.popBackStack()
         }
 
-        swipeRefreshLayout.setOnRefreshListener {
-            try {
-                viewModel.requestParticipants(code)
-            } catch (ex: Exception) {
-                swipeRefreshLayout.isRefreshing = false
-            }
-        }
-
         playPauseButton.setOnClickListener {
-            val currentState = viewModel.trackerData.value ?: return@setOnClickListener
+            val currentState = viewModel.trackerLiveData.value ?: return@setOnClickListener
 
             if (currentState.isPaused) {
                 viewModel.resume()
-            }
-            else{
+            } else {
                 viewModel.pause()
             }
         }

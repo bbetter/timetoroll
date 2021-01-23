@@ -1,7 +1,7 @@
 package com.owlsoft.shared.usecases
 
 import com.owlsoft.shared.UUIDRepository
-import com.owlsoft.shared.model.Character
+import com.owlsoft.shared.model.Participant
 import com.owlsoft.shared.remote.EncounterAPI
 
 sealed class JoinEncounterResult {
@@ -20,7 +20,7 @@ class JoinEncounterUseCase(
         dexterity: Int
     ): JoinEncounterResult {
         return try {
-            val encounterParticipant = Character(
+            val encounterParticipant = Participant(
                 idUUIDRepository.getUUID(),
                 name,
                 initiative,

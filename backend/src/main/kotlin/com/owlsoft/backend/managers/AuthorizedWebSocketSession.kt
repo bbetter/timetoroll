@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlin.coroutines.CoroutineContext
 
 class AuthorizedWebSocketSession(
-    val ownerID: String,
+    val deviceID: String,
     private val webSocketSession: WebSocketSession
 ) {
 
@@ -21,4 +21,5 @@ class AuthorizedWebSocketSession(
     suspend fun send(msg: String) {
         webSocketSession.send(Frame.Text(msg))
     }
+
 }

@@ -4,13 +4,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.owlsoft.shared.model.Character
+import com.owlsoft.shared.model.Participant
 import com.owlsoft.turntoroll.R
 import com.owlsoft.turntoroll.databinding.EncounterParticipantItemBinding
 
 class EncounterParticipantsAdapter(
-    private var data: List<Character> = emptyList(),
+    private var data: List<Participant> = emptyList(),
     private var activeParticipantIndex: Int = 0
 ) : RecyclerView.Adapter<EncounterParticipantsAdapter.EncounterParticipantViewHolder>() {
 
@@ -29,9 +30,14 @@ class EncounterParticipantsAdapter(
 
     override fun getItemCount() = data.size
 
-    fun updateParticipants(characters: List<Character>) {
-        this.data = characters
-        notifyDataSetChanged()
+    fun updateParticipants(participants: List<Participant>) {
+        if(data != participants){
+            this.data = participants
+            notifyDataSetChanged()
+        }
+        else{
+            this.data = participants
+        }
     }
 
     fun updateActiveParticipant(index: Int) {
@@ -46,21 +52,21 @@ class EncounterParticipantsAdapter(
             ContextCompat.getColor(binding.root.context, android.R.color.holo_orange_light)
         private val whiteColor = ContextCompat.getColor(binding.root.context, android.R.color.white)
 
-        fun bind(character: Character, index: Int) {
+        fun bind(participant: Participant, index: Int) {
             with(binding) {
                 setupActiveParticipant(index)
-                setupParticipantInitiative(character)
-                nameTextView.text = character.name
+                setupParticipantInitiative(participant)
+                nameTextView.text = participant.name
             }
         }
 
         private fun EncounterParticipantItemBinding.setupParticipantInitiative(
-            character: Character
+            participant: Participant
         ) {
             val initiative = root.context.resources.getString(
                 R.string.initiative,
-                character.initiative,
-                character.dexterity
+                participant.initiative,
+                participant.dexterity
             )
 
             initiativeView.text = initiative

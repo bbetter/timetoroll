@@ -61,10 +61,10 @@ fun Route.joinEncounterRoute(
             return@post
         }
 
-        val participant = call.receive<Character>()
+        val newParticipant = call.receive<Participant>()
 
         val newEncounter = encounter.copy(
-            characters = encounter.characters + participant
+            participants = encounter.participants + newParticipant
         )
 
         encountersManager.saveEncounter(newEncounter)

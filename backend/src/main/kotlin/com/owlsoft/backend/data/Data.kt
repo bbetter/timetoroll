@@ -3,7 +3,7 @@ package com.owlsoft.backend.data
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Character(
+data class Participant(
     val ownerID: String,
     val name: String,
     val initiative: Int,
@@ -16,13 +16,16 @@ data class Encounter(
     val ownerID: String = "",
     val timePerTurn: Int = 60,
 
-    val characters: List<Character> = emptyList(),
+    val participants: List<Participant>,
 )
 
 @Serializable
-data class TrackerData(
-    val timerTick: Int = 0,
-    val turnIndex: Int = 0,
-    val roundIndex: Int = 0,
-    val isPaused: Boolean = false
+data class EncounterData(
+    val tick: Int,
+    val turnIndex: Int,
+    val roundIndex: Int,
+    val isPaused: Boolean,
+    val isPlayPauseAllowed: Boolean,
+    val isSkipTurnAllowed: Boolean,
+    val participants: List<Participant>
 )

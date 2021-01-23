@@ -1,6 +1,6 @@
 package com.owlsoft.shared.usecases
 
-import com.owlsoft.shared.model.Character
+import com.owlsoft.shared.model.Participant
 import com.owlsoft.shared.model.Encounter
 import com.owlsoft.shared.remote.EncounterAPI
 
@@ -11,10 +11,10 @@ class GetEncounterUseCase(
         val encounter = encounterAPI.getEncounterByCode(code)
 
         return encounter.copy(
-            characters = encounter.characters.sortedWith(
+            participants = encounter.participants.sortedWith(
                 compareBy(
-                    Character::initiative,
-                    Character::dexterity
+                    Participant::initiative,
+                    Participant::dexterity
                 )
             )
         )

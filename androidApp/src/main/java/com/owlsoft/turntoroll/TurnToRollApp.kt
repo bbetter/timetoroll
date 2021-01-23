@@ -9,6 +9,7 @@ class TurnToRollApp : Application() {
     override fun onCreate() {
         super.onCreate()
         initKoin {
+            androidContext(this@TurnToRollApp)
             modules(appModule)
         }
     }

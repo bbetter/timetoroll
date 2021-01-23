@@ -1,8 +1,7 @@
 package com.owlsoft.shared.usecases
 
 import com.owlsoft.shared.UUIDRepository
-import com.owlsoft.shared.model.Character
-import com.owlsoft.shared.model.Encounter
+import com.owlsoft.shared.model.Participant
 import com.owlsoft.shared.remote.EncounterAPI
 
 sealed class EncounterCreateResult {
@@ -15,12 +14,12 @@ class CreateEncounterUseCase(
     private val uuidRepository: UUIDRepository
 ) {
 
-    suspend fun execute(characters: List<Character>): EncounterCreateResult {
+    suspend fun execute(participants: List<Participant>): EncounterCreateResult {
         return try {
             val ownerID = uuidRepository.getUUID()
             val (code, _) = encounterAPI.createEncounter(
                 ownerID,
-                characters.map { it.copy(ownerID = ownerID) }
+                participants.map { it.copy(ownerID = ownerID) }
             )
             EncounterCreateResult.Success(code)
         } catch (ex: Exception) {
