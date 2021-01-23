@@ -1,116 +1,153 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp">
 
 
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        style="@style/AppTheme.Toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?actionBarSize"
+        app:menu="@menu/encounter_join_menu"
+        app:popupTheme="@style/AppTheme.ToolbarMenu"
+        app:title="Join" />
+
     <LinearLayout
         android:id="@+id/fields_container"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHeight_default="wrap"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            style="@style/AppTheme.Toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?actionBarSize"
-            app:title="Join" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+        <LinearLayout
+            android:id="@+id/inputLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/encounter_join_code_field_hint"
-            android:textColorHint="@color/secondary_text"
-            app:boxCornerRadiusTopStart="@dimen/encounter_join_text_field_radius">
+            android:orientation="vertical"
+            android:padding="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbar">
 
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/encounter_code_edit_text"
-                android:inputType="text"
-                android:maxLines="1"
-                android:textAllCaps="true"
-                android:imeOptions="actionNext"
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:hint="@string/encounter_join_code_field_hint"
+                android:textColorHint="@color/secondary_text"
+                app:boxCornerRadiusTopStart="@dimen/encounter_join_text_field_radius">
 
-        </com.google.android.material.textfield.TextInputLayout>
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/encounter_code_edit_text"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:imeOptions="actionNext"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:textAllCaps="true" />
 
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <View
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:background="@color/primary_dark"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0.6"
+                    android:hint="@string/participant_name_hint"
+                    app:boxCornerRadiusTopEnd="16dp"
+                    app:boxCornerRadiusTopStart="16dp">
+
+                    <EditText
+                        android:id="@+id/nameEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:imeOptions="actionNext"
+                        android:textColor="@color/primary_text" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_weight="0.2"
+                    android:hint="@string/participant_initiative_hint"
+                    app:boxCornerRadiusTopEnd="16dp"
+                    app:boxCornerRadiusTopStart="16dp">
+
+                    <EditText
+                        android:id="@+id/initiativeEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:imeOptions="actionNext"
+                        android:inputType="numberDecimal"
+                        android:maxLines="1"
+                        android:textColor="@color/primary_text" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:layout_weight="0.2"
+                    android:hint="@string/participant_dexterity_hint"
+                    app:boxCornerRadiusTopEnd="16dp"
+                    app:boxCornerRadiusTopStart="16dp">
+
+                    <EditText
+                        android:id="@+id/dexterityEditText"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:imeOptions="actionDone"
+                        android:inputType="numberSigned"
+                        android:maxLines="1"
+                        android:textColor="@color/primary_text" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+
+
+            <Button
+                android:id="@+id/add_button"
+                style="@style/AppTheme.LargeButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="@string/add_participant_button_title" />
+
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/participants_list"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/encounter_join_char_name_field_hint"
-            android:textColorHint="@color/secondary_text"
-            app:boxCornerRadiusTopStart="@dimen/encounter_join_text_field_radius">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/name_edit_text"
-                android:maxLines="1"
-                android:inputType="text"
-                android:imeOptions="actionNext"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/encounter_join_char_initiative_hint"
-            android:textColorHint="@color/secondary_text"
-            app:boxCornerRadiusTopStart="@dimen/encounter_join_text_field_radius">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/initiative_edit_text"
-                android:inputType="number"
-                android:maxLines="1"
-                android:imeOptions="actionNext"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="@string/encounter_join_char_dex_hint"
-            android:textColorHint="@color/secondary_text"
-            app:boxCornerRadiusTopStart="@dimen/encounter_join_text_field_radius">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/dexterity_edit_text"
-                android:inputType="numberSigned"
-                android:maxLines="1"
-                android:imeOptions="actionDone"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-        </com.google.android.material.textfield.TextInputLayout>
+            android:layout_height="match_parent"
+            tools:listitem="@layout/encounter_participant_item" />
 
     </LinearLayout>
 
-    <Button
-        android:id="@+id/encounter_join_button"
-        style="@style/AppTheme.LargeButton"
-        android:layout_width="match_parent"
-        android:layout_height="64dp"
-        android:layout_marginStart="@dimen/encounter_join_button_start"
-        android:text="@string/encounter_join_button_title"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/fields_container"
-        app:layout_constraintVertical_bias="1" />
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+</LinearLayout>

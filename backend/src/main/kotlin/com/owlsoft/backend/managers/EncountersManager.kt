@@ -1,8 +1,9 @@
 package com.owlsoft.backend.managers
 
 import com.owlsoft.backend.data.Encounter
-import com.owlsoft.backend.data.EncounterData
+import com.owlsoft.backend.data.EncounterTrackerData
 import com.owlsoft.backend.data.EncountersDataSource
+import com.owlsoft.backend.data.Participant
 import io.ktor.http.cio.websocket.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.ObsoleteCoroutinesApi
@@ -26,17 +27,19 @@ class EncountersManager(
 
     private val sessionsData =
         mutableMapOf<String, CopyOnWriteArrayList<AuthorizedWebSocketSession>>()
+
     private val trackersData = mutableMapOf<String, TurnTracker>()
 
     suspend fun trackTurns() {
         _trackersUpdateChannel.consumeEach { code ->
             logger.debug("### TRACKERS UPDATE EVENT. CODE = $code")
 
-            combine(observeTrackerEvents(code), observeSessions(code)) { trackerData, sessions ->
+            combine(observeTracker(code), observeSessions(code)) { trackerData, sessions ->
                 logger.debug("### TICK ${trackerData.timerTick}; SESSIONS = [${sessions.map { it.deviceID }}]")
                 val encounter = encountersDataSource.get(code) ?: return@combine
+
                 for (session in sessions) {
-                    val data = EncounterData(
+                    val data = EncounterTrackerData(
                         trackerData.timerTick,
                         trackerData.turnIndex,
                         trackerData.roundIndex,
@@ -44,16 +47,18 @@ class EncountersManager(
                         session.deviceID == encounter.ownerID,
                         session.deviceID == encounter.ownerID || encounter.participants[trackerData.turnIndex].ownerID == session.deviceID,
                         encounter.participants
+                            .sortedWith(
+                                compareByDescending(Participant::initiative)
+                                    .thenByDescending(Participant::dexterity)
+                            )
                     )
 
                     val text = Json.encodeToString(data)
+
                     try {
                         session.send(text)
                     } catch (ex: Exception) {
-                        logger.debug("SESSION ${session.deviceID} failed to send message for encounter $code")
                         sessionsData[code]?.remove(session)
-
-                        _sessionsUpdateChannel.offer(code)
                     }
                 }
             }
@@ -66,6 +71,7 @@ class EncountersManager(
         encountersDataSource.addOrUpdate(encounter)
 
         logger.debug("SAVED ENCOUNTER TO DATASOURCE $encounter")
+
 
         val tracker = trackersData[encounter.code]
 
@@ -106,19 +112,7 @@ class EncountersManager(
                         "pause" -> pause(auth, code)
                     }
                 } catch (exception: Exception) {
-                    logger.debug("SESSION ${auth} FAILED. ${exception.message}")
-                    val encounter = encountersDataSource.get(code) ?: return@collect
 
-                    val updatedEncounter = encounter.copy(
-                        participants = encounter.participants.map {
-                            it.copy(ownerID = if (it.ownerID == auth) encounter.ownerID else it.ownerID)
-                        }
-                    )
-                    encountersDataSource.addOrUpdate(updatedEncounter)
-
-                    //todo: make it work
-//                pause(encounter.ownerID, code)
-                    _trackersUpdateChannel.offer(code)
                 }
             }
     }
@@ -158,17 +152,13 @@ class EncountersManager(
         }
     }
 
-    private fun observeTrackerEvents(code: String): Flow<TrackerData> {
+    private fun observeTracker(code: String): Flow<TrackerData> {
         return trackersData[code]!!.track()
-            .catch {
-                logger.debug("FAILED TRACKER EVENTS FLOW. ${it.message}")
-                emitAll(trackersData[code]!!.track())
-            }
+            .catch { logger.debug("FAILED TRACKER FLOW. ${it.message}") }
     }
 
     private fun observeSessions(code: String): Flow<List<AuthorizedWebSocketSession>> {
         return _sessionsUpdateChannel.asFlow().map { sessionsData[code] ?: emptyList() }
             .catch { logger.debug("FAILED SESSIONS FLOW. ${it.message}") }
     }
-
 }

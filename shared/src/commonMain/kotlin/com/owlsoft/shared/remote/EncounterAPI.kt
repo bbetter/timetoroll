@@ -8,8 +8,8 @@ import io.ktor.client.request.*
 class EncounterAPI(
     private val httpClient: HttpClient
 ) {
-    private val baseUrl = "http://10.0.2.2:8080"
-//    private val baseUrl = "https://turntoroll.pagekite.me/"
+    //    private val baseUrl = "http://10.0.2.2:8080"
+    private val baseUrl = "https://turntoroll.pagekite.me/"
 
     suspend fun getEncounterByCode(code: String): Encounter {
         return httpClient.get("$baseUrl/encounters/$code") {
@@ -32,10 +32,10 @@ class EncounterAPI(
         }
     }
 
-    suspend fun join(code: String, newParticipant: Participant) {
+    suspend fun join(code: String, participants: List<Participant>) {
         return httpClient.post("$baseUrl/encounters/$code/join") {
             jsonHeader()
-            body = newParticipant
+            body = participants
         }
     }
 }

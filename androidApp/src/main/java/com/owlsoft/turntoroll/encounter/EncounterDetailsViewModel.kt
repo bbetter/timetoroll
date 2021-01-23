@@ -19,7 +19,13 @@ class EncounterDetailsViewModel(
         return createEncounterUseCase.execute(participants)
     }
 
-    fun addParticipant(participant: Participant) {
+    fun addParticipant(name: String, initiative: String, dexterity: String) {
+        val participant = Participant(
+            "",
+            name,
+            initiative.toIntOrNull() ?: 0,
+            dexterity.toIntOrNull() ?: 0
+        )
         participants.add(participant)
         _participantsLiveData.postValue(participants)
     }

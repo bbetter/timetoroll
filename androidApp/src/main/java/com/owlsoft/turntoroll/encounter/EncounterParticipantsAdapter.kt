@@ -12,7 +12,7 @@ import com.owlsoft.turntoroll.databinding.EncounterParticipantItemBinding
 
 class EncounterParticipantsAdapter(
     private var data: List<Participant> = emptyList(),
-    private var activeParticipantIndex: Int = 0
+    private var activeParticipantIndex: Int = -1
 ) : RecyclerView.Adapter<EncounterParticipantsAdapter.EncounterParticipantViewHolder>() {
 
     override fun onCreateViewHolder(
@@ -31,11 +31,10 @@ class EncounterParticipantsAdapter(
     override fun getItemCount() = data.size
 
     fun updateParticipants(participants: List<Participant>) {
-        if(data != participants){
+        if (data != participants) {
             this.data = participants
             notifyDataSetChanged()
-        }
-        else{
+        } else {
             this.data = participants
         }
     }

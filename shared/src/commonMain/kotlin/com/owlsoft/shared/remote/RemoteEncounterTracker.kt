@@ -12,8 +12,8 @@ class RemoteEncounterTracker(
     uuidRepository: UUIDRepository
 ) {
     companion object {
-        private const val socketUrl = "ws://10.0.2.2:8080"
-//        private const val socketUrl = "ws://turntoroll.pagekite.me"
+//        private const val socketUrl = "ws://10.0.2.2:8080"
+        private const val socketUrl = "ws://turntoroll.pagekite.me"
     }
 
     private val session = AppSocketSession.create(

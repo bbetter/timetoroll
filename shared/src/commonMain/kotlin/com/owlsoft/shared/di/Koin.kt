@@ -58,7 +58,6 @@ private fun createHttpClient() = HttpClient {
 }
 
 private fun Module.useCases() {
-    single { GetEncounterUseCase(get()) }
     single { CreateEncounterUseCase(get(), get()) }
     single { JoinEncounterUseCase(get(), get()) }
 }

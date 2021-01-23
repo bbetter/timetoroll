@@ -61,13 +61,16 @@ fun Route.joinEncounterRoute(
             return@post
         }
 
-        val newParticipant = call.receive<Participant>()
+        val newParticipants = call.receive<List<Participant>>()
 
-        val newEncounter = encounter.copy(
-            participants = encounter.participants + newParticipant
-        )
+        if (newParticipants.isNotEmpty()) {
 
-        encountersManager.saveEncounter(newEncounter)
+            val newEncounter = encounter.copy(
+                participants = encounter.participants + newParticipants
+            )
+
+            encountersManager.saveEncounter(newEncounter)
+        }
 
         call.respond(HttpStatusCode.OK, encounter)
     }
