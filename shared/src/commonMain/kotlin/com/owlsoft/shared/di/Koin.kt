@@ -2,7 +2,6 @@ package com.owlsoft.shared.di
 
 import com.owlsoft.shared.UUIDRepository
 import com.owlsoft.shared.remote.EncounterAPI
-import com.owlsoft.shared.remote.RemoteEncounterManager
 import com.owlsoft.shared.remote.RemoteEncounterTracker
 import com.owlsoft.shared.usecases.*
 import io.ktor.client.*
@@ -14,7 +13,6 @@ import org.koin.core.context.startKoin
 import org.koin.core.module.Module
 import org.koin.dsl.KoinAppDeclaration
 import org.koin.dsl.module
-
 
 fun initKoin(koinAppDeclaration: KoinAppDeclaration) = startKoin {
     koinAppDeclaration()
@@ -30,11 +28,6 @@ private val coreModule = module {
     factory { params ->
         val (_, code) = params.component1<Pair<String, String>>()
         RemoteEncounterTracker(code, get())
-    }
-
-    factory { params ->
-        val remoteEncounterTracker = get<RemoteEncounterTracker> { params }
-        RemoteEncounterManager(remoteEncounterTracker)
     }
 
     single { UUIDRepository(get(), get()) }

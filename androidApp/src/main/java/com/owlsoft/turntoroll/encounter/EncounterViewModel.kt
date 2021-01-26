@@ -1,35 +1,32 @@
 package com.owlsoft.turntoroll.encounter
 
 import androidx.lifecycle.*
-import com.owlsoft.shared.model.EncounterData
-import com.owlsoft.shared.remote.RemoteEncounterManager
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class EncounterViewModel(
-    private val remoteEncounterManager: RemoteEncounterManager,
+//    private val remoteEncounterTracker: RemoteEncounterTracker,
 ) : ViewModel() {
 
-    val trackerLiveData: LiveData<EncounterData> = remoteEncounterManager.track()
-        .flowOn(Dispatchers.IO)
-        .asLiveData()
+//    val trackerLiveData: LiveData<EncounterData> = remoteEncounterTracker.track()
+//        .flowOn(Dispatchers.IO)
+//        .asLiveData()
 
     fun skipTurn() {
         viewModelScope.launch(Dispatchers.Default) {
-            remoteEncounterManager.skipTurn()
+//            remoteEncounterTracker.skipTurn()
         }
     }
 
     fun resume() {
         viewModelScope.launch(Dispatchers.Default) {
-            remoteEncounterManager.resume()
+//            remoteEncounterTracker.resume()
         }
     }
 
     fun pause() {
         viewModelScope.launch(Dispatchers.Default) {
-            remoteEncounterManager.pause()
+//            remoteEncounterTracker.pause()
         }
     }
 }

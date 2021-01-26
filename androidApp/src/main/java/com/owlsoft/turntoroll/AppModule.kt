@@ -10,7 +10,13 @@ import org.koin.dsl.module
 
 @OptIn(InternalCoroutinesApi::class)
 val appModule = module {
-    viewModel { params -> EncounterViewModel( get { params } ) }
+//    viewModel { params -> EncounterViewModel( get { params } ) }
+
+    single { LocalRemoteEncounterTracker() }
+
+    viewModel { EncounterViewModel() }
     viewModel { EncounterDetailsViewModel(get()) }
     viewModel { EncounterJoinViewModel(get()) }
+
+
 }

@@ -39,22 +39,25 @@ class EncountersManager(
 
                     val encounter = dataSource.findByCode(code) ?: return@collectLatest
                     val sessions = sessionsData[code] ?: return@collectLatest
-
+                    val participants = encounter.participants
+                        .sortedWith(
+                            compareByDescending(Participant::initiative)
+                                .thenByDescending(Participant::dexterity)
+                        )
                     logger.debug("### ENCOUNTER $code. TICK = ${trackerData.timerTick}")
 
                     for (session in sessions) {
+                        val isAdminSession = session.deviceID == encounter.ownerID
+                        val isCurrentSession = participants[trackerData.turnIndex].ownerID == session.deviceID
+
                         val data = EncounterTrackerData(
                             trackerData.timerTick,
                             trackerData.turnIndex,
                             trackerData.roundIndex,
                             trackerData.isPaused,
-                            session.deviceID == encounter.ownerID,
-                            session.deviceID == encounter.ownerID || encounter.participants[trackerData.turnIndex].ownerID == session.deviceID,
-                            encounter.participants
-                                .sortedWith(
-                                    compareByDescending(Participant::initiative)
-                                        .thenByDescending(Participant::dexterity)
-                                )
+                            isAdminSession,
+                            isAdminSession || isCurrentSession,
+                            participants
                         )
 
                         val text = Json.encodeToString(data)

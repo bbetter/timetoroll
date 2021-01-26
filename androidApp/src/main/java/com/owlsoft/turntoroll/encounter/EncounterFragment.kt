@@ -1,5 +1,6 @@
 package com.owlsoft.turntoroll.encounter
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
@@ -8,12 +9,18 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager.VERTICAL
+import com.owlsoft.shared.model.Participant
+import com.owlsoft.turntoroll.EncounterService
+import com.owlsoft.turntoroll.LocalRemoteEncounterTracker
 import com.owlsoft.turntoroll.MainActivity
 import com.owlsoft.turntoroll.R
 import com.owlsoft.turntoroll.databinding.EncounterFragmentBinding
+import kotlinx.coroutines.channels.consumeEach
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 import java.text.SimpleDateFormat
@@ -31,6 +38,10 @@ class EncounterFragment : Fragment(R.layout.encounter_fragment) {
 
     private var skipItem: MenuItem? = null
 
+    private val localRemoteEncounterTracker by inject<LocalRemoteEncounterTracker>()
+
+    private val encounterService by lazy { Intent(requireContext(), EncounterService::class.java) }
+
     private val viewModel: EncounterViewModel by viewModel {
         parametersOf(
             "code" to arguments?.getString(
@@ -42,6 +53,23 @@ class EncounterFragment : Fragment(R.layout.encounter_fragment) {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+
+
+        lifecycleScope.launchWhenResumed {
+            localRemoteEncounterTracker.data.consumeEach {
+                binding.updateTimer(it.tick)
+                binding.updatePlayPauseButton(it.isPlayPauseAllowed, it.isPaused)
+                binding.updateRound(it.roundIndex)
+
+                updateParticipantsList(it.participants, it.turnIndex)
+                updateSkipTurnButton(it.isSkipTurnAllowed)
+            }
+        }
+    }
+
+    private fun updateParticipantsList(participants: List<Participant>, turnIndex: Int) {
+        adapter.updateParticipants(participants)
+        adapter.updateActiveParticipant(turnIndex)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -54,8 +82,9 @@ class EncounterFragment : Fragment(R.layout.encounter_fragment) {
         with(binding) {
             toolbar.title = "Encounter : $code"
             setupView()
-            setupSubscriptions()
         }
+
+        startEncounterService()
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -66,23 +95,18 @@ class EncounterFragment : Fragment(R.layout.encounter_fragment) {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.skipItem) {
-            viewModel.skipTurn()
+            lifecycleScope.launchWhenCreated {
+                localRemoteEncounterTracker.commands.send("skip")
+            }
+
+//            viewModel.skipTurn()
         }
         return true
     }
 
-    private fun EncounterFragmentBinding.setupSubscriptions() {
-
-        viewModel.trackerLiveData.observe(viewLifecycleOwner) {
-            val (tick, turnIndex, roundIndex, isPaused, isPlayPauseAllowed, isSkipTurnAllowed, participants) = it
-
-            updateRound(roundIndex)
-            updateTimer(tick)
-            updatePlayPauseButton(isPlayPauseAllowed, isPaused)
-            updateSkipTurnButton(isSkipTurnAllowed)
-            updateCurrentTurnMarker(turnIndex)
-            adapter.updateParticipants(participants)
-        }
+    private fun startEncounterService() {
+        val startIntent = encounterService.apply { putExtra("code", code) }
+        requireContext().startService(startIntent)
     }
 
     private fun updateSkipTurnButton(skipTurnAllowed: Boolean) {
@@ -107,10 +131,6 @@ class EncounterFragment : Fragment(R.layout.encounter_fragment) {
         }
     }
 
-    private fun updateCurrentTurnMarker(turnIndex: Int) {
-        adapter.updateActiveParticipant(turnIndex)
-    }
-
     private fun EncounterFragmentBinding.updateTimer(timerTick: Int) {
         val timer = timerFormatter.format(timerTick * 1000)
         val color = if (timerTick < 5) android.R.color.holo_red_light else R.color.primary_text
@@ -127,13 +147,16 @@ class EncounterFragment : Fragment(R.layout.encounter_fragment) {
         }
 
         playPauseButton.setOnClickListener {
-            val currentState = viewModel.trackerLiveData.value ?: return@setOnClickListener
-
-            if (currentState.isPaused) {
-                viewModel.resume()
-            } else {
-                viewModel.pause()
+            lifecycleScope.launchWhenCreated {
+                localRemoteEncounterTracker.commands.send("resume")
             }
+//            val currentState = viewModel.trackerLiveData.value ?: return@setOnClickListener
+//
+//            if (currentState.isPaused) {
+//                viewModel.resume()
+//            } else {
+//                viewModel.pause()
+//            }
         }
 
         participantsList.adapter = adapter
@@ -142,5 +165,11 @@ class EncounterFragment : Fragment(R.layout.encounter_fragment) {
             VERTICAL,
             false
         )
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+
+        requireContext().stopService(encounterService)
     }
 }

@@ -24,6 +24,7 @@ class EncounterDetailsFragment : Fragment(R.layout.encounter_details_fragment) {
     lateinit var binding: EncounterDetailsFragmentBinding
 
     private val adapter = EncounterParticipantsAdapter()
+
     private val viewModel: EncounterDetailsViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -95,7 +96,7 @@ class EncounterDetailsFragment : Fragment(R.layout.encounter_details_fragment) {
             val dexterity = dexterityEditText.text.toString()
 
             viewModel.addParticipant(name, initiative, dexterity)
-            
+
             nameEditText.text.clear()
             initiativeEditText.text.clear()
             dexterityEditText.text.clear()
