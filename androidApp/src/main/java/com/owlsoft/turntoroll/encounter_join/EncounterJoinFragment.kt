@@ -12,16 +12,17 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.owlsoft.shared.usecases.JoinEncounterResult
 import com.owlsoft.turntoroll.R
 import com.owlsoft.turntoroll.databinding.EncounterJoinFragmentBinding
-import com.owlsoft.turntoroll.encounter.EncounterParticipantsAdapter
+import com.owlsoft.turntoroll.encounter.EncounterSessionParticipantsAdapter
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class EncounterJoinFragment : Fragment(R.layout.encounter_join_fragment) {
     private lateinit var binding: EncounterJoinFragmentBinding
 
-    private val adapter = EncounterParticipantsAdapter()
+    private val adapter = EncounterSessionParticipantsAdapter()
     private val viewModel: EncounterJoinViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -31,9 +32,8 @@ class EncounterJoinFragment : Fragment(R.layout.encounter_join_fragment) {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.encounter_join_menu, menu)
+        inflater.inflate(R.menu.join_encounter_menu, menu)
     }
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.encounterDetailsActionButton) {
             lifecycleScope.launchWhenResumed {
@@ -80,6 +80,13 @@ class EncounterJoinFragment : Fragment(R.layout.encounter_join_fragment) {
         toolbar.setNavigationOnClickListener {
             findNavController().popBackStack()
         }
+
+        participantsList.adapter = adapter
+        participantsList.layoutManager = LinearLayoutManager(
+            context,
+            LinearLayoutManager.VERTICAL,
+            false
+        )
 
         addButton.setOnClickListener {
             val name = nameEditText.text.toString()

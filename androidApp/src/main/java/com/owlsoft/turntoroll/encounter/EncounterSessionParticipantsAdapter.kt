@@ -4,16 +4,15 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.owlsoft.shared.model.Participant
 import com.owlsoft.turntoroll.R
 import com.owlsoft.turntoroll.databinding.EncounterParticipantItemBinding
 
-class EncounterParticipantsAdapter(
+class EncounterSessionParticipantsAdapter(
     private var data: List<Participant> = emptyList(),
-    private var activeParticipantIndex: Int = 0
-) : RecyclerView.Adapter<EncounterParticipantsAdapter.EncounterParticipantViewHolder>() {
+    private var activeParticipantIndex: Int = -1
+) : RecyclerView.Adapter<EncounterSessionParticipantsAdapter.EncounterParticipantViewHolder>() {
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -31,11 +30,10 @@ class EncounterParticipantsAdapter(
     override fun getItemCount() = data.size
 
     fun updateParticipants(participants: List<Participant>) {
-        if(data != participants){
+        if (data != participants) {
             this.data = participants
             notifyDataSetChanged()
-        }
-        else{
+        } else {
             this.data = participants
         }
     }

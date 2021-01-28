@@ -5,39 +5,28 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager.VERTICAL
-import com.owlsoft.turntoroll.MainActivity
+import com.owlsoft.shared.model.Participant
+import com.owlsoft.shared.model.RequestResult
 import com.owlsoft.turntoroll.R
-import com.owlsoft.turntoroll.databinding.EncounterFragmentBinding
+import com.owlsoft.turntoroll.databinding.CreateEncounterFragmentBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
-import org.koin.core.parameter.parametersOf
-import java.text.SimpleDateFormat
-import java.util.*
 
 class EncounterFragment : Fragment(R.layout.encounter_fragment) {
 
-    private lateinit var binding: EncounterFragmentBinding
+    lateinit var binding: CreateEncounterFragmentBinding
 
-    private val adapter = EncounterParticipantsAdapter()
+    private val adapter = EncounterParticipantsEditAdapter(
+        onParticipantDelete = this::onParticipantDelete
+    )
 
-    private val timerFormatter = SimpleDateFormat("mm:ss", Locale.getDefault())
-
-    private val code by lazy { arguments?.getString("code") ?: "" }
-
-    private var skipItem: MenuItem? = null
-
-    private val viewModel: EncounterViewModel by viewModel {
-        parametersOf(
-            "code" to arguments?.getString(
-                "code"
-            )
-        )
-    }
+    private val viewModel: EncounterViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,103 +35,89 @@ class EncounterFragment : Fragment(R.layout.encounter_fragment) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        viewModel.track()
-
-        binding = EncounterFragmentBinding.bind(view)
-
-        (requireActivity() as MainActivity).hideKeyboard()
+        binding = CreateEncounterFragmentBinding.bind(view)
 
         with(binding) {
-            toolbar.title = "Encounter : $code"
+            (activity as AppCompatActivity).setSupportActionBar(toolbar)
             setupView()
-            setupSubscriptions()
+            setupSubscription()
         }
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.encounter_menu, menu)
-        skipItem = menu.findItem(R.id.skipItem)
         super.onCreateOptionsMenu(menu, inflater)
+        inflater.inflate(R.menu.create_encounter_menu, menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.skipItem) {
-            viewModel.skipTurn()
+        if (item.itemId == R.id.encounterDetailsActionButton) {
+            lifecycleScope.launchWhenResumed {
+
+                when (val result = viewModel.saveEncounter()) {
+                    is RequestResult.Success -> {
+                        findNavController().goToEncounter(result.code)
+                    }
+                    is RequestResult.Error -> {
+                        showCreateEncounterError(result)
+                    }
+                }
+            }
         }
         return true
     }
 
-    private fun EncounterFragmentBinding.setupSubscriptions() {
-
-        viewModel.trackerLiveData.observe(viewLifecycleOwner) {
-            val (tick, turnIndex, roundIndex, isPaused, isPlayPauseAllowed, isSkipTurnAllowed, participants) = it
-
-            updateRound(roundIndex)
-            updateTimer(tick)
-            updatePlayPauseButton(isPlayPauseAllowed, isPaused)
-            updateSkipTurnButton(isSkipTurnAllowed)
-            updateCurrentTurnMarker(turnIndex)
-            adapter.updateParticipants(participants)
-        }
+    private fun showCreateEncounterError(result: RequestResult.Error) {
+        AlertDialog.Builder(requireContext())
+            .setTitle("Error")
+            .setMessage(result.message)
+            .setPositiveButton("Cancel") { d, _ ->
+                d.dismiss()
+            }
+            .create()
+            .show()
     }
 
-    private fun updateSkipTurnButton(skipTurnAllowed: Boolean) {
-        skipItem?.isVisible = skipTurnAllowed
-    }
-
-    private fun EncounterFragmentBinding.updateRound(roundIndex: Int) {
-        roundNumberTextView.text = getString(R.string.round_index, roundIndex)
-    }
-
-    private fun EncounterFragmentBinding.updatePlayPauseButton(
-        isPlayPauseAllowed: Boolean,
-        isPaused: Boolean
-    ) {
-        if (isPlayPauseAllowed) {
-            playPauseButton.visibility = View.VISIBLE
-            val resource =
-                if (!isPaused) R.drawable.ic_baseline_pause_circle_filled_24 else R.drawable.ic_baseline_play_arrow_24
-            playPauseButton.setImageResource(resource)
-        } else {
-            playPauseButton.visibility = View.GONE
-        }
-    }
-
-    private fun updateCurrentTurnMarker(turnIndex: Int) {
-        adapter.updateActiveParticipant(turnIndex)
-    }
-
-    private fun EncounterFragmentBinding.updateTimer(timerTick: Int) {
-        val timer = timerFormatter.format(timerTick * 1000)
-        val color = if (timerTick < 5) android.R.color.holo_red_light else R.color.primary_text
-        roundTimerView.setTextColor(ContextCompat.getColor(requireContext(), color))
-        roundTimerView.text = timer
-    }
-
-    private fun EncounterFragmentBinding.setupView() {
-        (requireActivity() as AppCompatActivity).setSupportActionBar(toolbar)
+    private fun CreateEncounterFragmentBinding.setupView() {
 
         toolbar.setNavigationOnClickListener {
-            val navController = findNavController()
-            navController.popBackStack()
-        }
-
-        playPauseButton.setOnClickListener {
-            val currentState = viewModel.trackerLiveData.value ?: return@setOnClickListener
-
-            if (currentState.isPaused) {
-                viewModel.resume()
-            } else {
-                viewModel.pause()
-            }
+            findNavController().popBackStack()
         }
 
         participantsList.adapter = adapter
+
         participantsList.layoutManager = LinearLayoutManager(
             context,
-            VERTICAL,
+            LinearLayoutManager.VERTICAL,
             false
+        )
+
+        addButton.setOnClickListener {
+            val name = nameEditText.text.toString()
+            val initiative = initiativeEditText.text.toString()
+            val dexterity = dexterityEditText.text.toString()
+
+            viewModel.addParticipant(name, initiative, dexterity)
+
+            nameEditText.text.clear()
+            initiativeEditText.text.clear()
+            dexterityEditText.text.clear()
+        }
+    }
+
+    private fun onParticipantDelete(participant: Participant) {
+        viewModel.removeParticipant(participant)
+    }
+
+    private fun setupSubscription() {
+        viewModel.participantsLiveData.observe(viewLifecycleOwner) {
+            adapter.updateParticipants(it)
+        }
+    }
+
+    private fun NavController.goToEncounter(encounterCode: String) {
+        navigate(
+            R.id.action_encounterDetailsFragment_to_encounterFragment,
+            bundleOf("code" to encounterCode)
         )
     }
 }

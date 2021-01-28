@@ -6,9 +6,9 @@
     app:startDestination="@id/menuFragment">
 
     <fragment
-        tools:layout="@layout/encounter_fragment"
+        tools:layout="@layout/encounter_session_fragment"
         android:id="@+id/encounterFragment"
-        android:name="com.owlsoft.turntoroll.encounter.EncounterFragment"
+        android:name="com.owlsoft.turntoroll.encounter.EncounterSessionFragment"
         android:label="EncounterFragment">
         <argument
             android:name="code"
@@ -45,9 +45,9 @@
     </fragment>
 
     <fragment
-        tools:layout="@layout/encounter_details_fragment"
+        tools:layout="@layout/encounter_fragment"
         android:id="@+id/encounterDetailsFragment"
-        android:name="com.owlsoft.turntoroll.encounter.EncounterDetailsFragment"
+        android:name="com.owlsoft.turntoroll.encounter.EncounterFragment"
         android:label="EncounterDetailsFragment">
         <action
             android:id="@+id/action_encounterDetailsFragment_to_encounterFragment"

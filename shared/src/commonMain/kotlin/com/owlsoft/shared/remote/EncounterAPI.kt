@@ -32,8 +32,8 @@ class EncounterAPI(
         }
     }
 
-    suspend fun join(code: String, participants: List<Participant>) {
-        return httpClient.post("$baseUrl/encounters/$code/join") {
+    suspend fun updateEncounter(code: String, participants: List<Participant>): Encounter{
+        return httpClient.put("$baseUrl/encounters/$code/join") {
             jsonHeader()
             body = participants
         }

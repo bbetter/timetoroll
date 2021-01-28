@@ -25,7 +25,7 @@ fun main() {
         routing {
             encounterByCodeRoute(LocalEncountersDataSource)
             createEncounterRoute(encountersManager)
-            joinEncounterRoute(LocalEncountersDataSource, encountersManager)
+            joinEncounterRoute(encountersManager)
 
             trackRoute(encountersManager)
 

@@ -5,7 +5,7 @@ import kotlinx.coroutines.ObsoleteCoroutinesApi
 import kotlinx.coroutines.channels.ticker
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.consumeAsFlow
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.transform
 import kotlinx.serialization.Serializable
 
 
@@ -32,22 +32,26 @@ class TurnTracker(
     private var _roundIndex = 1
     private var _tick = timePerTurn
 
+    val ticker = ticker(TIMER_TICK, 0)
+
     fun track(): Flow<TrackerData> {
-        return ticker(TIMER_TICK,0)
+
+        return ticker
             .consumeAsFlow()
-            .map {
+            .transform {
                 val newTimerValue = if (isPaused) _tick else _tick--
 
+                emit(
+                    TrackerData(
+                        newTimerValue,
+                        _turnIndex,
+                        _roundIndex,
+                        isPaused
+                    )
+                )
                 if (_tick == 0) {
                     nextTurn()
                 }
-
-                TrackerData(
-                    newTimerValue,
-                    _turnIndex,
-                    _roundIndex,
-                    isPaused
-                )
             }
     }
 
@@ -74,5 +78,9 @@ class TurnTracker(
 
     fun updateTurnCount(turnsPerRound: Int) {
         this.turnsPerRound = turnsPerRound
+    }
+
+    fun cancel() {
+        ticker.cancel()
     }
 }

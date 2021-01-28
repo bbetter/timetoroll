@@ -8,5 +8,11 @@ object LocalEncountersDataSource : EncountersDataSource {
         encounters[encounter.code] = encounter
     }
 
-    override fun get(code: String) = encounters[code]
+    override fun findByCode(code: String): Encounter? {
+        return encounters[code]
+    }
+
+    override fun remove(code: String) {
+        encounters.remove(code)
+    }
 }

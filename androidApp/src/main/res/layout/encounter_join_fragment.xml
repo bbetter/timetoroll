@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:orientation="vertical">
 
 
     <androidx.appcompat.widget.Toolbar
@@ -13,7 +12,7 @@
         style="@style/AppTheme.Toolbar"
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
-        app:menu="@menu/encounter_join_menu"
+        app:menu="@menu/join_encounter_menu"
         app:popupTheme="@style/AppTheme.ToolbarMenu"
         app:title="Join" />
 
@@ -22,6 +21,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
+        android:padding="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHeight_default="wrap"
         app:layout_constraintStart_toStartOf="parent"
@@ -58,11 +58,11 @@
 
 
             <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"
-                android:background="@color/primary_dark"
-                android:layout_width="match_parent"
-                android:layout_height="1dp"/>
+                android:background="@color/primary_dark" />
 
             <LinearLayout
                 android:layout_width="match_parent"

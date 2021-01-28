@@ -11,52 +11,104 @@
         style="@style/AppTheme.Toolbar"
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
-        app:menu="@menu/encounter_menu"
-        app:title="Encounter" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:title="Create Encounter"
+        app:titleTextColor="@color/on_primary" />
+
 
     <LinearLayout
-        android:id="@+id/timerLayout"
+        android:id="@+id/inputLayout"
         android:layout_width="match_parent"
-        android:layout_height="64dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:padding="8dp">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar">
 
-        <TextView
-            android:id="@+id/round_number_text_view"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:textColor="@color/primary_text"
-            android:textSize="32sp"
-            tools:text="Round #1" />
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/round_timer_view"
-            android:layout_width="wrap_content"
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.6"
+                android:hint="@string/participant_name_hint"
+                app:boxCornerRadiusTopEnd="16dp"
+                app:boxCornerRadiusTopStart="16dp">
+
+                <EditText
+                    android:id="@+id/nameEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:imeOptions="actionNext"
+                    android:textColor="@color/primary_text" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.2"
+                android:layout_marginStart="4dp"
+                android:hint="@string/participant_initiative_hint"
+                app:boxCornerRadiusTopEnd="16dp"
+                app:boxCornerRadiusTopStart="16dp">
+
+                <EditText
+                    android:id="@+id/initiativeEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:imeOptions="actionNext"
+                    android:inputType="numberDecimal"
+                    android:maxLines="1"
+                    android:textColor="@color/primary_text" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:layout_weight="0.2"
+                android:hint="@string/participant_dexterity_hint"
+                app:boxCornerRadiusTopEnd="16dp"
+                app:boxCornerRadiusTopStart="16dp">
+
+                <EditText
+                    android:id="@+id/dexterityEditText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:imeOptions="actionDone"
+                    android:inputType="numberSigned"
+                    android:maxLines="1"
+                    android:textColor="@color/primary_text" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </LinearLayout>
+
+
+        <Button
+            android:id="@+id/add_button"
+            style="@style/AppTheme.LargeButton"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="24dp"
-            android:gravity="center"
-            android:textColor="@color/primary_text"
-            android:textSize="32sp"
-            android:textStyle="bold"
-            tools:text="2:00" />
-
-        <ImageButton
-            android:id="@+id/play_pause_button"
-            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-            android:layout_width="48dp"
-            android:layout_height="42dp"
-            android:src="@drawable/ic_baseline_pause_circle_filled_24"
-            android:textColor="@color/primary"
-            android:tint="@color/primary" />
+            android:layout_marginTop="12dp"
+            android:text="@string/add_participant_button_title" />
 
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/participants_list"
+        android:id="@+id/participantsList"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         tools:listitem="@layout/encounter_participant_item" />
 
 </LinearLayout>

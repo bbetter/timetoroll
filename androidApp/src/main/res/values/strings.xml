@@ -11,6 +11,7 @@
 
     <string name="create_menu_item_title">CREATE</string>
     <string name="join_menu_item_title">JOIN</string>
+    <string name="update_menu_item_title">UPDATE</string>
 
     <string name="create_encounter_button_title">Create Encounter</string>
     <string name="join_encounter_button_title">Join Encounter</string>

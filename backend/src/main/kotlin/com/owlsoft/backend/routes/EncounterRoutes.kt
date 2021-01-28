@@ -17,12 +17,12 @@ fun Route.encounterByCodeRoute(
 ) {
     get("$encountersPath/{code}") {
         val code = call.parameters["code"] ?: kotlin.run {
-            call.respond(HttpStatusCode.NoContent)
+            call.respond(HttpStatusCode.BadRequest)
             return@get
         }
 
-        val encounter = encountersDataSource.get(code) ?: kotlin.run {
-            call.respond(HttpStatusCode.NoContent)
+        val encounter = encountersDataSource.findByCode(code) ?: kotlin.run {
+            call.respond(HttpStatusCode.BadRequest)
             return@get
         }
 
@@ -48,16 +48,16 @@ fun Route.createEncounterRoute(
 }
 
 fun Route.joinEncounterRoute(
-    encountersDataSource: EncountersDataSource,
     encountersManager: EncountersManager
 ) {
     post("$encountersPath/{code}/join") {
         val code = call.parameters["code"] ?: kotlin.run {
-            call.respond(HttpStatusCode.NoContent)
+            call.respond(HttpStatusCode.BadRequest)
             return@post
         }
-        val encounter = encountersDataSource.get(code) ?: kotlin.run {
-            call.respond(HttpStatusCode.NoContent)
+
+        val encounter = encountersManager.getEncounter(code) ?: kotlin.run {
+            call.respond(HttpStatusCode.BadRequest)
             return@post
         }
 
