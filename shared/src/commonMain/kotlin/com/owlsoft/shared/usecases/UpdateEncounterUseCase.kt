@@ -3,7 +3,6 @@ package com.owlsoft.shared.usecases
 import com.owlsoft.shared.model.Participant
 import com.owlsoft.shared.model.RequestResult
 import com.owlsoft.shared.remote.EncounterAPI
-import io.ktor.http.cio.*
 
 class UpdateEncounterUseCase(
     private val encounterAPI: EncounterAPI

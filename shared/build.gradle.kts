@@ -8,6 +8,14 @@ plugins {
     id("koin")
 }
 
+allprojects{
+    tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
+        kotlinOptions {
+            freeCompilerArgs += "-Xopt-in=kotlin.RequiresOptIn"
+        }
+    }
+}
+
 kotlin {
     jvm()
     android()
@@ -20,6 +28,11 @@ kotlin {
     }
 
     sourceSets {
+        all {
+            languageSettings.useExperimentalAnnotation("kotlinx.coroutines.ExperimentalCoroutinesApi")
+            languageSettings.useExperimentalAnnotation("kotlinx.coroutines.ObsoleteCoroutinesApi")
+            languageSettings.useExperimentalAnnotation("kotlinx.coroutines.FlowPreview")
+        }
         val commonMain by getting {
             dependencies {
                 api(Libs.Koin.core)
@@ -48,7 +61,11 @@ kotlin {
             }
         }
         val androidTest by getting
-        val iosMain by getting
+        val iosMain by getting {
+            dependencies {
+                implementation(Libs.KtorClient.ios)
+            }
+        }
         val iosTest by getting
     }
 }

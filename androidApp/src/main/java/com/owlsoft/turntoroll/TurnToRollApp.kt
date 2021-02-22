@@ -10,6 +10,7 @@ class TurnToRollApp : Application() {
         super.onCreate()
         initKoin {
             androidContext(this@TurnToRollApp)
+//            androidLogger()
             modules(appModule)
         }
     }

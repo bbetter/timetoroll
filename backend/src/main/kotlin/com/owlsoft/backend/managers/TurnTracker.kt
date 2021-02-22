@@ -1,7 +1,5 @@
 package com.owlsoft.backend.managers
 
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.ObsoleteCoroutinesApi
 import kotlinx.coroutines.channels.ticker
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.consumeAsFlow
@@ -17,7 +15,6 @@ data class TrackerData(
     val isPaused: Boolean = false
 )
 
-@OptIn(ExperimentalCoroutinesApi::class, ObsoleteCoroutinesApi::class)
 class TurnTracker(
     private val timePerTurn: Int,
     private var turnsPerRound: Int,

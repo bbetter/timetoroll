@@ -1,5 +1,7 @@
 package com.owlsoft.shared.sockets
 
+import org.koin.core.logger.Logger
+
 //Common
 class AppSocket(
     authID: String,
@@ -44,7 +46,7 @@ class AppSocket(
         ws.sendMessage(msg)
     }
 
-    private val socketListener = object : PlatformSocketListener {
+    val socketListener = object : PlatformSocketListener {
         override fun onOpen() {
             currentState = State.CONNECTED
         }

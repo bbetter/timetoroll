@@ -1,32 +1,35 @@
 package com.owlsoft.turntoroll.encounter
 
 import androidx.lifecycle.*
+import com.owlsoft.shared.model.EncounterData
+import com.owlsoft.turntoroll.TrackerChannelsHolder
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.launch
 
 class EncounterSessionViewModel(
-//    private val remoteEncounterTracker: RemoteEncounterTracker,
+    private val trackerChannelsHolder: TrackerChannelsHolder
 ) : ViewModel() {
 
-//    val trackerLiveData: LiveData<EncounterData> = remoteEncounterTracker.track()
-//        .flowOn(Dispatchers.IO)
-//        .asLiveData()
+    val trackerLiveData: LiveData<EncounterData> = trackerChannelsHolder.data
+        .asFlow()
+        .asLiveData()
 
     fun skipTurn() {
         viewModelScope.launch(Dispatchers.Default) {
-//            remoteEncounterTracker.skipTurn()
+            trackerChannelsHolder.commands.send("skip")
         }
     }
 
     fun resume() {
         viewModelScope.launch(Dispatchers.Default) {
-//            remoteEncounterTracker.resume()
+            trackerChannelsHolder.commands.send("resume")
         }
     }
 
     fun pause() {
         viewModelScope.launch(Dispatchers.Default) {
-//            remoteEncounterTracker.pause()
+            trackerChannelsHolder.commands.send("pause")
         }
     }
 }

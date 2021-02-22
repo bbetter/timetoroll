@@ -20,7 +20,8 @@ internal actual class PlatformSocket actual constructor(
         val urlSession = NSURLSession.sessionWithConfiguration(
             configuration = configuration,
             delegate = object : NSObject(), NSURLSessionWebSocketDelegateProtocol {
-                fun URLSession(
+
+                override fun URLSession(
                     session: NSURLSession,
                     webSocketTask: NSURLSessionWebSocketTask,
                     didOpenWithProtocol: String?
@@ -28,7 +29,7 @@ internal actual class PlatformSocket actual constructor(
                     listener.onOpen()
                 }
 
-                fun URLSession(
+                override fun URLSession(
                     session: NSURLSession,
                     webSocketTask: NSURLSessionWebSocketTask,
                     didCloseWithCode: NSURLSessionWebSocketCloseCode,

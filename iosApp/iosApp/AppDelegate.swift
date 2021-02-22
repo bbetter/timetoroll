@@ -1,12 +1,21 @@
+//
+//  AppDelegate.swift
+//  iosApp
+//
+//  Created by Andrii Puhach on 07.02.2021.
+//
+
 import UIKit
 
-@UIApplicationMain
+import shared
+
+@main
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
-
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        startKoin()
+        
         return true
     }
 

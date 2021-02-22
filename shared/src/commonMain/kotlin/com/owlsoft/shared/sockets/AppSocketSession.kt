@@ -1,26 +1,32 @@
 package com.owlsoft.shared.sockets
 
 import io.ktor.utils.io.core.*
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import org.koin.core.logger.Level
+import org.koin.core.logger.Logger
+import kotlin.native.concurrent.ThreadLocal
 
-@ExperimentalCoroutinesApi
+
 class AppSocketSession private constructor(
-    private val socket: AppSocket
+    private val socket: AppSocket,
 ) : Closeable {
 
     companion object {
-        fun create(auth: String, url: String) = AppSocketSession(AppSocket(auth, url))
+        fun create(auth: String, url: String) =
+            AppSocketSession(AppSocket(auth, url))
     }
 
     val incoming = callbackFlow {
-        socket.connect()
         socket.messageListener = {
             offer(it)
         }
         awaitClose { socket.disconnect() }
+    }
+
+    fun connect() {
+        socket.connect()
     }
 
     fun send(msg: String) {

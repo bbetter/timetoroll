@@ -91,6 +91,7 @@ object Libs {
         val serialization = "io.ktor:ktor-client-serialization:${Versions.Libs.ktor}"
         val websockets = "io.ktor:ktor-client-websockets:${Versions.Libs.ktor}"
         val android = "io.ktor:ktor-client-android:${Versions.Libs.ktor}"
+        val ios = "io.ktor:ktor-client-ios:${Versions.Libs.ktor}"
         val okhttp = "io.ktor:ktor-client-okhttp:${Versions.Libs.ktor}"
     }
 

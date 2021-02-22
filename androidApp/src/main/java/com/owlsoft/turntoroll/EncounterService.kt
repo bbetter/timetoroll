@@ -34,7 +34,7 @@ class EncounterService : Service() {
     private val timerFormatter = SimpleDateFormat("mm:ss", Locale.getDefault())
 
     private lateinit var encounterTracker: RemoteEncounterTracker
-    private val localRemoteEncounterTracker by inject<LocalRemoteEncounterTracker>()
+    private val localRemoteEncounterTracker by inject<TrackerChannelsHolder>()
 
     private val ioScope = CoroutineScope(Dispatchers.IO + Job())
 

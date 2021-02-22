@@ -50,15 +50,15 @@ fun Route.createEncounterRoute(
 fun Route.joinEncounterRoute(
     encountersManager: EncountersManager
 ) {
-    post("$encountersPath/{code}/join") {
+    put("$encountersPath/{code}") {
         val code = call.parameters["code"] ?: kotlin.run {
             call.respond(HttpStatusCode.BadRequest)
-            return@post
+            return@put
         }
 
         val encounter = encountersManager.getEncounter(code) ?: kotlin.run {
             call.respond(HttpStatusCode.BadRequest)
-            return@post
+            return@put
         }
 
         val newParticipants = call.receive<List<Participant>>()

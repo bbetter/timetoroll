@@ -3,11 +3,9 @@ package com.owlsoft.turntoroll.encounter_join
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.owlsoft.shared.model.Participant
 import com.owlsoft.shared.usecases.JoinEncounterResult
 import com.owlsoft.shared.usecases.JoinEncounterUseCase
-import kotlinx.coroutines.launch
 
 
 class EncounterJoinViewModel(

@@ -18,12 +18,12 @@ class EncounterParticipantsEditAdapter(
         viewType: Int
     ): EncounterParticipantViewHolder {
         val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.encounter_participant_item, parent, false)
+            .inflate(R.layout.encounter_participant_edit_item, parent, false)
         return EncounterParticipantViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: EncounterParticipantViewHolder, position: Int) {
-        holder.bind(data[position], position)
+        holder.bind(data[position])
     }
 
     override fun getItemCount() = data.size
@@ -44,7 +44,7 @@ class EncounterParticipantsEditAdapter(
             }
         }
 
-        fun bind(participant: Participant, index: Int) {
+        fun bind(participant: Participant) {
             with(binding) {
                 val initiative = root.context.resources.getString(
                     R.string.initiative,

@@ -11,7 +11,7 @@
         style="@style/AppTheme.Toolbar"
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
-        app:menu="@menu/encounter_menu"
+        app:menu="@menu/encounter_session_menu"
         app:title="Encounter" />
 
     <LinearLayout

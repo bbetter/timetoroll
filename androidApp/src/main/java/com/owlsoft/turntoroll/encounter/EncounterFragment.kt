@@ -12,30 +12,37 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.owlsoft.shared.model.Participant
 import com.owlsoft.shared.model.RequestResult
 import com.owlsoft.turntoroll.R
-import com.owlsoft.turntoroll.databinding.CreateEncounterFragmentBinding
+import com.owlsoft.turntoroll.databinding.EncounterFragmentBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class EncounterFragment : Fragment(R.layout.encounter_fragment) {
 
-    lateinit var binding: CreateEncounterFragmentBinding
+    lateinit var binding: EncounterFragmentBinding
 
     private val adapter = EncounterParticipantsEditAdapter(
         onParticipantDelete = this::onParticipantDelete
     )
+
+    private val code by lazy { arguments?.getString("code") ?: "" }
 
     private val viewModel: EncounterViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+
+        if (code.isNotEmpty()) {
+            viewModel.requestParticipants(code)
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding = CreateEncounterFragmentBinding.bind(view)
+        binding = EncounterFragmentBinding.bind(view)
 
         with(binding) {
             (activity as AppCompatActivity).setSupportActionBar(toolbar)
@@ -46,14 +53,13 @@ class EncounterFragment : Fragment(R.layout.encounter_fragment) {
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
-        inflater.inflate(R.menu.create_encounter_menu, menu)
+        inflater.inflate(R.menu.encounter_menu, menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.encounterDetailsActionButton) {
+        if (item.itemId == R.id.action_menu_item) {
             lifecycleScope.launchWhenResumed {
-
-                when (val result = viewModel.saveEncounter()) {
+                when (val result = viewModel.saveEncounter(code)) {
                     is RequestResult.Success -> {
                         findNavController().goToEncounter(result.code)
                     }
@@ -77,7 +83,7 @@ class EncounterFragment : Fragment(R.layout.encounter_fragment) {
             .show()
     }
 
-    private fun CreateEncounterFragmentBinding.setupView() {
+    private fun EncounterFragmentBinding.setupView() {
 
         toolbar.setNavigationOnClickListener {
             findNavController().popBackStack()
@@ -116,7 +122,7 @@ class EncounterFragment : Fragment(R.layout.encounter_fragment) {
 
     private fun NavController.goToEncounter(encounterCode: String) {
         navigate(
-            R.id.action_encounterDetailsFragment_to_encounterFragment,
+            R.id.action_encounterFragment_to_encounterSessionFragment,
             bundleOf("code" to encounterCode)
         )
     }

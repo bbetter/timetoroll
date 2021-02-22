@@ -5,8 +5,6 @@ import com.owlsoft.backend.data.EncounterTrackerData
 import com.owlsoft.backend.data.EncountersDataSource
 import com.owlsoft.backend.data.Participant
 import io.ktor.http.cio.websocket.*
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.ObsoleteCoroutinesApi
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.flow.*
@@ -16,7 +14,6 @@ import org.slf4j.Logger
 import java.lang.Exception
 import java.util.concurrent.CopyOnWriteArrayList
 
-@OptIn(ExperimentalCoroutinesApi::class, ObsoleteCoroutinesApi::class)
 class EncountersManager(
     private val dataSource: EncountersDataSource,
     private val logger: Logger

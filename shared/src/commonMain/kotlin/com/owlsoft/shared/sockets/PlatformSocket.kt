@@ -1,5 +1,7 @@
 package com.owlsoft.shared.sockets
 
+import org.koin.core.logger.Logger
+
 //Common
 internal expect class PlatformSocket(
     url: String,
