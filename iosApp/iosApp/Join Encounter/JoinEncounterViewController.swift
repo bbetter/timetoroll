@@ -89,8 +89,9 @@ class JoinEncounterViewController: UIViewController, UITableViewDataSource, UITa
         cell.deleteButton.tag = index
         
         cell.onRowClick = { [weak self] index in
-            self?.viewModel.removeAt(index: Int32(index))
-            self?.participantsTable?.reloadData()
+            guard let self = self else {return}
+            self.viewModel.removeAt(index: Int32(index))
+            self.participantsTable?.reloadData()
         }
     }
     

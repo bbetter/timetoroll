@@ -134,7 +134,6 @@
                         <outlet property="initiativeTextField" destination="5Iv-of-lm6" id="YWR-Mm-eKa"/>
                         <outlet property="nameTextField" destination="eYI-xg-pHe" id="AZs-83-WYe"/>
                         <outlet property="participantsTable" destination="ETI-Im-EMO" id="1x3-AN-8dM"/>
-                        <segue destination="xf4-9e-Edc" kind="show" identifier="encounter_segue" id="MrY-6R-7jC"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="L9y-F3-TPG" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
@@ -237,7 +236,7 @@
         <!--Encounter Session View Controller-->
         <scene sceneID="Xf8-OS-2Ks">
             <objects>
-                <viewController title="Test" id="xf4-9e-Edc" userLabel="Encounter Session View Controller" customClass="EncounterSessionViewController" customModule="iosApp" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="EncounterSessionViewController" title="Test" id="xf4-9e-Edc" userLabel="Encounter Session View Controller" customClass="EncounterSessionViewController" customModule="iosApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Y8r-mh-BYn">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -318,9 +317,6 @@
             <point key="canvasLocation" x="-3712" y="-228"/>
         </scene>
     </scenes>
-    <inferredMetricsTieBreakers>
-        <segue reference="zI6-51-aWl"/>
-    </inferredMetricsTieBreakers>
     <color key="tintColor" red="0.4039215686" green="0.2274509804" blue="0.71764705880000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
     <resources>
         <image name="play.fill" catalog="system" width="116" height="128"/>

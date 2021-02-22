@@ -10,7 +10,7 @@ import shared
 
 class EncounterViewController: UIViewController,UITableViewDataSource, UITableViewDelegate {
   
-    enum Constants{
+    struct Constants {
         static let ROW_MARGIN = CGFloat(10)
     }
     
@@ -92,14 +92,15 @@ class EncounterViewController: UIViewController,UITableViewDataSource, UITableVi
         }
     }
     
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if(segue.identifier == "encounter_segue"){
-            
-            if let controller = segue.destination as? EncounterSessionViewController{
-                controller.code = code
-            }
-        }
-    }
+//    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+//        if(segue.identifier == "encounter_segue"){
+//
+//
+//            if let controller = segue.destination as? EncounterSessionViewController{
+//                controller.code = code
+//            }
+//        }
+//    }
     @IBAction func onAddTouch(_ sender: UIButton) {
         let name = nameTextField.text ?? ""
         let ini = Int32(initiativeTextField.text ?? "") ?? 0
@@ -110,9 +111,35 @@ class EncounterViewController: UIViewController,UITableViewDataSource, UITableVi
     }
     
     @IBAction func onActionTouch(_ sender: UIBarButtonItem) {
-        viewModel.create { code in
-            self.code = code
-            self.performSegue(withIdentifier: "encounter_segue", sender: self)
-        }
+        let vc = EncounterSessionViewController.fromStoryboard()
+        vc.code = "TEST"
+        self.navigationController?.pushViewController(vc, animated: true)
+        
+//        viewModel.create { [weak self] code in
+//            self.code = code
+//            self.performSegue(withIdentifier: "encounter_segue", sender: self)
+//
+//        }
     }
 }
+
+protocol Identifiable {
+    static var identifier: String { get }
+}
+
+extension Identifiable where Self: UIViewController {
+    
+    static func fromStoryboard() -> Self {
+        let sb = UIStoryboard(name: "Main", bundle: nil)
+        let vc = sb.instantiateViewController(withIdentifier: Self.identifier) as! Self
+        return vc
+    }
+}
+
+extension UIViewController: Identifiable {
+    static var identifier: String {
+        return String(describing: self)
+    }
+}
+// UIViewContoller+StoryboardInstantiatable
+// UIView+Rx

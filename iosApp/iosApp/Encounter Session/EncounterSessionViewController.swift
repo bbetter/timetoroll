@@ -57,9 +57,13 @@ class EncounterSessionViewController: UIViewController, UITableViewDataSource, U
         self.timerLabel.text = self.formatter.string(from: TimeInterval.init(data.tick))
     }
     
+    // MARK: - View Lifecycle
+    
     override func viewWillAppear(_ animated: Bool) {
         self.navigationController?.setNavigationBarHidden(false, animated: true)
     }
+    
+    private var observer: NSObjectProtocol?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -67,11 +71,23 @@ class EncounterSessionViewController: UIViewController, UITableViewDataSource, U
         formatter.allowedUnits = [.minute, .second]
         formatter.zeroFormattingBehavior = .pad
         
-        viewModel.listenToServer()
+        //        viewModel.listenToServer()
         
         self.setupParticipantsTable()
         
         title = "Encounter #\(code)"
+        
+        observer = NotificationCenter.default.addObserver(forName: UIApplication.willEnterForegroundNotification, object: nil, queue: .main) { [unowned self] notification in
+            let alert = UIAlertController(title: "Shit", message: "Fuck", preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
+            self.present(alert, animated: true, completion: nil)
+        }
+    }
+    
+    deinit {
+        if let observer = observer {
+            NotificationCenter.default.removeObserver(observer)
+        }
     }
     
     private func setupParticipantsTable(){
@@ -124,7 +140,7 @@ class EncounterSessionViewController: UIViewController, UITableViewDataSource, U
     }
 
     @IBAction func onActionTouch(_ sender: UIButton) {
-        viewModel.resume()
+//        viewModel.resume()
     }
     
     override func viewWillDisappear(_ animated: Bool) {
