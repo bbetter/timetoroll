@@ -1,15 +1,8 @@
 package com.owlsoft.backend.managers
 
 import io.ktor.http.cio.websocket.*
-import io.ktor.server.cio.backend.*
-import kotlinx.coroutines.channels.ReceiveChannel
-import kotlinx.coroutines.channels.SendChannel
-import kotlinx.coroutines.channels.map
 import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.flow.filterIsInstance
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.receiveAsFlow
-import kotlin.coroutines.CoroutineContext
 
 class AuthorizedWebSocketSession(
     val deviceID: String,
@@ -23,4 +16,7 @@ class AuthorizedWebSocketSession(
         webSocketSession.send(Frame.Text(msg))
     }
 
+    override fun toString(): String {
+        return "Session#${webSocketSession.hashCode()}[auth by $deviceID]"
+    }
 }

@@ -14,16 +14,16 @@ import org.koin.dsl.module
 
 const val PREFERENCES_KEY = "default"
 
-actual val logger = object : Logger() {
-    override fun log(level: Level, msg: MESSAGE) {
-        Log.d("$level", msg)
-    }
-}
-
-
 actual val platformModule = module {
     single { androidContext().getSharedPreferences(PREFERENCES_KEY, Context.MODE_PRIVATE) }
 
     single<Storage> { StorageImpl(get()) }
     single<UUIDGenerator> { UUIDGeneratorImpl() }
+
+}
+
+actual val logger = object : Logger() {
+    override fun log(level: Level, msg: MESSAGE) {
+        Log.d("$level", msg)
+    }
 }

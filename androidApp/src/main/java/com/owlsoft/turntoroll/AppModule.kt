@@ -1,21 +1,21 @@
 package com.owlsoft.turntoroll
 
-import com.owlsoft.turntoroll.encounter.EncounterViewModel
-import com.owlsoft.turntoroll.encounter.EncounterSessionViewModel
-import com.owlsoft.turntoroll.encounter_join.EncounterJoinViewModel
+import com.owlsoft.shared.di.AppLogger
+import com.owlsoft.shared.viewmodel.EncounterJoinViewModel
+import com.owlsoft.shared.viewmodel.EncounterSessionViewModel
+import com.owlsoft.shared.viewmodel.EncounterViewModel
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
-
 @OptIn(InternalCoroutinesApi::class)
 val appModule = module {
 
-    single { TrackerChannelsHolder() }
+    viewModel { EncounterViewModel() }
+    viewModel { EncounterJoinViewModel() }
 
-    viewModel { EncounterSessionViewModel(get()) }
-    viewModel { EncounterViewModel(get(), get(), get()) }
-    viewModel { EncounterJoinViewModel(get()) }
-
-
+    viewModel { params ->
+        val (_, code) = params.component1<Pair<String, String>>()
+        EncounterSessionViewModel(code)
+    }
 }

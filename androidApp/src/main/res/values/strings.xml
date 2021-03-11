@@ -23,4 +23,18 @@
     <string name="skip_menu_item_title">Skip</string>
     <string name="round_index">Round #%d</string>
     <string name="edit_menu_item_title">Edit</string>
+    <string name="error_title">Error</string>
+
+    <string name="error_confirmation_action_title">Cancel</string>
+
+    <string name="notification_title">Encounter</string>
+    <string name="encounter_title">Encounter</string>
+    <string name="close_confirmation_title">Already leaving ?</string>
+    <string name="close_confirmation_message">If you\'re the last player in the game it will be automatically closed</string>
+    <string name="close_positive_button">Close</string>
+    <string name="close_negative_button">Cancel</string>
+    <string name="share_menu_item">Share</string>
+
+    <string name="encounter_notification_title">Encounter %s</string>
+    <string name="encounter_notification_message">%1$s turn. %2$s</string>
 </resources>

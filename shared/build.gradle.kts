@@ -8,7 +8,7 @@ plugins {
     id("koin")
 }
 
-allprojects{
+allprojects {
     tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile> {
         kotlinOptions {
             freeCompilerArgs += "-Xopt-in=kotlin.RequiresOptIn"
@@ -52,8 +52,11 @@ kotlin {
             }
         }
         val commonTest by getting
-        val androidMain by getting{
+        val androidMain by getting {
             dependencies {
+                implementation(Libs.Lifecycle.livedata)
+                implementation(Libs.Lifecycle.viewModel)
+
                 implementation(Libs.Koin.android)
                 implementation(Libs.KtorClient.android)
                 implementation(Libs.KtorClient.okhttp)

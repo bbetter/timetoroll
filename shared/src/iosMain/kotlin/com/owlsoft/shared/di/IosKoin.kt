@@ -16,12 +16,6 @@ fun init() = initKoin {
     logger(logger)
 }
 
-fun KoinApplication.createEncounterUseCase(): CreateEncounterUseCase {
-    val encounterAPI = koin.get<EncounterAPI>()
-    val uuidRepository = koin.get<UUIDRepository>()
-    return CreateEncounterUseCase(encounterAPI, uuidRepository)
-}
-
 actual val platformModule = module {
 
     val defaults = NSUserDefaults(suiteName = "TTR")

@@ -8,11 +8,13 @@
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
-        style="@style/AppTheme.Toolbar"
         android:layout_width="match_parent"
-        android:layout_height="?actionBarSize"
+        android:layout_height="wrap_content"
+        android:theme="@style/AppTheme.Toolbar"
         app:layout_constraintTop_toTopOf="parent"
-        app:title="Create Encounter"
+        app:menu="@menu/encounter_menu"
+        app:title="@string/encounter_title"
+        app:titleMarginTop="16dp"
         app:titleTextColor="@color/on_primary" />
 
 
@@ -53,8 +55,8 @@
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.2"
                 android:layout_marginStart="4dp"
+                android:layout_weight="0.2"
                 android:hint="@string/participant_initiative_hint"
                 app:boxCornerRadiusTopEnd="16dp"
                 app:boxCornerRadiusTopStart="16dp">

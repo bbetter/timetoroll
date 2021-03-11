@@ -24,6 +24,8 @@ fun initKoin(koinAppDeclaration: KoinAppDeclaration = {}) = startKoin {
 }
 
 private val coreModule = module {
+    single { logger }
+
     single { createHttpClient() }
 
     single { EncounterAPI(get()) }

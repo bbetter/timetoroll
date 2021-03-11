@@ -8,11 +8,13 @@
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
-        style="@style/AppTheme.Toolbar"
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
+        android:theme="@style/AppTheme.Toolbar"
         app:menu="@menu/encounter_session_menu"
-        app:title="Encounter" />
+        app:title="Encounter"
+        app:titleMarginTop="16dp"
+        app:titleTextColor="@color/on_primary" />
 
     <LinearLayout
         android:id="@+id/timerLayout"

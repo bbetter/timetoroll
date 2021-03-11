@@ -1,45 +1,34 @@
 import com.owlsoft.backend.managers.TurnTracker
 import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.BroadcastChannel
-import kotlinx.coroutines.channels.ConflatedBroadcastChannel
-import kotlinx.coroutines.channels.consumeEach
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.collectLatest
-
+import kotlinx.coroutines.flow.*
 
 fun main() {
     runBlocking {
 
-        val channel = ConflatedBroadcastChannel<String>()
-
-        val map = mutableMapOf<String, TurnTracker>(
-            "1234" to TurnTracker(2, 10, false)
-        )
+        val mutableList = mutableListOf<String>()
+        val mutableFlow = MutableStateFlow(emptyList<String>())
 
         launch(Dispatchers.Default) {
 
-            channel.consumeEach {
-                val tracker = map[it]
-                println("TRACKER CONSUMED $it ; ${tracker.toString()}")
-                tracker
-                    ?.track()
-                    ?.catch { println("TRACKER COMPLETED") }
-                    ?.collectLatest {
-                        println("$it")
-                    }
-
-            }
+            mutableFlow
+                .onCompletion { println("flow completed") }
+                .collectLatest {
+                    println("Collected $it")
+                }
         }
 
-        channel.send("1234")
-        delay(3000)
+        mutableList.add("test")
+        val isEmitted = mutableFlow.tryEmit(mutableList)
+        if (isEmitted) {
+            println("Emitted $mutableList")
+        }
+        delay(1000)
+        mutableList.add("test 2")
+        val isEmitted2 = mutableFlow.tryEmit(mutableList)
+        if (isEmitted2) {
+            println("Emitted $mutableList")
+        }
 
-//        map["1234"]?.complete()
-        map["1234"] = TurnTracker(
-            2,
-            5,
-            false
-        )
-        channel.send("1234")
+        awaitCancellation()
     }
 }

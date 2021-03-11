@@ -6,10 +6,10 @@
     app:startDestination="@id/menuFragment">
 
     <fragment
-        tools:layout="@layout/encounter_session_fragment"
         android:id="@+id/encounterSessionFragment"
-        android:name="com.owlsoft.turntoroll.encounter.EncounterSessionFragment"
-        android:label="EncounterSessionFragment">
+        android:name="com.owlsoft.turntoroll.EncounterSessionFragment"
+        android:label="EncounterSessionFragment"
+        tools:layout="@layout/encounter_session_fragment">
 
         <argument
             android:name="code"
@@ -17,44 +17,48 @@
 
         <action
             android:id="@+id/action_encounterSessionFragment_to_encounterFragment"
-            app:destination="@id/encounterFragment"
-            app:popUpTo="@id/menuFragment"
-            app:popUpToInclusive="true" />
+            app:destination="@id/encounterFragment" />
 
     </fragment>
 
     <fragment
-        tools:layout="@layout/menu_fragment"
         android:id="@+id/menuFragment"
         android:name="com.owlsoft.turntoroll.MenuFragment"
-        android:label="MenuFragment">
+        android:label="MenuFragment"
+        tools:layout="@layout/menu_fragment">
         <action
             android:id="@+id/action_menuFragment_to_encounterJoinFragment"
             app:destination="@id/encounterJoinFragment" />
+
         <action
             android:id="@+id/action_menuFragment_to_encounterDetailsFragment"
             app:destination="@id/encounterFragment" />
     </fragment>
 
     <fragment
-        tools:layout="@layout/encounter_join_fragment"
         android:id="@+id/encounterJoinFragment"
-        android:name="com.owlsoft.turntoroll.encounter_join.EncounterJoinFragment"
-        android:label="EncounterJoinFragment">
+        android:name="com.owlsoft.turntoroll.EncounterJoinFragment"
+        android:label="EncounterJoinFragment"
+        tools:layout="@layout/encounter_join_fragment">
+
         <action
             android:id="@+id/action_encounterJoinFragment_to_encounterFragment"
             app:destination="@id/encounterSessionFragment">
+
         </action>
+
     </fragment>
 
     <fragment
-        tools:layout="@layout/encounter_fragment"
         android:id="@+id/encounterFragment"
-        android:name="com.owlsoft.turntoroll.encounter.EncounterFragment"
-        android:label="EncounterFragment">
+        android:name="com.owlsoft.turntoroll.EncounterFragment"
+        android:label="EncounterFragment"
+        tools:layout="@layout/encounter_fragment">
+
         <action
             android:id="@+id/action_encounterFragment_to_encounterSessionFragment"
             app:destination="@id/encounterSessionFragment" />
+
     </fragment>
 
 </navigation>

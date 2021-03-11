@@ -1,24 +1,25 @@
-package com.owlsoft.turntoroll.encounter
+package com.owlsoft.turntoroll
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import android.widget.LinearLayout.VERTICAL
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.NavigationUI
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.owlsoft.shared.model.Participant
-import com.owlsoft.turntoroll.EncounterService
-import com.owlsoft.turntoroll.MainActivity
-import com.owlsoft.turntoroll.R
+import com.owlsoft.shared.viewmodel.EncounterSessionViewModel
 import com.owlsoft.turntoroll.databinding.EncounterSessionFragmentBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -35,15 +36,34 @@ class EncounterSessionFragment : Fragment(R.layout.encounter_session_fragment) {
     private var skipItem: MenuItem? = null
     private var editItem: MenuItem? = null
 
-    private val encounterService by lazy { Intent(requireContext(), EncounterService::class.java) }
+    private val encounterServiceIntent by lazy {
+        Intent(requireContext(), EncounterService::class.java)
+            .apply { putExtra("code", code) }
+    }
 
-    private val viewModel: EncounterSessionViewModel by viewModel()
+    private val viewModel: EncounterSessionViewModel by viewModel(
+        parameters = { parametersOf("code" to code) }
+    )
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
+        (requireActivity() as MainActivity).hideKeyboard()
+    }
 
-        viewModel.trackerLiveData.observe(viewLifecycleOwner) {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        binding = EncounterSessionFragmentBinding.bind(view)
+
+        with(binding) {
+            setupToolbar()
+            setupView()
+        }
+        setupSubscriptions()
+    }
+
+    private fun setupSubscriptions() {
+        viewModel.data.watch {
             binding.updateTimer(it.tick)
             binding.updatePlayPauseButton(it.isPlayPauseAllowed, it.isPaused)
             binding.updateRound(it.roundIndex)
@@ -54,28 +74,9 @@ class EncounterSessionFragment : Fragment(R.layout.encounter_session_fragment) {
         }
     }
 
-    private fun updateEditEncounterButton(isAdmin: Boolean) {
-        editItem?.isVisible = isAdmin
-    }
-
-    private fun updateParticipantsList(participants: List<Participant>, turnIndex: Int) {
-        adapter.updateParticipants(participants)
-        adapter.updateActiveParticipant(turnIndex)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        binding = EncounterSessionFragmentBinding.bind(view)
-
-        (requireActivity() as MainActivity).hideKeyboard()
-
-        with(binding) {
-            toolbar.title = "Encounter : $code"
-            setupView()
-        }
-
-        startEncounterService()
+    private fun EncounterSessionFragmentBinding.setupToolbar() {
+        (activity as AppCompatActivity).setSupportActionBar(toolbar)
+        toolbar.title = "Encounter : $code"
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -92,13 +93,36 @@ class EncounterSessionFragment : Fragment(R.layout.encounter_session_fragment) {
                 R.id.action_encounterSessionFragment_to_encounterFragment,
                 bundleOf("code" to code)
             )
+            R.id.shareItem -> shareEncounter()
         }
         return true
     }
 
-    private fun startEncounterService() {
-        val startIntent = encounterService.apply { putExtra("code", code) }
-        requireContext().startService(startIntent)
+    override fun onPause() {
+        super.onPause()
+        Log.d("lifecycle", "EncounterSessionFragment#onPause")
+        requireContext().startService(encounterServiceIntent)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.d("lifecycle", "EncounterSessionFragment#onResume")
+        requireContext().stopService(encounterServiceIntent)
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        Log.d("lifecycle", "EncounterSessionFragment#onDestroyView")
+        requireContext().stopService(encounterServiceIntent)
+    }
+
+    private fun updateEditEncounterButton(isAdmin: Boolean) {
+        editItem?.isVisible = isAdmin
+    }
+
+    private fun updateParticipantsList(participants: List<Participant>, turnIndex: Int) {
+        adapter.updateParticipants(participants)
+        adapter.updateActiveParticipant(turnIndex)
     }
 
     private fun updateSkipTurnButton(skipTurnAllowed: Boolean) {
@@ -134,31 +158,42 @@ class EncounterSessionFragment : Fragment(R.layout.encounter_session_fragment) {
         (requireActivity() as AppCompatActivity).setSupportActionBar(toolbar)
 
         toolbar.setNavigationOnClickListener {
-            val navController = findNavController()
-            navController.popBackStack()
+            AlertDialog.Builder(requireContext())
+                .setTitle(getString(R.string.close_confirmation_title))
+                .setMessage(getString(R.string.close_confirmation_message))
+                .setPositiveButton(getString(R.string.close_positive_button)) { d, _ ->
+                    d.dismiss()
+                    val navController = findNavController()
+                    navController.popBackStack(R.id.menuFragment, false)
+                }
+                .setNegativeButton(getString(R.string.close_negative_button)) { d, _ ->
+                    d.dismiss()
+                }
+                .create()
+                .show()
         }
 
         playPauseButton.setOnClickListener {
-            val currentState = viewModel.trackerLiveData.value ?: return@setOnClickListener
-
-            if (currentState.isPaused) {
-                viewModel.resume()
-            } else {
-                viewModel.pause()
-            }
+            viewModel.doTrackerAction()
         }
 
         participantsList.adapter = adapter
         participantsList.layoutManager = LinearLayoutManager(
             context,
-            VERTICAL,
+            LinearLayoutManager.VERTICAL,
             false
         )
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
+    private fun shareEncounter() {
+        val sendIntent: Intent = Intent().apply {
+            action = Intent.ACTION_SEND
+            //todo: share deep link (app link) when deployed to heroku
+            putExtra(Intent.EXTRA_TEXT, code)
+            type = "text/plain"
+        }
 
-        requireContext().stopService(encounterService)
+        val shareIntent = Intent.createChooser(sendIntent, null)
+        startActivity(shareIntent)
     }
 }

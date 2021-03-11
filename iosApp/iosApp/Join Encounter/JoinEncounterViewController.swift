@@ -10,7 +10,7 @@ import shared
 
 class JoinEncounterViewController: UIViewController, UITableViewDataSource, UITableViewDelegate{
     
-    enum Constants{
+    private struct Constants{
         static let ROW_MARGIN = CGFloat(10)
     }
     
@@ -24,7 +24,7 @@ class JoinEncounterViewController: UIViewController, UITableViewDataSource, UITa
     
     @IBOutlet weak var dexTextField: UITextField!
     
-    lazy var viewModel = JoinEncounterViewModel()
+    lazy var viewModel = EncounterJoinViewModel()
     
     override func viewWillAppear(_ animated: Bool) {
         self.navigationController?.setNavigationBarHidden(false, animated: true)
@@ -33,6 +33,7 @@ class JoinEncounterViewController: UIViewController, UITableViewDataSource, UITa
     override func viewDidLoad() {
         super.viewDidLoad()
         setupParticipantsTable()
+        setupSubscriptions()
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -72,34 +73,21 @@ class JoinEncounterViewController: UIViewController, UITableViewDataSource, UITa
         return cell
     }
     
-    private func setupParticipantsTable(){
-        participantsTable.delegate = self
-        participantsTable.dataSource = self
-    
-        let nib = UINib(nibName: "ParticipantCell", bundle: nil)
-        participantsTable.register(nib, forCellReuseIdentifier: "participant_cell")
-    }
-    
-    private func bindCell(cell: ParticipantCell, participant: Participant, index: Int){
-        cell.allowDelete = true
-        
-        cell.nameLabel.text = participant.name
-        cell.initiativeLabel.text = "\(participant.initiative).\(participant.dexterity)"
-        
-        cell.deleteButton.tag = index
-        
-        cell.onRowClick = { [weak self] index in
-            self?.viewModel.removeAt(index: Int32(index))
-            self?.participantsTable?.reloadData()
-        }
-    }
-    
     @IBAction func onJoinTouch(_ sender: UIBarButtonItem) {
         
         guard let code = self.codeTextField.text else { return }
-        viewModel.join(code: code) { [weak self] in
-            self?.performSegue(withIdentifier: "join_encounter_segue", sender: self)
+        
+        let successHandler: () -> Void = { [weak self] in
+            guard let self = self else { return }
+            self.performSegue(withIdentifier: "join_encounter_segue", sender: self)
         }
+        
+        let errorHandler: (String) -> Void = { [weak self] errMsg in
+            guard let self = self else { return }
+            self.showErrorDialog(msg: errMsg)
+        }
+        
+        viewModel.join(code: code, onSuccess: successHandler, onError: errorHandler)
     }
     
     @IBAction func onAddTouch(_ sender: Any) {
@@ -107,8 +95,11 @@ class JoinEncounterViewController: UIViewController, UITableViewDataSource, UITa
         let initiative = Int32(initiativeTextField.text ?? "") ?? 0
         let dexterity = Int32(dexTextField.text ?? "") ?? 0
         
-        self.viewModel.add(name: name, ini: initiative, dex: dexterity)
-        participantsTable.reloadData()
+        self.viewModel.addParticipant(name: name, ini: initiative, dex: dexterity)
+        
+        nameTextField.text = ""
+        initiativeTextField.text = ""
+        dexTextField.text = ""
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -123,5 +114,40 @@ class JoinEncounterViewController: UIViewController, UITableViewDataSource, UITa
     override func viewWillDisappear(_ animated: Bool){
         super.viewWillDisappear(animated)
         self.viewModel.onCleared()
+    }
+    
+    private func showErrorDialog(msg: String){
+        let alert = UIAlertController(title: "Error", message: msg, preferredStyle: .alert)
+
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+
+        self.present(alert, animated: true)
+    }
+    
+    private func setupParticipantsTable(){
+        participantsTable.delegate = self
+        participantsTable.dataSource = self
+    
+        let nib = UINib(nibName: "ParticipantCell", bundle: nil)
+        participantsTable.register(nib, forCellReuseIdentifier: "participant_cell")
+    }
+    
+    private func bindCell(cell: ParticipantCell, participant: Participant, index: Int){
+        cell.allowDelete = true
+        cell.nameLabel.text = participant.name
+        cell.initiativeLabel.text = "\(participant.initiative).\(participant.dexterity)"
+        
+        cell.deleteButton.tag = index
+        cell.onRowClick = { [weak self] index in
+            guard let self = self else { return }
+            self.viewModel.removeParticipant(participant: participant)
+        }
+    }
+    
+    private func setupSubscriptions(){
+        viewModel.data.watch { [weak self] _ in
+            guard let self = self else { return }
+            self.participantsTable.reloadData()
+        }
     }
 }

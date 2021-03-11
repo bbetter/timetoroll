@@ -7,6 +7,7 @@ plugins {
 
 dependencies {
     implementation(Libs.Lifecycle.livedata)
+    implementation(Libs.Lifecycle.viewModel)
 
     implementation(Libs.Widgets.recyclerView)
     implementation(Libs.Widgets.cardView)

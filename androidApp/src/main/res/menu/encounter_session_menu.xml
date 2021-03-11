@@ -11,4 +11,11 @@
         android:id="@+id/editItem"
         android:title="@string/edit_menu_item_title"
         app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/shareItem"
+        android:icon="@android:drawable/ic_menu_share"
+        android:title="@string/share_menu_item"
+        app:iconTint="@color/on_primary"
+        app:showAsAction="ifRoom" />
 </menu>

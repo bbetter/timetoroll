@@ -1,11 +1,15 @@
 package com.owlsoft.turntoroll
 
-import android.R
 import android.app.Notification
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.app.Service
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.IBinder
+import android.util.Log
+import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.owlsoft.shared.model.EncounterData
@@ -13,28 +17,27 @@ import com.owlsoft.shared.remote.RemoteEncounterTracker
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.channels.consumeEach
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.get
-import org.koin.android.ext.android.inject
 import org.koin.core.parameter.parametersOf
-import java.lang.Exception
 import java.text.SimpleDateFormat
+import androidx.core.content.getSystemService
 import java.util.*
 
 class EncounterService : Service() {
 
     companion object {
+        const val ENCOUNTER_CHANNEL_ID = "encounter_channel_id"
+        const val ENCOUNTER_CHANNEL_NAME = "Encounter Service"
+
         const val ONGOING_NOTIFICATION_ID = 1
-        const val CHANNEL_ID = "1"
     }
 
     private val timerFormatter = SimpleDateFormat("mm:ss", Locale.getDefault())
 
     private lateinit var encounterTracker: RemoteEncounterTracker
-    private val localRemoteEncounterTracker by inject<TrackerChannelsHolder>()
 
     private val ioScope = CoroutineScope(Dispatchers.IO + Job())
 
@@ -43,40 +46,27 @@ class EncounterService : Service() {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
 
         val code = intent?.getStringExtra("code") ?: return START_NOT_STICKY
+
         encounterTracker = get { parametersOf("code" to code) }
 
         startForeground(1, createNotification(this@EncounterService))
 
         ioScope.launch {
-            localRemoteEncounterTracker.commands.consumeEach {
-                try {
-                    when (it) {
-                        "skip" -> encounterTracker.skipTurn()
-                        "resume" -> encounterTracker.resume()
-                        "pause" -> encounterTracker.pause()
-                    }
-                } catch (ex: Exception) {
-                    stopSelf()
-                }
-            }
-        }
-
-        ioScope.launch {
-
             encounterTracker
                 .data()
-                .catch { stopForeground(true) }
+                .catch {
+                    Log.e("error", "EncounterService. Tracker Failed")
+                    stopForeground(true)
+                }
                 .collectLatest {
-
                     notificationManager.notify(
                         ONGOING_NOTIFICATION_ID,
-                        it.toNotification(this@EncounterService)
+                        it.toNotificationUpdate(this@EncounterService)
                     )
-
-                    localRemoteEncounterTracker.data.send(it)
                 }
         }
-        return START_STICKY
+
+        return START_NOT_STICKY
     }
 
     override fun onBind(p0: Intent?): IBinder? {
@@ -86,26 +76,72 @@ class EncounterService : Service() {
     override fun onDestroy() {
         super.onDestroy()
 
-        encounterTracker.complete()
+        if (::encounterTracker.isInitialized)
+            encounterTracker.complete()
     }
 
     private fun createNotification(context: Context): Notification {
-        return NotificationCompat.Builder(context, CHANNEL_ID)
-            .setContentTitle("Encounter")
-            .setSmallIcon(R.drawable.ic_input_get)
+        val channelId =
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                createNotificationChannel(ENCOUNTER_CHANNEL_ID, ENCOUNTER_CHANNEL_NAME)
+            } else {
+                // If earlier version channel ID is not used
+                // https://developer.android.com/reference/android/support/v4/app/NotificationCompat.Builder.html#NotificationCompat.Builder(android.content.Context)
+                ""
+            }
+
+        return NotificationCompat.Builder(context, channelId)
+            .setContentTitle(getString(R.string.notification_title))
+            .setSmallIcon(R.drawable.ic_baseline_play_arrow_24)
             .build()
     }
 
-    private fun EncounterData.toNotification(context: Context): Notification {
-
-        val status = if (isPaused) "paused" else "running"
-        val timer = timerFormatter.format(tick * 1000)
-
-        return NotificationCompat.Builder(context, CHANNEL_ID)
-            .setContentTitle("Encounter is $status")
-            .setContentText("${participants[turnIndex].name} turn. $timer")
-            .setSmallIcon(R.drawable.ic_input_get)
-            .build()
+    @RequiresApi(Build.VERSION_CODES.O)
+    private fun createNotificationChannel(channelId: String, channelName: String): String {
+        val channel = NotificationChannel(
+            channelId,
+            channelName,
+            NotificationManager.IMPORTANCE_HIGH
+        ).apply {
+            lockscreenVisibility = Notification.VISIBILITY_PUBLIC
+        }
+        val service = getSystemService<NotificationManager>()
+        service!!.createNotificationChannel(channel)
+        return channelId
     }
 
+    private fun EncounterData.toNotificationUpdate(context: Context): Notification {
+        val builder = NotificationCompat.Builder(context, ENCOUNTER_CHANNEL_ID)
+        val participantName = participants[turnIndex].name
+        val timerTick = timerFormatter.format(tick * 1000)
+
+        val notificationTitle = resources.getString(
+            R.string.encounter_notification_title,
+            if (isPaused) {
+                "paused"
+            } else {
+                "running"
+            }
+        )
+        val notificationMessage = getString(
+            R.string.encounter_notification_message,
+            participantName,
+            timerTick
+        )
+
+        if (tick <= 5) {
+            builder.priority = NotificationCompat.PRIORITY_HIGH
+            builder.setDefaults(Notification.DEFAULT_ALL)
+        } else {
+            builder.priority = NotificationCompat.PRIORITY_LOW
+            builder.setNotificationSilent()
+        }
+
+        return builder
+            .setNotificationSilent()
+            .setContentTitle(notificationTitle)
+            .setContentText(notificationMessage)
+            .setSmallIcon(R.drawable.ic_baseline_play_arrow_24)
+            .build()
+    }
 }

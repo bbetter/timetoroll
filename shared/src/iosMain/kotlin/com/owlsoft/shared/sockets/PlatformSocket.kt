@@ -4,7 +4,7 @@ import platform.Foundation.*
 import platform.darwin.NSObject
 
 internal actual class PlatformSocket actual constructor(
-    private val url: String,
+    url: String,
     private val authID: String
 ) {
 

@@ -288,9 +288,7 @@
                             <constraint firstItem="Wi0-Lh-mz8" firstAttribute="leading" secondItem="0HR-wK-Q0q" secondAttribute="leading" constant="24" id="xMw-wJ-q9a"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Encounter" id="z8l-c2-lUr">
-                        <barButtonItem key="backBarButtonItem" title="Back" id="yZV-wS-RBU"/>
-                    </navigationItem>
+                    <navigationItem key="navigationItem" title="Encounter" id="z8l-c2-lUr"/>
                     <connections>
                         <outlet property="actionButton" destination="N2w-nF-C26" id="Mpg-zi-cq9"/>
                         <outlet property="participantsTable" destination="Wi0-Lh-mz8" id="e2f-gj-Wf0"/>

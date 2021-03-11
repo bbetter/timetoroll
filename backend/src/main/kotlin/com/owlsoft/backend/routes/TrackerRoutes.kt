@@ -14,7 +14,7 @@ import kotlin.time.Duration
 const val trackerPath = "/tracker"
 
 @OptIn(InternalCoroutinesApi::class)
-fun Route.trackRoute(
+fun Route.encounterTrackerRoute(
     encountersManager: EncountersManager
 ) {
     webSocket("$trackerPath/{code}") {
@@ -23,17 +23,12 @@ fun Route.trackRoute(
             call.respond(HttpStatusCode.BadRequest)
             return@webSocket
         }
-        call.application.log.debug("JOIN. CODE VERIFY $code")
 
         val auth = call.request.headers["Authentication"] ?: kotlin.run {
             call.respond(HttpStatusCode.Unauthorized)
             return@webSocket
         }
 
-        call.application.log.debug("JOIN. AUTHENTICATION VERIFY $auth")
-
         encountersManager.join(code, auth, this)
-
-
     }
 }

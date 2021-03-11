@@ -3,9 +3,9 @@ package com.owlsoft.backend.managers
 import kotlinx.coroutines.channels.ticker
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.consumeAsFlow
+import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.transform
 import kotlinx.serialization.Serializable
-
 
 @Serializable
 data class TrackerData(
@@ -29,7 +29,10 @@ class TurnTracker(
     private var _roundIndex = 1
     private var _tick = timePerTurn
 
-    val ticker = ticker(TIMER_TICK, 0)
+    private val ticker = ticker(TIMER_TICK, 0)
+
+    var state = TrackerData()
+        private set
 
     fun track(): Flow<TrackerData> {
 
@@ -38,14 +41,15 @@ class TurnTracker(
             .transform {
                 val newTimerValue = if (isPaused) _tick else _tick--
 
-                emit(
-                    TrackerData(
-                        newTimerValue,
-                        _turnIndex,
-                        _roundIndex,
-                        isPaused
-                    )
+                state = state.copy(
+                    timerTick = newTimerValue,
+                    turnIndex = _turnIndex,
+                    roundIndex = _roundIndex,
+                    isPaused = isPaused
                 )
+
+                emit(state)
+
                 if (_tick == 0) {
                     nextTurn()
                 }
@@ -70,8 +74,6 @@ class TurnTracker(
     fun resume() {
         isPaused = false
     }
-
-    fun currentTurn() = _turnIndex
 
     fun updateTurnCount(turnsPerRound: Int) {
         this.turnsPerRound = turnsPerRound

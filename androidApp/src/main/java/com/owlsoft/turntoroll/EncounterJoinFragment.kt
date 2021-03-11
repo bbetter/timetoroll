@@ -1,6 +1,7 @@
-package com.owlsoft.turntoroll.encounter_join
+package com.owlsoft.turntoroll
 
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -9,20 +10,24 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.asLiveData
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.owlsoft.shared.usecases.JoinEncounterResult
-import com.owlsoft.turntoroll.R
+import com.owlsoft.shared.viewmodel.EncounterJoinViewModel
 import com.owlsoft.turntoroll.databinding.EncounterJoinFragmentBinding
-import com.owlsoft.turntoroll.encounter.EncounterSessionParticipantsAdapter
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class EncounterJoinFragment : Fragment(R.layout.encounter_join_fragment) {
+
     private lateinit var binding: EncounterJoinFragmentBinding
 
-    private val adapter = EncounterSessionParticipantsAdapter()
+    private val code by lazy { arguments?.getString("code") }
+
+    private val adapter = EncounterParticipantsEditAdapter(
+        mutableListOf(),
+        onParticipantDelete = { viewModel.removeParticipant(it) }
+    )
     private val viewModel: EncounterJoinViewModel by viewModel()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,22 +39,16 @@ class EncounterJoinFragment : Fragment(R.layout.encounter_join_fragment) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.join_encounter_menu, menu)
     }
+
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.encounterDetailsActionButton) {
-            lifecycleScope.launchWhenResumed {
-                val encounterCode = binding.encounterCodeEditText.text.toString()
+            val encounterCode = binding.encounterCodeEditText.text.toString()
 
-                val result = viewModel.joinEncounter(encounterCode)
-
-                when (result) {
-                    is JoinEncounterResult.Success -> {
-                        findNavController().goToEncounter(encounterCode)
-                    }
-                    is JoinEncounterResult.Error -> {
-                        showJoinEncounterError(result)
-                    }
-                }
-            }
+            viewModel.join(
+                encounterCode,
+                onSuccess = { findNavController().goToEncounter(encounterCode) },
+                onError = { errorMessage -> showError(errorMessage) }
+            )
         }
         return true
     }
@@ -67,11 +66,11 @@ class EncounterJoinFragment : Fragment(R.layout.encounter_join_fragment) {
         }
     }
 
-    private fun showJoinEncounterError(result: JoinEncounterResult.Error) {
+    private fun showError(errorMessage: String) {
         AlertDialog.Builder(requireContext())
-            .setTitle("Error")
-            .setMessage(result.message)
-            .setPositiveButton("Cancel") { d, _ -> d.dismiss() }
+            .setTitle(getString(R.string.error_title))
+            .setMessage(errorMessage)
+            .setPositiveButton(getString(R.string.error_confirmation_action_title)) { d, _ -> d.dismiss() }
             .create()
             .show()
     }
@@ -88,17 +87,24 @@ class EncounterJoinFragment : Fragment(R.layout.encounter_join_fragment) {
             false
         )
 
+        encounterCodeEditText.setText(code ?: "")
+
         addButton.setOnClickListener {
             val name = nameEditText.text.toString()
-            val initiative = initiativeEditText.text.toString()
-            val dexterity = dexterityEditText.text.toString()
+            val initiative = initiativeEditText.text.toString().toIntOrNull() ?: 0
+            val dexterity = dexterityEditText.text.toString().toIntOrNull() ?: 0
 
+            Log.d("###", "adding participant $name $initiative.$dexterity")
             viewModel.addParticipant(name, initiative, dexterity)
+
+            nameEditText.text.clear()
+            initiativeEditText.text.clear()
+            dexterityEditText.text.clear()
         }
     }
 
     private fun setupSubscription() {
-        viewModel.participantsLiveData.observe(viewLifecycleOwner) {
+        viewModel.data.watch {
             adapter.updateParticipants(it)
         }
     }

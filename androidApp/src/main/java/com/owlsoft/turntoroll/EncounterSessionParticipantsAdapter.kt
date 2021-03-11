@@ -1,4 +1,4 @@
-package com.owlsoft.turntoroll.encounter
+package com.owlsoft.turntoroll
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,7 +6,6 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.owlsoft.shared.model.Participant
-import com.owlsoft.turntoroll.R
 import com.owlsoft.turntoroll.databinding.EncounterParticipantItemBinding
 
 class EncounterSessionParticipantsAdapter(

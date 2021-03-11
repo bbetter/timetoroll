@@ -8,9 +8,9 @@
 import UIKit
 import shared
 
-class EncounterSessionViewController: UIViewController, UITableViewDataSource, UITableViewDelegate{
+class EncounterSessionViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
-    enum Constants{
+    private struct Constants{
         static let ROW_MARGIN = CGFloat(10)
     }
     
@@ -25,38 +25,14 @@ class EncounterSessionViewController: UIViewController, UITableViewDataSource, U
     
     private var encounterData: EncounterData? = nil
     
+    //MARK: params
     var code: String = ""
     
     lazy var viewModel = EncounterSessionViewModel(
-        code: self.code,
-        onSessionDataUpdated: { [weak self] data in
-            guard let self = self else { return }
-            self.encounterData = data
-            self.participantsTable?.reloadData()
-            
-            self.updateTrackerButton(data)
-            self.updateTrackerTime(data)
-        }
+        code: self.code
     )
     
-    private func updateTrackerButton(_ data: EncounterData){
-        self.actionButton.isHidden = !data.isPlayPauseAllowed
-      
-        let image = data.isPaused ? "play.fill" : "pause.fill"
-        self.actionButton.setImage(UIImage(systemName: image), for: .normal)
-    }
-    
-    private func updateTrackerTime(_ data: EncounterData){
-        if data.tick <= 5 {
-            self.timerLabel.textColor = UIColor.red
-        }
-        else {
-            self.timerLabel.textColor = UIColor.black
-        }
-        
-        self.timerLabel.text = self.formatter.string(from: TimeInterval.init(data.tick))
-    }
-    
+    //MARK: lifecycle
     override func viewWillAppear(_ animated: Bool) {
         self.navigationController?.setNavigationBarHidden(false, animated: true)
     }
@@ -67,20 +43,29 @@ class EncounterSessionViewController: UIViewController, UITableViewDataSource, U
         formatter.allowedUnits = [.minute, .second]
         formatter.zeroFormattingBehavior = .pad
         
-        viewModel.listenToServer()
+        viewModel.data.watch { data in
+            guard let data = data else { return }
+            
+            self.updateTrackerTime(data)
+            self.updateTrackerButton(data)
+            self.updateNavBarActions(data)
+            self.encounterData = data
+            
+            self.participantsTable.reloadData()
+        }
         
+        self.setupBackButton()
         self.setupParticipantsTable()
         
         title = "Encounter #\(code)"
     }
-    
-    private func setupParticipantsTable(){
-        participantsTable.delegate = self
-        participantsTable.dataSource = self
-        let nib = UINib(nibName: "ParticipantCell", bundle: nil)
-        participantsTable.register(nib, forCellReuseIdentifier: "participant_cell")
+  
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        viewModel.onCleared()
     }
     
+    //MARK: table
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return 1
     }
@@ -122,14 +107,99 @@ class EncounterSessionViewController: UIViewController, UITableViewDataSource, U
         cell.initiativeLabel?.text = "\(participant.initiative).\(participant.dexterity)"
         return cell
     }
-
+    
+    //MARK: actions
+    
     @IBAction func onActionTouch(_ sender: UIButton) {
-        viewModel.resume()
+        viewModel.doTrackerAction()
     }
     
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        viewModel.onCleared()
+    @objc func onSkipTouch(_ sender: UIBarButtonItem){
+        viewModel.skipTurn()
+    }
+    
+    @objc func onShareTouch(_ sender: UIBarButtonItem){
+        let items = [code]
+        let ac = UIActivityViewController(activityItems: items, applicationActivities: nil)
+        present(ac, animated: true)
+    }
+    
+    @objc func onBackButtonTouch (_ sender: UIBarButtonItem){
+        let controller = UIAlertController(
+            title: "Already going?",
+            message: "If you're last player in the room, game session will be lost.",
+            preferredStyle: UIAlertController.Style.alert
+        )
+        
+        let confirmAction = UIAlertAction(title: "Ok", style: .default, handler: { (action: UIAlertAction!) in
+            self.navigationController?.popToRootViewController(animated: true)
+        })
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .default, handler: { (action: UIAlertAction!) in
+        })
+        
+        controller.addAction(confirmAction)
+        controller.addAction(cancelAction)
+
+        present(controller, animated: true, completion: nil)
+    }
+    
+    private func setupBackButton(){
+        self.navigationController?.interactivePopGestureRecognizer?.isEnabled = false
+        self.navigationItem.setHidesBackButton(true, animated: false)
+        
+        let backButton = UIBarButtonItem(
+            title: "Cancel",
+            style: UIBarButtonItem.Style.plain,
+            target: self,
+            action: #selector(onBackButtonTouch)
+        )
+        self.navigationItem.leftBarButtonItem = backButton
+    }
+    
+    private func updateNavBarActions(_ data: EncounterData){
+        let skip = UIBarButtonItem(
+            title: "Skip",
+            style: .plain,
+            target: self,
+            action: #selector(onSkipTouch)
+        )
+        let share = UIBarButtonItem(
+            barButtonSystemItem: .action, target: self, action: #selector(onShareTouch)
+        )
+        
+        if(data.isSkipTurnAllowed){
+            self.navigationItem.rightBarButtonItems = [skip]
+            navigationController?.navigationBar.topItem?.rightBarButtonItems = [skip, share]
+        } else{
+            navigationController?.navigationBar.topItem?.rightBarButtonItems = [share]
+        }
+    
+        navigationController?.toolbarItems = []
     }
 
+    private func updateTrackerButton(_ data: EncounterData){
+        self.actionButton.isHidden = !data.isPlayPauseAllowed
+      
+        let image = data.isPaused ? "play.fill" : "pause.fill"
+        self.actionButton.setImage(UIImage(systemName: image), for: .normal)
+    }
+    
+    private func updateTrackerTime(_ data: EncounterData){
+        if data.tick <= 5 {
+            self.timerLabel.textColor = UIColor.red
+        }
+        else {
+            self.timerLabel.textColor = UIColor.black
+        }
+        
+        self.timerLabel.text = self.formatter.string(from: TimeInterval.init(data.tick))
+    }
+    
+    private func setupParticipantsTable(){
+        participantsTable.delegate = self
+        participantsTable.dataSource = self
+        let nib = UINib(nibName: "ParticipantCell", bundle: nil)
+        participantsTable.register(nib, forCellReuseIdentifier: "participant_cell")
+    }
 }

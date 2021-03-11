@@ -2,11 +2,7 @@ package com.owlsoft.shared.sockets
 
 import io.ktor.utils.io.core.*
 import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
-import org.koin.core.logger.Level
-import org.koin.core.logger.Logger
-import kotlin.native.concurrent.ThreadLocal
 
 
 class AppSocketSession private constructor(
@@ -21,6 +17,13 @@ class AppSocketSession private constructor(
     val incoming = callbackFlow {
         socket.messageListener = {
             offer(it)
+        }
+        awaitClose { socket.disconnect() }
+    }
+
+    val states = callbackFlow {
+        socket.stateListener = {
+            offer(it.name)
         }
         awaitClose { socket.disconnect() }
     }

@@ -51,6 +51,7 @@ object Libs {
     }
 
     object Lifecycle {
+        const val viewModel = "androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.Libs.lifecycle}"
         const val livedata = "androidx.lifecycle:lifecycle-livedata-ktx:${Versions.Libs.lifecycle}"
     }
 

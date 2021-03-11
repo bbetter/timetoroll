@@ -9,12 +9,13 @@
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
-        style="@style/AppTheme.Toolbar"
         android:layout_width="match_parent"
         android:layout_height="?actionBarSize"
+        android:theme="@style/AppTheme.Toolbar"
         app:menu="@menu/join_encounter_menu"
-        app:popupTheme="@style/AppTheme.ToolbarMenu"
-        app:title="Join" />
+        app:title="Join"
+        app:titleMarginTop="16dp"
+        app:titleTextColor="@color/on_primary" />
 
     <LinearLayout
         android:id="@+id/fields_container"

@@ -16,7 +16,9 @@ class RemoteEncounterTracker(
     private val session = AppSocketSession.create(
         uuidRepository.getUUID(),
         "ws://${Configuration.serverUrl}/tracker/$encounterCode"
-    )
+    ).apply {
+        connect()
+    }
 
     fun data() = session.incoming
         .mapLatest { Json.decodeFromString<EncounterData>(it) }
@@ -26,10 +28,6 @@ class RemoteEncounterTracker(
     fun pause() = session.send("pause")
 
     fun resume() = session.send("resume")
-
-    fun start() {
-        session.connect()
-    }
 
     fun complete() {
         session.close()

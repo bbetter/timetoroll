@@ -27,10 +27,10 @@ fun main() {
             createEncounterRoute(encountersManager)
             joinEncounterRoute(encountersManager)
 
-            trackRoute(encountersManager)
+            encounterTrackerRoute(encountersManager)
 
             launch {
-                encountersManager.trackTurns()
+                encountersManager.listenToTrackerCreation()
             }
         }
 

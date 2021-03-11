@@ -10,7 +10,7 @@ import shared
 
 class EncounterViewController: UIViewController,UITableViewDataSource, UITableViewDelegate {
   
-    enum Constants{
+    private struct Constants{
         static let ROW_MARGIN = CGFloat(10)
     }
     
@@ -35,14 +35,7 @@ class EncounterViewController: UIViewController,UITableViewDataSource, UITableVi
     override func viewDidLoad() {
         super.viewDidLoad()
         setupParticipantsTable()
-    }
-    
-    func setupParticipantsTable(){
-        self.participantsTable.delegate = self
-        self.participantsTable.dataSource = self
-        
-        let nib = UINib(nibName: "ParticipantCell", bundle: nil)
-        self.participantsTable.register(nib, forCellReuseIdentifier: "participant_cell")
+        setupSubscriptions()
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -79,19 +72,6 @@ class EncounterViewController: UIViewController,UITableViewDataSource, UITableVi
         return cell
     }
     
-    private func bindCell(cell: ParticipantCell, participant: Participant, index: Int){
-        cell.allowDelete = true
-        cell.nameLabel.text = participant.name
-        cell.initiativeLabel.text = "\(participant.initiative).\(participant.dexterity)"
-        
-        cell.deleteButton.tag = index
-        
-        cell.onRowClick = { [weak self] index in
-            self?.viewModel.removeAt(index: Int32(index))
-            self?.participantsTable?.reloadData()
-        }
-    }
-    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if(segue.identifier == "encounter_segue"){
             
@@ -105,14 +85,61 @@ class EncounterViewController: UIViewController,UITableViewDataSource, UITableVi
         let ini = Int32(initiativeTextField.text ?? "") ?? 0
         let dex = Int32(dexterityField.text ?? "") ?? 0
         
-        viewModel.add(name: name, ini: ini, dex: dex)
-        participantsTable.reloadData()
+        viewModel.addParticipant(name: name, ini: ini, dex: dex)
+    
+        nameTextField.text = ""
+        initiativeTextField.text = ""
+        dexterityField.text = ""
     }
     
     @IBAction func onActionTouch(_ sender: UIBarButtonItem) {
-        viewModel.create { code in
+        let successHandler: (String) -> Void = { code in
             self.code = code
             self.performSegue(withIdentifier: "encounter_segue", sender: self)
         }
+        
+        let errorHandler: (String) -> Void = { errorMsg in
+            self.showErrorDialog(msg: errorMsg)
+        }
+        
+        viewModel.create(onSuccess: successHandler, onError: errorHandler)
+    }
+    
+    private func setupSubscriptions(){
+        self.viewModel.data.watch { [weak self] _ in
+            NSLog("%", "DATA RECEIVED")
+            guard let self = self else { return }
+            NSLog("%", "RELOADING TABLE")
+            
+            self.participantsTable.reloadData()
+        }
+    }
+    
+    private func setupParticipantsTable(){
+        self.participantsTable.delegate = self
+        self.participantsTable.dataSource = self
+        
+        let nib = UINib(nibName: "ParticipantCell", bundle: nil)
+        self.participantsTable.register(nib, forCellReuseIdentifier: "participant_cell")
+    }
+    
+    private func bindCell(cell: ParticipantCell, participant: Participant, index: Int){
+        cell.allowDelete = true
+        cell.nameLabel.text = participant.name
+        cell.initiativeLabel.text = "\(participant.initiative).\(participant.dexterity)"
+        
+        cell.deleteButton.tag = index
+        
+        cell.onRowClick = { [weak self] index in
+            guard let self = self else { return }
+            
+            self.viewModel.removeParticiapant(participant: participant)
+        }
+    }
+    
+    private func showErrorDialog(msg: String){
+        let alert = UIAlertController(title: "Error", message: msg, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        self.present(alert, animated: true)
     }
 }

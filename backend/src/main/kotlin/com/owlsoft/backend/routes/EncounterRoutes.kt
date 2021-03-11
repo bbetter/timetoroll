@@ -26,7 +26,6 @@ fun Route.encounterByCodeRoute(
             return@get
         }
 
-
         call.respond(encounter)
     }
 }
@@ -39,6 +38,7 @@ fun Route.createEncounterRoute(
 
         val resultEncounter = requestEncounter.copy(
             code = UUID.randomUUID().toString().take(5),
+            participants = requestEncounter.participants.sorted()
         )
 
         encountersManager.saveEncounter(resultEncounter)
@@ -63,15 +63,17 @@ fun Route.joinEncounterRoute(
 
         val newParticipants = call.receive<List<Participant>>()
 
-        if (newParticipants.isNotEmpty()) {
+        val newEncounter = encounter.copy(
+            participants = (encounter.participants + newParticipants).sorted()
+        )
 
-            val newEncounter = encounter.copy(
-                participants = encounter.participants + newParticipants
-            )
-
-            encountersManager.saveEncounter(newEncounter)
-        }
+        encountersManager.saveEncounter(newEncounter)
 
         call.respond(HttpStatusCode.OK, encounter)
     }
 }
+
+private fun List<Participant>.sorted() = sortedWith(
+    compareByDescending(Participant::initiative)
+        .thenByDescending(Participant::dexterity)
+)

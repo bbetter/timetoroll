@@ -21,10 +21,7 @@
         <item name="navigationIcon">@drawable/abc_vector_test</item>
         <item name="android:background">@color/primary</item>
         <item name="titleTextColor">@color/on_primary</item>
-    </style>
-
-    <style name="AppTheme.ToolbarMenu" parent="Widget.AppCompat.PopupMenu">
-        <item name="android:textColor">@color/on_primary</item>
+        <item name="actionMenuTextColor">@color/on_primary</item>
     </style>
 
 </resources>
