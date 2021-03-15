@@ -6,6 +6,8 @@ import com.owlsoft.backend.routes.*
 
 import io.ktor.application.*
 import io.ktor.features.*
+import io.ktor.http.content.*
+import io.ktor.response.*
 import io.ktor.routing.*
 import io.ktor.serialization.*
 import io.ktor.server.engine.*
@@ -23,6 +25,9 @@ fun main() {
         val encountersManager = EncountersManager(LocalEncountersDataSource, log)
 
         routing {
+            static("assets") {
+            }
+
             encounterByCodeRoute(LocalEncountersDataSource)
             createEncounterRoute(encountersManager)
             joinEncounterRoute(encountersManager)

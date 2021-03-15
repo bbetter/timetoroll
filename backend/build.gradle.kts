@@ -23,10 +23,8 @@ dependencies {
 
 application {
     mainClass.set("com.owlsoft.backend.ServerKt")
-}
 
-kotlin {
-    sourceSets {
-        val test by getting
+    tasks.create("stage") {
+        dependsOn("installDist")
     }
 }
