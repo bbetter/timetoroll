@@ -1,7 +1,6 @@
-package com.owlsoft.turntoroll
+package com.owlsoft.timetoroll
 
 import android.os.Bundle
-import android.util.Log
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -10,12 +9,10 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.asLiveData
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.owlsoft.shared.viewmodel.EncounterJoinViewModel
-import com.owlsoft.turntoroll.databinding.EncounterJoinFragmentBinding
+import com.owlsoft.timetoroll.databinding.EncounterJoinFragmentBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class EncounterJoinFragment : Fragment(R.layout.encounter_join_fragment) {

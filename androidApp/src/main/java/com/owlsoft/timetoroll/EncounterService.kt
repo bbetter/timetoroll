@@ -1,4 +1,4 @@
-package com.owlsoft.turntoroll
+package com.owlsoft.timetoroll
 
 import android.app.Notification
 import android.app.NotificationChannel

@@ -1,10 +1,10 @@
-package com.owlsoft.turntoroll
+package com.owlsoft.timetoroll
 
 import android.os.Bundle
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
-import com.owlsoft.turntoroll.databinding.ActivityMainBinding
+import com.owlsoft.timetoroll.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 

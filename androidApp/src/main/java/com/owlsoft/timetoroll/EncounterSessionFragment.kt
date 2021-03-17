@@ -1,4 +1,4 @@
-package com.owlsoft.turntoroll
+package com.owlsoft.timetoroll
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,17 +7,13 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.NavigationUI
-import androidx.recyclerview.widget.LinearLayoutManager
 import com.owlsoft.shared.model.Participant
 import com.owlsoft.shared.viewmodel.EncounterSessionViewModel
-import com.owlsoft.turntoroll.databinding.EncounterSessionFragmentBinding
+import com.owlsoft.timetoroll.databinding.EncounterSessionFragmentBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 import java.text.SimpleDateFormat

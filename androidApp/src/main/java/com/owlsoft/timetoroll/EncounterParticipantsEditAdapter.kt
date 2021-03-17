@@ -1,11 +1,11 @@
-package com.owlsoft.turntoroll
+package com.owlsoft.timetoroll
 
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.owlsoft.shared.model.Participant
-import com.owlsoft.turntoroll.databinding.EncounterParticipantEditItemBinding
+import com.owlsoft.timetoroll.databinding.EncounterParticipantEditItemBinding
 
 class EncounterParticipantsEditAdapter(
     private var data: MutableList<Participant> = mutableListOf(),

@@ -1,10 +1,10 @@
-package com.owlsoft.turntoroll
+package com.owlsoft.timetoroll
 
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.owlsoft.turntoroll.databinding.MenuFragmentBinding
+import com.owlsoft.timetoroll.databinding.MenuFragmentBinding
 
 class MenuFragment : Fragment(R.layout.menu_fragment) {
 

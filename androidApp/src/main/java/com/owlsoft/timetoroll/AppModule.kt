@@ -1,6 +1,5 @@
-package com.owlsoft.turntoroll
+package com.owlsoft.timetoroll
 
-import com.owlsoft.shared.di.AppLogger
 import com.owlsoft.shared.viewmodel.EncounterJoinViewModel
 import com.owlsoft.shared.viewmodel.EncounterSessionViewModel
 import com.owlsoft.shared.viewmodel.EncounterViewModel

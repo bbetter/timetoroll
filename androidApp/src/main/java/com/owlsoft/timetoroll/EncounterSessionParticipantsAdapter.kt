@@ -1,4 +1,4 @@
-package com.owlsoft.turntoroll
+package com.owlsoft.timetoroll
 
 import android.view.LayoutInflater
 import android.view.View
@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.owlsoft.shared.model.Participant
-import com.owlsoft.turntoroll.databinding.EncounterParticipantItemBinding
+import com.owlsoft.timetoroll.databinding.EncounterParticipantItemBinding
 
 class EncounterSessionParticipantsAdapter(
     private var data: List<Participant> = emptyList(),

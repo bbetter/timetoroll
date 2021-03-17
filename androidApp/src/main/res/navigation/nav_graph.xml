@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/encounterSessionFragment"
-        android:name="com.owlsoft.turntoroll.EncounterSessionFragment"
+        android:name="com.owlsoft.timetoroll.EncounterSessionFragment"
         android:label="EncounterSessionFragment"
         tools:layout="@layout/encounter_session_fragment">
 
@@ -23,7 +23,7 @@
 
     <fragment
         android:id="@+id/menuFragment"
-        android:name="com.owlsoft.turntoroll.MenuFragment"
+        android:name="com.owlsoft.timetoroll.MenuFragment"
         android:label="MenuFragment"
         tools:layout="@layout/menu_fragment">
         <action
@@ -37,7 +37,7 @@
 
     <fragment
         android:id="@+id/encounterJoinFragment"
-        android:name="com.owlsoft.turntoroll.EncounterJoinFragment"
+        android:name="com.owlsoft.timetoroll.EncounterJoinFragment"
         android:label="EncounterJoinFragment"
         tools:layout="@layout/encounter_join_fragment">
 
@@ -51,7 +51,7 @@
 
     <fragment
         android:id="@+id/encounterFragment"
-        android:name="com.owlsoft.turntoroll.EncounterFragment"
+        android:name="com.owlsoft.timetoroll.EncounterFragment"
         android:label="EncounterFragment"
         tools:layout="@layout/encounter_fragment">
 
