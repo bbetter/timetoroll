@@ -1,7 +1,7 @@
 plugins {
-    id("kotlin-platform-jvm")
     application
-    kotlin("plugin.serialization")
+    kotlin("jvm")
+    id("com.github.johnrengelman.shadow") version "5.0.0"
 }
 
 dependencies {
@@ -22,9 +22,16 @@ dependencies {
 }
 
 application {
-    mainClass.set("com.owlsoft.backend.ServerKt")
+    @Suppress("DEPRECATION")
+    mainClassName ="com.owlsoft.backend.ServerKt"
+}
 
-    tasks.create("stage") {
-        dependsOn("installDist")
+tasks.shadowJar{
+    manifest {
+        attributes(
+            mapOf(
+                "Main-Class" to "com.owlsoft.backend.ServerKt"
+            )
+        )
     }
 }
