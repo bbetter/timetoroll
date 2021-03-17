@@ -1,5 +1,6 @@
 {
   "name": "Time 2 Roll",
   "description": "Time 2 Roll web service",
+  "image": "heroku/java",
   "addons": []
 }

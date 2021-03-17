@@ -1,1 +1,1 @@
-web: java -jar build/libs/backend-all.jar
+web: ls -al && java -jar backend-all.jar

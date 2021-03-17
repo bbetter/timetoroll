@@ -23,15 +23,25 @@ dependencies {
 
 application {
     @Suppress("DEPRECATION")
-    mainClassName ="com.owlsoft.backend.ServerKt"
+    mainClassName = "com.owlsoft.backend.ServerKt"
 }
 
-tasks.shadowJar{
-    manifest {
-        attributes(
-            mapOf(
-                "Main-Class" to "com.owlsoft.backend.ServerKt"
+tasks {
+    shadowJar {
+        mergeServiceFiles()
+        manifest {
+            attributes(
+                mapOf(
+                    "Main-Class" to "com.owlsoft.backend.ServerKt"
+                )
             )
-        )
+        }
+    }
+    register<Copy>("stage") {
+        from("build/libs/backend-all.jar")
+        into("./")
+
+        dependsOn("clean", "shadowJar")
+        mustRunAfter("clean")
     }
 }
