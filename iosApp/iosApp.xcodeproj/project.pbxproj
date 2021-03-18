@@ -10,7 +10,6 @@
 		B504743325D985E60069E2AD /* ParticipantCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = B504743225D985E60069E2AD /* ParticipantCell.xib */; };
 		B504743725D986240069E2AD /* ParticipantCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B504743625D986240069E2AD /* ParticipantCell.swift */; };
 		B5592FFA25CF587200985547 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5592FF925CF587200985547 /* AppDelegate.swift */; };
-		B5592FFC25CF587200985547 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5592FFB25CF587200985547 /* SceneDelegate.swift */; };
 		B5592FFE25CF587200985547 /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5592FFD25CF587200985547 /* MenuViewController.swift */; };
 		B559300125CF587200985547 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B5592FFF25CF587200985547 /* Main.storyboard */; };
 		B559300325CF587F00985547 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B559300225CF587F00985547 /* Assets.xcassets */; };
@@ -61,7 +60,6 @@
 		B504743625D986240069E2AD /* ParticipantCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParticipantCell.swift; sourceTree = "<group>"; };
 		B5592FF625CF587200985547 /* iosApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iosApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B5592FF925CF587200985547 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		B5592FFB25CF587200985547 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		B5592FFD25CF587200985547 /* MenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuViewController.swift; sourceTree = "<group>"; };
 		B559300025CF587200985547 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		B559300225CF587F00985547 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -144,7 +142,6 @@
 				B5FB9D5D25D0A00500860B44 /* Join Encounter */,
 				B5FB9D5C25D0742000860B44 /* Encounter Session */,
 				B5592FF925CF587200985547 /* AppDelegate.swift */,
-				B5592FFB25CF587200985547 /* SceneDelegate.swift */,
 				B5592FFF25CF587200985547 /* Main.storyboard */,
 				B559300225CF587F00985547 /* Assets.xcassets */,
 				B559300425CF587F00985547 /* LaunchScreen.storyboard */,
@@ -372,7 +369,6 @@
 				B504743725D986240069E2AD /* ParticipantCell.swift in Sources */,
 				B559304925CF900800985547 /* DI.swift in Sources */,
 				B5592FFA25CF587200985547 /* AppDelegate.swift in Sources */,
-				B5592FFC25CF587200985547 /* SceneDelegate.swift in Sources */,
 				B5FB9D8C25D35DED00860B44 /* EncounterViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -557,7 +553,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.owlsoft.turntoroll;
+				PRODUCT_BUNDLE_IDENTIFIER = com.owlsoft.timetoroll;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -577,7 +573,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.owlsoft.turntoroll;
+				PRODUCT_BUNDLE_IDENTIFIER = com.owlsoft.timetoroll;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -598,7 +594,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.owlsoft.turntoroll.iosAppTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.owlsoft.timetoroll.iosAppTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -620,7 +616,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.owlsoft.turntoroll.iosAppTests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.owlsoft.timetoroll.iosAppTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -640,7 +636,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.owlsoft.turntoroll.iosAppUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.owlsoft.timetoroll.iosAppUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -660,7 +656,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.owlsoft.turntoroll.iosAppUITests;
+				PRODUCT_BUNDLE_IDENTIFIER = com.owlsoft.timetoroll.iosAppUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

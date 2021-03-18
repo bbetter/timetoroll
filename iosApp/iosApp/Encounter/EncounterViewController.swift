@@ -130,7 +130,7 @@ class EncounterViewController: UIViewController,UITableViewDataSource, UITableVi
         
         cell.deleteButton.tag = index
         
-        cell.onRowClick = { [weak self] index in
+        cell.onDeleteRowClick = { [weak self] index in
             guard let self = self else { return }
             
             self.viewModel.removeParticiapant(participant: participant)

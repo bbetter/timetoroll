@@ -14,6 +14,7 @@ buildscript {
         classpath(Plugins.kotlinSerialization)
         classpath(Plugins.googleServices)
         classpath(Plugins.crashlytics)
+        classpath("com.android.tools.build:gradle:4.1.2")
     }
 }
 

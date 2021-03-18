@@ -7,12 +7,20 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:849469439243:android:b1e6ff78cf4ff35c6a360e",
+        "mobilesdk_app_id": "1:849469439243:android:76008888d51b78b26a360e",
         "android_client_info": {
-          "package_name": "com.owlsoft.turntoroll"
+          "package_name": "com.owlsoft.timetoroll"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "849469439243-qsbs5da42badrmpegsrk992hl173mlnt.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.owlsoft.timetoroll",
+            "certificate_hash": "9fbc9395e8db5c489c187e1aa30e865f35aa21ed"
+          }
+        },
         {
           "client_id": "849469439243-rg8rtcf0peh942k9nsjtamrtnddirh6g.apps.googleusercontent.com",
           "client_type": 3

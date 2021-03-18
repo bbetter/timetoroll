@@ -14,7 +14,7 @@ dependencies {
 
     implementation(Libs.kotlinSerialization) // JVM dependency
 
-    implementation("ch.qos.logback:logback-classic:1.2.1")
+    implementation("ch.qos.logback:logback-classic:1.2.3")
 
     implementation(project(":shared"))
 

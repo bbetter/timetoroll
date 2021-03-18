@@ -10,7 +10,7 @@
 
 
     <application
-        android:name="com.owlsoft.timetoroll.TurnToRollApp"
+        android:name="com.owlsoft.timetoroll.TimeToRollApp"
         android:allowBackup="false"
         android:networkSecurityConfig="@xml/network_security_config"
         android:supportsRtl="true"

@@ -1,5 +1,5 @@
 object App {
-    const val ID = "com.owlsoft.turntoroll"
+    const val ID = "com.owlsoft.timetoroll"
 
     object Version {
         const val name = "1.0"

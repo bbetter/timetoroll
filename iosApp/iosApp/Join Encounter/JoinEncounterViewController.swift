@@ -138,7 +138,7 @@ class JoinEncounterViewController: UIViewController, UITableViewDataSource, UITa
         cell.initiativeLabel.text = "\(participant.initiative).\(participant.dexterity)"
         
         cell.deleteButton.tag = index
-        cell.onRowClick = { [weak self] index in
+        cell.onDeleteRowClick = { [weak self] index in
             guard let self = self else { return }
             self.viewModel.removeParticipant(participant: participant)
         }

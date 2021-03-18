@@ -96,10 +96,10 @@ class EncounterSessionViewController: UIViewController, UITableViewDataSource, U
             if(turnIndex == participantIndex){
                 cell.backgroundColor = UIColor.yellow
             } else{
-                cell.backgroundColor = UIColor.systemGray
+                cell.backgroundColor = UIColor.white
             }
         } else {
-            cell.backgroundColor = UIColor.systemGray
+            cell.backgroundColor = UIColor.white
         }
         
         cell.allowDelete = false

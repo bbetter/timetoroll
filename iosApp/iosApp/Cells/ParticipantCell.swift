@@ -20,7 +20,7 @@ class ParticipantCell: UITableViewCell {
     @IBOutlet weak var deleteButton: UIButton!
     
     @IBAction func onDeleteTouch(_ sender: UIButton) {
-        onRowClick(sender.tag)
+        onDeleteRowClick(sender.tag)
     }
     
     var allowDelete: Bool = false{
@@ -35,6 +35,6 @@ class ParticipantCell: UITableViewCell {
         }
     }
     
-    var onRowClick: (Int) -> Void = { _ in }
+    var onDeleteRowClick: (Int) -> Void = { _ in }
     
 }

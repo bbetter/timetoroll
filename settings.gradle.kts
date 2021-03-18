@@ -1,4 +1,4 @@
 include(":androidApp", ":shared", ":backend")
-rootProject.name = "turntoroll"
+rootProject.name = "timetoroll"
 
 enableFeaturePreview("GRADLE_METADATA")
