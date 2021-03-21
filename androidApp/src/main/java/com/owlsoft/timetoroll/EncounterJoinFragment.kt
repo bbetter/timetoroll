@@ -11,6 +11,7 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.owlsoft.shared.viewmodel.EncounterJoinViewModel
 import com.owlsoft.timetoroll.databinding.EncounterJoinFragmentBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
@@ -91,7 +92,6 @@ class EncounterJoinFragment : Fragment(R.layout.encounter_join_fragment) {
             val initiative = initiativeEditText.text.toString().toIntOrNull() ?: 0
             val dexterity = dexterityEditText.text.toString().toIntOrNull() ?: 0
 
-            Log.d("###", "adding participant $name $initiative.$dexterity")
             viewModel.addParticipant(name, initiative, dexterity)
 
             nameEditText.text.clear()

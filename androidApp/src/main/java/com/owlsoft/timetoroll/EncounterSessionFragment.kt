@@ -7,10 +7,13 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import android.view.View
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.owlsoft.shared.model.Participant
 import com.owlsoft.shared.viewmodel.EncounterSessionViewModel
 import com.owlsoft.timetoroll.databinding.EncounterSessionFragmentBinding
@@ -145,8 +148,9 @@ class EncounterSessionFragment : Fragment(R.layout.encounter_session_fragment) {
 
     private fun EncounterSessionFragmentBinding.updateTimer(timerTick: Int) {
         val timer = timerFormatter.format(timerTick * 1000)
-        val color = if (timerTick < 5) android.R.color.holo_red_light else R.color.primary_text
-        roundTimerView.setTextColor(ContextCompat.getColor(requireContext(), color))
+        val colorRes = if (timerTick < 5) android.R.color.holo_red_light else R.color.primary_text
+        val color = ContextCompat.getColor(requireContext(), colorRes)
+        roundTimerView.setTextColor(color)
         roundTimerView.text = timer
     }
 

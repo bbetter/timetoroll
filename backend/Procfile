@@ -1,1 +1,0 @@
-web: ls -al && java -jar backend-all.jar

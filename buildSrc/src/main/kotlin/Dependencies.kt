@@ -15,7 +15,7 @@ object App {
 
 object Versions {
     object Plugins {
-        const val android = "4.0.2"
+        const val android = "4.1.2"
         const val kotlin = "1.4.21"
         const val koin = "3.0.0-alpha-4"
     }

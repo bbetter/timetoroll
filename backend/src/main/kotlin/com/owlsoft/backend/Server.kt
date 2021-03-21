@@ -19,7 +19,8 @@ import kotlinx.coroutines.launch
 @OptIn(InternalCoroutinesApi::class)
 fun main() {
 
-    val embeddedServer = embeddedServer(Netty, 8080) {
+    val port = System.getenv("PORT")?.toInt() ?: 23567
+    val embeddedServer = embeddedServer(Netty, port) {
         setupFeatures()
 
         val encountersManager = EncountersManager(LocalEncountersDataSource, log)

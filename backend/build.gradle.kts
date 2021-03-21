@@ -1,6 +1,7 @@
 plugins {
     application
     kotlin("jvm")
+    id("kotlinx-serialization")
     id("com.github.johnrengelman.shadow") version "5.0.0"
 }
 
@@ -37,11 +38,12 @@ tasks {
             )
         }
     }
-    register<Copy>("stage") {
-        from("build/libs/backend-all.jar")
-        into("./")
+//    register("stage") {
+//        dependsOn("clean", "shadowJar")
+//        mustRunAfter("clean")
+//    }
 
-        dependsOn("clean", "shadowJar")
-        mustRunAfter("clean")
+    register("stage"){
+        dependsOn("installDist")
     }
 }
