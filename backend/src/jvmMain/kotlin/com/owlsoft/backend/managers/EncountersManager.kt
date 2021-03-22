@@ -1,13 +1,11 @@
 package com.owlsoft.backend.managers
 
-import com.owlsoft.backend.data.Encounter
 import com.owlsoft.backend.data.EncountersDataSource
+import com.owlsoft.shared.model.Encounter
 import io.ktor.http.cio.websocket.*
 import kotlinx.coroutines.channels.BroadcastChannel
 import kotlinx.coroutines.channels.consumeEach
-import kotlinx.coroutines.delay
 import org.slf4j.Logger
-import kotlin.concurrent.timerTask
 
 class EncountersManager(
     private val dataSource: EncountersDataSource,

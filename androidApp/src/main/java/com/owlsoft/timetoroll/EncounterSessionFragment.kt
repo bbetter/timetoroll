@@ -63,7 +63,7 @@ class EncounterSessionFragment : Fragment(R.layout.encounter_session_fragment) {
 
     private fun setupSubscriptions() {
         viewModel.data.watch {
-            binding.updateTimer(it.tick)
+            binding.updateTimer(it)
             binding.updatePlayPauseButton(it.isPlayPauseAllowed, it.isPaused)
             binding.updateRound(it.roundIndex)
 
@@ -146,9 +146,9 @@ class EncounterSessionFragment : Fragment(R.layout.encounter_session_fragment) {
         }
     }
 
-    private fun EncounterSessionFragmentBinding.updateTimer(timerTick: Int) {
-        val timer = timerFormatter.format(timerTick * 1000)
-        val colorRes = if (timerTick < 5) android.R.color.holo_red_light else R.color.primary_text
+    private fun EncounterSessionFragmentBinding.updateTimer(tickData: TickData) {
+        val timer = timerFormatter.format(tickData.decoratedTick)
+        val colorRes = if (tickData.isInDangerZone) android.R.color.holo_red_light else R.color.primary_text
         val color = ContextCompat.getColor(requireContext(), colorRes)
         roundTimerView.setTextColor(color)
         roundTimerView.text = timer

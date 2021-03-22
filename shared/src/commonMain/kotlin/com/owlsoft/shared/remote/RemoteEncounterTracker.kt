@@ -2,9 +2,9 @@ package com.owlsoft.shared.remote
 
 import com.owlsoft.shared.Configuration
 import com.owlsoft.shared.UUIDRepository
-import com.owlsoft.shared.model.EncounterData
+import com.owlsoft.shared.model.TickData
 import com.owlsoft.shared.sockets.AppSocketSession
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.flow.mapLatest
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 
@@ -21,7 +21,7 @@ class RemoteEncounterTracker(
     }
 
     fun data() = session.incoming
-        .mapLatest { Json.decodeFromString<EncounterData>(it) }
+        .mapLatest { Json.decodeFromString<TickData>(it) }
 
     fun skipTurn() = session.send("skip")
 

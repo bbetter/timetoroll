@@ -51,7 +51,6 @@ kotlin {
                 }
             }
         }
-        val commonTest by getting
         val androidMain by getting {
             dependencies {
                 implementation(Libs.Lifecycle.livedata)
@@ -63,13 +62,12 @@ kotlin {
 
             }
         }
-        val androidTest by getting
         val iosMain by getting {
             dependencies {
                 implementation(Libs.KtorClient.ios)
             }
         }
-        val iosTest by getting
+        val jvmMain by getting
     }
 }
 

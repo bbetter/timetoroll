@@ -1,13 +1,13 @@
 package com.owlsoft.backend.managers
 
-import com.owlsoft.backend.data.Encounter
-import com.owlsoft.backend.data.EncounterTrackerData
+
+import com.owlsoft.shared.model.Encounter
+import com.owlsoft.shared.model.TickData
 import io.ktor.http.cio.websocket.*
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
-import java.lang.Exception
 import java.util.concurrent.CopyOnWriteArrayList
 
 class EncounterTurnTracker(
@@ -70,7 +70,7 @@ class EncounterTurnTracker(
         val isCurrentSession =
             participants[trackerData.turnIndex].ownerID == deviceID
 
-        val data = EncounterTrackerData(
+        val data = TickData(
             trackerData.timerTick,
             trackerData.turnIndex,
             trackerData.roundIndex,

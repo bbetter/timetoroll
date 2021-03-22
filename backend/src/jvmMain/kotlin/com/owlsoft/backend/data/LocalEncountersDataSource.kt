@@ -1,5 +1,7 @@
 package com.owlsoft.backend.data
 
+import com.owlsoft.shared.model.Encounter
+
 object LocalEncountersDataSource : EncountersDataSource {
 
     private val encounters = mutableMapOf<String, Encounter>()

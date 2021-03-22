@@ -23,7 +23,7 @@ class EncounterSessionViewController: UIViewController, UITableViewDataSource, U
    
     private let formatter = DateComponentsFormatter()
     
-    private var encounterData: EncounterData? = nil
+    private var TickData: TickData? = nil
     
     //MARK: params
     var code: String = ""
@@ -49,7 +49,7 @@ class EncounterSessionViewController: UIViewController, UITableViewDataSource, U
             self.updateTrackerTime(data)
             self.updateTrackerButton(data)
             self.updateNavBarActions(data)
-            self.encounterData = data
+            self.TickData = data
             
             self.participantsTable.reloadData()
         }
@@ -71,7 +71,7 @@ class EncounterSessionViewController: UIViewController, UITableViewDataSource, U
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return encounterData?.participants.count ?? 0
+        return TickData?.participants.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
@@ -88,11 +88,11 @@ class EncounterSessionViewController: UIViewController, UITableViewDataSource, U
     
         let participantIndex = indexPath.section
         
-        guard let participant = encounterData?.participants[participantIndex] else {
+        guard let participant = TickData?.participants[participantIndex] else {
             return cell
         }
         
-        if let turnIndex = encounterData?.turnIndex {
+        if let turnIndex = TickData?.turnIndex {
             if(turnIndex == participantIndex){
                 cell.backgroundColor = UIColor.yellow
             } else{
@@ -157,7 +157,7 @@ class EncounterSessionViewController: UIViewController, UITableViewDataSource, U
         self.navigationItem.leftBarButtonItem = backButton
     }
     
-    private func updateNavBarActions(_ data: EncounterData){
+    private func updateNavBarActions(_ data: TickData){
         let skip = UIBarButtonItem(
             title: "Skip",
             style: .plain,
@@ -178,22 +178,23 @@ class EncounterSessionViewController: UIViewController, UITableViewDataSource, U
         navigationController?.toolbarItems = []
     }
 
-    private func updateTrackerButton(_ data: EncounterData){
+    private func updateTrackerButton(_ data: TickData){
         self.actionButton.isHidden = !data.isPlayPauseAllowed
       
         let image = data.isPaused ? "play.fill" : "pause.fill"
         self.actionButton.setImage(UIImage(systemName: image), for: .normal)
     }
     
-    private func updateTrackerTime(_ data: EncounterData){
-        if data.tick <= 5 {
+    private func updateTrackerTime(_ data: TickData){
+
+        if data.isInDangerZone {
             self.timerLabel.textColor = UIColor.red
         }
         else {
             self.timerLabel.textColor = UIColor.black
         }
         
-        self.timerLabel.text = self.formatter.string(from: TimeInterval.init(data.tick))
+        self.timerLabel.text = self.formatter.string(from: TimeInterval.init(data.decoratedTick))
     }
     
     private func setupParticipantsTable(){
