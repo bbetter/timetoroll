@@ -2,6 +2,8 @@ package com.owlsoft.backend.routes
 
 import com.owlsoft.backend.data.*
 import com.owlsoft.backend.managers.EncountersManager
+import com.owlsoft.shared.model.Encounter
+import com.owlsoft.shared.model.Participant
 
 import io.ktor.application.*
 import io.ktor.http.*

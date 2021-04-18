@@ -20,8 +20,6 @@ class EncounterSessionViewController: UIViewController, UITableViewDataSource, U
     @IBOutlet weak var timerLabel: UILabel!
     
     @IBOutlet weak var participantsTable: UITableView!
-   
-    private let formatter = DateComponentsFormatter()
     
     private var TickData: TickData? = nil
     
@@ -39,9 +37,6 @@ class EncounterSessionViewController: UIViewController, UITableViewDataSource, U
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        formatter.allowedUnits = [.minute, .second]
-        formatter.zeroFormattingBehavior = .pad
         
         viewModel.data.watch { data in
             guard let data = data else { return }
@@ -194,7 +189,7 @@ class EncounterSessionViewController: UIViewController, UITableViewDataSource, U
             self.timerLabel.textColor = UIColor.black
         }
         
-        self.timerLabel.text = self.formatter.string(from: TimeInterval.init(data.decoratedTick))
+        self.timerLabel.text = data.decoratedTick
     }
     
     private func setupParticipantsTable(){

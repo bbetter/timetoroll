@@ -12,7 +12,8 @@ import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
-import com.owlsoft.shared.model.EncounterData
+import androidx.core.content.getSystemService
+import com.owlsoft.shared.model.TickData
 import com.owlsoft.shared.remote.RemoteEncounterTracker
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -23,7 +24,6 @@ import kotlinx.coroutines.launch
 import org.koin.android.ext.android.get
 import org.koin.core.parameter.parametersOf
 import java.text.SimpleDateFormat
-import androidx.core.content.getSystemService
 import java.util.*
 
 class EncounterService : Service() {
@@ -110,7 +110,7 @@ class EncounterService : Service() {
         return channelId
     }
 
-    private fun EncounterData.toNotificationUpdate(context: Context): Notification {
+    private fun TickData.toNotificationUpdate(context: Context): Notification {
         val builder = NotificationCompat.Builder(context, ENCOUNTER_CHANNEL_ID)
         val participantName = participants[turnIndex].name
         val timerTick = timerFormatter.format(tick * 1000)

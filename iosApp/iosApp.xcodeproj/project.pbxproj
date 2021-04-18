@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		B504743325D985E60069E2AD /* ParticipantCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = B504743225D985E60069E2AD /* ParticipantCell.xib */; };
 		B504743725D986240069E2AD /* ParticipantCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B504743625D986240069E2AD /* ParticipantCell.swift */; };
+		B51982F02626018C00A16095 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B51982EF2626018C00A16095 /* SceneDelegate.swift */; };
 		B5592FFA25CF587200985547 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5592FF925CF587200985547 /* AppDelegate.swift */; };
 		B5592FFE25CF587200985547 /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5592FFD25CF587200985547 /* MenuViewController.swift */; };
 		B559300125CF587200985547 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B5592FFF25CF587200985547 /* Main.storyboard */; };
@@ -58,6 +59,7 @@
 /* Begin PBXFileReference section */
 		B504743225D985E60069E2AD /* ParticipantCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ParticipantCell.xib; sourceTree = "<group>"; };
 		B504743625D986240069E2AD /* ParticipantCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParticipantCell.swift; sourceTree = "<group>"; };
+		B51982EF2626018C00A16095 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		B5592FF625CF587200985547 /* iosApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iosApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B5592FF925CF587200985547 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B5592FFD25CF587200985547 /* MenuViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuViewController.swift; sourceTree = "<group>"; };
@@ -148,6 +150,7 @@
 				B559300725CF587F00985547 /* Info.plist */,
 				B559304825CF900800985547 /* DI.swift */,
 				B504742725D97ED00069E2AD /* Cells */,
+				B51982EF2626018C00A16095 /* SceneDelegate.swift */,
 			);
 			path = iosApp;
 			sourceTree = "<group>";
@@ -370,6 +373,7 @@
 				B559304925CF900800985547 /* DI.swift in Sources */,
 				B5592FFA25CF587200985547 /* AppDelegate.swift in Sources */,
 				B5FB9D8C25D35DED00860B44 /* EncounterViewController.swift in Sources */,
+				B51982F02626018C00A16095 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

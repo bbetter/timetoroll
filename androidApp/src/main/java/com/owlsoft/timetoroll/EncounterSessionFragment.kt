@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.owlsoft.shared.model.Participant
+import com.owlsoft.shared.model.TickData
 import com.owlsoft.shared.viewmodel.EncounterSessionViewModel
 import com.owlsoft.timetoroll.databinding.EncounterSessionFragmentBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
