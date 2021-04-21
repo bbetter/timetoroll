@@ -11,6 +11,11 @@ kotlin {
     }
 }
 
+application {
+    mainClass.set("com.owlsoft.backend.ServerKt")
+}
+
+
 dependencies {
     implementation(Libs.Coroutines.core)
 
@@ -24,10 +29,6 @@ dependencies {
     implementation("ch.qos.logback:logback-classic:1.2.3")
     implementation(project(":shared"))
     testImplementation(Libs.KtorServer.test)
-}
-application {
-    @Suppress("DEPRECATION")
-    mainClassName = "com.owlsoft.backend.ServerKt"
 }
 
 tasks.register("stage") {
