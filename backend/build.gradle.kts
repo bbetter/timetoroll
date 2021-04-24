@@ -1,14 +1,7 @@
 plugins {
     application
-    kotlin("multiplatform")
+    kotlin("jvm")
     id("kotlinx-serialization")
-}
-
-
-kotlin {
-    jvm {
-        withJava()
-    }
 }
 
 application {
@@ -27,7 +20,7 @@ dependencies {
     implementation(Libs.kotlinSerialization) // JVM dependency
 
     implementation("ch.qos.logback:logback-classic:1.2.3")
-    implementation(project(":shared"))
+    implementation(files("../shared/build/libs/shared-jvm.jar"))
     testImplementation(Libs.KtorServer.test)
 }
 
