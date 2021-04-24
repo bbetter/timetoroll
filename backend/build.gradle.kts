@@ -24,6 +24,10 @@ dependencies {
     testImplementation(Libs.KtorServer.test)
 }
 
+tasks.getByName("installDist"){
+    dependsOn(":shared:build")
+}
+
 tasks.register("stage") {
     dependsOn("installDist")
 }
