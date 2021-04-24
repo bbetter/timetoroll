@@ -22,14 +22,14 @@ dependencies {
     implementation("ch.qos.logback:logback-classic:1.2.3")
 
 
-    //NOT working, petty hack required
+    //NOT working
 //    implementation(project("shared"))
-
+    //this petty hack required
     implementation(files("../shared/build/libs/shared-jvm.jar"))
     testImplementation(Libs.KtorServer.test)
 }
 
-tasks.getByName("compileKotlin"){
+tasks.getByName("compileKotlin") {
     dependsOn(":shared:jvmJar")
 }
 
