@@ -20,12 +20,17 @@ dependencies {
     implementation(Libs.kotlinSerialization) // JVM dependency
 
     implementation("ch.qos.logback:logback-classic:1.2.3")
+
+
+    //NOT working, petty hack required
+//    implementation(project("shared"))
+
     implementation(files("../shared/build/libs/shared-jvm.jar"))
     testImplementation(Libs.KtorServer.test)
 }
 
-tasks.getByName("installDist"){
-    dependsOn(":shared:build")
+tasks.getByName("compileKotlin"){
+    dependsOn(":shared:jvmJar")
 }
 
 tasks.register("stage") {
