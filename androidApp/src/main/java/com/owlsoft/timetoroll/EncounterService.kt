@@ -23,7 +23,6 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.get
 import org.koin.core.parameter.parametersOf
-import java.text.SimpleDateFormat
 import java.util.*
 
 class EncounterService : Service() {
@@ -34,8 +33,6 @@ class EncounterService : Service() {
 
         const val ONGOING_NOTIFICATION_ID = 1
     }
-
-    private val timerFormatter = SimpleDateFormat("mm:ss", Locale.getDefault())
 
     private lateinit var encounterTracker: RemoteEncounterTracker
 
@@ -113,7 +110,6 @@ class EncounterService : Service() {
     private fun TickData.toNotificationUpdate(context: Context): Notification {
         val builder = NotificationCompat.Builder(context, ENCOUNTER_CHANNEL_ID)
         val participantName = participants[turnIndex].name
-        val timerTick = timerFormatter.format(tick * 1000)
 
         val notificationTitle = resources.getString(
             R.string.encounter_notification_title,
@@ -126,7 +122,7 @@ class EncounterService : Service() {
         val notificationMessage = getString(
             R.string.encounter_notification_message,
             participantName,
-            timerTick
+            decoratedTick
         )
 
         if (tick <= 5) {

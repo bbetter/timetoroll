@@ -10,7 +10,7 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import java.util.concurrent.CopyOnWriteArrayList
 
-class EncounterTurnTracker(
+class EncounterTurnTracker  (
     private val turnTracker: TurnTracker,
     private var encounter: Encounter,
     private val sessions: CopyOnWriteArrayList<AuthorizedWebSocketSession> = CopyOnWriteArrayList(),

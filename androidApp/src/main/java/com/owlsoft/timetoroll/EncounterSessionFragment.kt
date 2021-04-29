@@ -20,14 +20,10 @@ import com.owlsoft.shared.viewmodel.EncounterSessionViewModel
 import com.owlsoft.timetoroll.databinding.EncounterSessionFragmentBinding
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
-import java.text.SimpleDateFormat
-import java.util.*
 
 class EncounterSessionFragment : Fragment(R.layout.encounter_session_fragment) {
 
     private lateinit var binding: EncounterSessionFragmentBinding
-
-    private val timerFormatter = SimpleDateFormat("mm:ss", Locale.getDefault())
 
     private val adapter = EncounterSessionParticipantsAdapter()
 
@@ -148,11 +144,10 @@ class EncounterSessionFragment : Fragment(R.layout.encounter_session_fragment) {
     }
 
     private fun EncounterSessionFragmentBinding.updateTimer(tickData: TickData) {
-        val timer = timerFormatter.format(tickData.decoratedTick)
         val colorRes = if (tickData.isInDangerZone) android.R.color.holo_red_light else R.color.primary_text
         val color = ContextCompat.getColor(requireContext(), colorRes)
         roundTimerView.setTextColor(color)
-        roundTimerView.text = timer
+        roundTimerView.text = tickData.decoratedTick
     }
 
     private fun EncounterSessionFragmentBinding.setupView() {
