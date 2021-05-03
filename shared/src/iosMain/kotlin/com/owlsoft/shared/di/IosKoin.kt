@@ -12,10 +12,6 @@ import org.koin.dsl.module
 import platform.Foundation.NSLog
 import platform.Foundation.NSUserDefaults
 
-fun init() = initKoin {
-    logger(logger)
-}
-
 actual val platformModule = module {
 
     val defaults = NSUserDefaults(suiteName = "TTR")

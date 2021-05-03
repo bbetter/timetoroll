@@ -13,6 +13,7 @@ import io.ktor.client.features.json.serializer.*
 import io.ktor.client.features.logging.*
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module
+import org.koin.core.parameter.DefinitionParameters
 import org.koin.dsl.KoinAppDeclaration
 import org.koin.dsl.module
 
@@ -24,6 +25,7 @@ fun initKoin(koinAppDeclaration: KoinAppDeclaration = {}) = startKoin {
 }
 
 private val coreModule = module {
+
     single { logger }
 
     single { createHttpClient() }
@@ -33,7 +35,7 @@ private val coreModule = module {
     single { UUIDRepository(get(), get()) }
 
     factory { params ->
-        val (_, code) = params.component1<Pair<String, String>>()
+        val (_, code) = params.pairedComponent()
         RemoteEncounterTracker(
             code,
             get()
@@ -63,6 +65,8 @@ private fun Module.useCases() {
     single { GetEncounterUseCase(get()) }
     single { UpdateEncounterUseCase(get()) }
 }
+
+fun DefinitionParameters.pairedComponent() = component1<Pair<String, String>>()
 
 expect val logger: AppLogger
 expect val platformModule: Module

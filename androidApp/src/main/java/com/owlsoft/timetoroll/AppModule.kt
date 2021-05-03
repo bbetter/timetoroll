@@ -1,5 +1,6 @@
 package com.owlsoft.timetoroll
 
+import com.owlsoft.shared.di.pairedComponent
 import com.owlsoft.shared.viewmodel.EncounterJoinViewModel
 import com.owlsoft.shared.viewmodel.EncounterSessionViewModel
 import com.owlsoft.shared.viewmodel.EncounterViewModel
@@ -14,7 +15,7 @@ val appModule = module {
     viewModel { EncounterJoinViewModel() }
 
     viewModel { params ->
-        val (_, code) = params.component1<Pair<String, String>>()
+        val (_, code) = params.pairedComponent()
         EncounterSessionViewModel(code)
     }
 }

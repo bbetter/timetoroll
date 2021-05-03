@@ -6,7 +6,7 @@ internal actual class PlatformSocket actual constructor(
     authID: String
 ) {
     actual fun openSocket(listener: PlatformSocketListener) {
-
+        TODO()
     }
 
     actual fun closeSocket(code: Int, reason: String) {

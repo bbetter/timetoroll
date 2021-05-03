@@ -5,7 +5,7 @@ import platform.Foundation.NSUserDefaults
 import platform.Foundation.setValue
 
 class StorageImpl(
-    val defaults: NSUserDefaults
+    private val defaults: NSUserDefaults
 ) : Storage {
     init {
         NSLog("%s", "Creating storage...")
