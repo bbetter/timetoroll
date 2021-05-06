@@ -21,6 +21,8 @@ class EncounterSessionViewController: UIViewController, UITableViewDataSource, U
     
     @IBOutlet weak var participantsTable: UITableView!
     
+    @IBOutlet weak var roundLabel: UILabel!
+    
     private var tickData: TickData? = nil
     
     //MARK: params
@@ -41,6 +43,7 @@ class EncounterSessionViewController: UIViewController, UITableViewDataSource, U
         viewModel.data.watch { data in
             guard let data = data else { return }
             
+            self.updateRoundLabel(data)
             self.updateTrackerTime(data)
             self.updateTrackerButton(data)
             self.updateNavBarActions(data)
@@ -190,6 +193,10 @@ class EncounterSessionViewController: UIViewController, UITableViewDataSource, U
         }
         
         self.timerLabel.text = data.decoratedTick
+    }
+    
+    private func updateRoundLabel(_ data: TickData){
+        self.roundLabel.text = "Round # \(data.roundIndex)"
     }
     
     private func setupParticipantsTable(){
