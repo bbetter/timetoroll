@@ -9,4 +9,7 @@ actual open class BaseViewModel actual constructor() : ViewModel() {
     actual val scope: CoroutineScope
         get() = viewModelScope
 
+    actual override fun onCleared() {
+        viewModelScope.cancel()
+    }
 }

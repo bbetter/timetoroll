@@ -5,4 +5,7 @@ import kotlinx.coroutines.CoroutineScope
 actual open class BaseViewModel actual constructor() {
     actual val scope: CoroutineScope
         get() = TODO()
+
+    protected actual fun onCleared() {
+    }
 }

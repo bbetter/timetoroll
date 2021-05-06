@@ -21,7 +21,7 @@ class EncounterSessionViewController: UIViewController, UITableViewDataSource, U
     
     @IBOutlet weak var participantsTable: UITableView!
     
-    private var TickData: TickData? = nil
+    private var tickData: TickData? = nil
     
     //MARK: params
     var code: String = ""
@@ -44,7 +44,7 @@ class EncounterSessionViewController: UIViewController, UITableViewDataSource, U
             self.updateTrackerTime(data)
             self.updateTrackerButton(data)
             self.updateNavBarActions(data)
-            self.TickData = data
+            self.tickData = data
             
             self.participantsTable.reloadData()
         }
@@ -66,7 +66,7 @@ class EncounterSessionViewController: UIViewController, UITableViewDataSource, U
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
-        return TickData?.participants.count ?? 0
+        return tickData?.participants.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
@@ -83,11 +83,11 @@ class EncounterSessionViewController: UIViewController, UITableViewDataSource, U
     
         let participantIndex = indexPath.section
         
-        guard let participant = TickData?.participants[participantIndex] else {
+        guard let participant = tickData?.participants[participantIndex] else {
             return cell
         }
         
-        if let turnIndex = TickData?.turnIndex {
+        if let turnIndex = tickData?.turnIndex {
             if(turnIndex == participantIndex){
                 cell.backgroundColor = UIColor.yellow
             } else{
