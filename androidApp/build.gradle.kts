@@ -17,7 +17,6 @@ dependencies {
     implementation(Libs.Navigation.fragment)
 
     implementation(Libs.Koin.android)
-    implementation(Libs.Koin.androidViewModel)
 
     implementation(platform(Libs.Analytics.platform))
     implementation(Libs.Analytics.crashlytics)

@@ -10,7 +10,7 @@
 
 
     <application
-        android:name="com.owlsoft.timetoroll.TimeToRollApp"
+        android:name=".TimeToRollApp"
         android:allowBackup="false"
         android:networkSecurityConfig="@xml/network_security_config"
         android:requestLegacyExternalStorage="true"
@@ -29,7 +29,6 @@
         <service
             android:name="com.owlsoft.timetoroll.EncounterService"
             android:exported="false" />
-
 
     </application>
 </manifest>

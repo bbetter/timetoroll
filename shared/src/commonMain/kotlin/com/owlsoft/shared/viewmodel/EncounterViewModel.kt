@@ -8,8 +8,8 @@ import com.owlsoft.shared.usecases.UpdateEncounterUseCase
 import com.owlsoft.shared.utils.asLiveFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
-import org.koin.core.KoinComponent
-import org.koin.core.inject
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 
 class EncounterViewModel : BaseViewModel(), KoinComponent {
 

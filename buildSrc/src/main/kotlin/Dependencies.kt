@@ -15,23 +15,22 @@ object App {
 
 object Versions {
     object Plugins {
-        const val android = "4.1.2"
-        const val kotlin = "1.4.21"
-        const val koin = "3.0.0-alpha-4"
+        const val android = "4.1.3"
+        const val kotlin = "1.4.32"
     }
 
     object Libs {
 
-        const val coroutines = "1.4.1-native-mt"
+        const val coroutines = "1.4.3-native-mt"
         const val lifecycle = "2.2.0"
         const val kotlinxSerialization = "1.0.1"
-        const val koin = "3.0.0-alpha-4"
+        const val koin = "3.0.1"
         const val navigation = "2.3.2"
         const val recyclerView = "1.1.0"
         const val cardView = "1.0.0"
         const val constraintLayout = "2.0.4"
 
-        const val ktor = "1.5.0"
+        const val ktor = "1.5.3"
     }
 }
 
@@ -39,7 +38,6 @@ object Plugins {
     const val kotlinSerialization = "org.jetbrains.kotlin:kotlin-serialization:${Versions.Plugins.kotlin}"
     const val gradle = "com.android.tools.build:gradle:${Versions.Plugins.android}"
     const val kotlin = "org.jetbrains.kotlin:kotlin-gradle-plugin:${Versions.Plugins.kotlin}"
-    const val koin = "org.koin:koin-gradle-plugin:${Versions.Plugins.koin}"
     const val googleServices = "com.google.gms:google-services:4.3.4"
     const val crashlytics = "com.google.firebase:firebase-crashlytics-gradle:2.4.1"
 }
@@ -58,9 +56,8 @@ object Libs {
     object Koin {
         private const val version = Versions.Libs.koin
 
-        const val core = "org.koin:koin-core:$version"
-        const val android = "org.koin:koin-android:$version"
-        const val androidViewModel = "org.koin:koin-androidx-viewmodel:$version"
+        const val core = "io.insert-koin:koin-core:$version"
+        const val android = "io.insert-koin:koin-android:$version"
     }
 
     object Navigation {

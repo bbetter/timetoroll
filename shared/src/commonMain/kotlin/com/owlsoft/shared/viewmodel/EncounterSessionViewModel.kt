@@ -1,13 +1,10 @@
 package com.owlsoft.shared.viewmodel
 
-import com.owlsoft.shared.di.AppLogger
 import com.owlsoft.shared.remote.RemoteEncounterTracker
 import com.owlsoft.shared.utils.asLiveFlow
-import io.ktor.client.features.logging.*
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import org.koin.core.KoinComponent
-import org.koin.core.inject
+import org.koin.core.component.KoinComponent
+import org.koin.core.component.inject
 import org.koin.core.parameter.parametersOf
 
 class EncounterSessionViewModel(
