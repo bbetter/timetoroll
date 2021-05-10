@@ -4,6 +4,7 @@ import com.owlsoft.shared.model.Participant
 import com.owlsoft.shared.model.RequestResult
 import com.owlsoft.shared.usecases.CreateEncounterUseCase
 import com.owlsoft.shared.usecases.GetEncounterUseCase
+import com.owlsoft.shared.usecases.RollDiceUseCase
 import com.owlsoft.shared.usecases.UpdateEncounterUseCase
 import com.owlsoft.shared.utils.asLiveFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -14,6 +15,7 @@ import org.koin.core.component.inject
 class EncounterViewModel : BaseViewModel(), KoinComponent {
 
     private val createEncounterUseCase by inject<CreateEncounterUseCase>()
+    private val rollDiceUseCase by inject<RollDiceUseCase>()
     private val updateEncounterUseCase by inject<UpdateEncounterUseCase>()
     private val getEncounterUseCase by inject<GetEncounterUseCase>()
 
@@ -49,7 +51,7 @@ class EncounterViewModel : BaseViewModel(), KoinComponent {
 
     fun dataCount() = _data.value.size
 
-    fun update(code: String, onSuccess: () -> Unit, onError: (String) -> Unit) {
+    fun updateEncounter(code: String, onSuccess: () -> Unit, onError: (String) -> Unit) {
         scope.launch {
             when (val result = updateEncounterUseCase.execute(code, _data.value)) {
                 is RequestResult.Success -> {
@@ -62,7 +64,7 @@ class EncounterViewModel : BaseViewModel(), KoinComponent {
         }
     }
 
-    fun create(onSuccess: (String) -> Unit, onError: (String) -> Unit) {
+    fun createEncounter(onSuccess: (String) -> Unit, onError: (String) -> Unit) {
 
         scope.launch {
             when (val result = createEncounterUseCase.execute(_data.value)) {
@@ -75,4 +77,6 @@ class EncounterViewModel : BaseViewModel(), KoinComponent {
             }
         }
     }
+
+    fun rollInitiative() = rollDiceUseCase.execute()
 }

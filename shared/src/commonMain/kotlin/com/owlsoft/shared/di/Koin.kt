@@ -3,10 +3,7 @@ package com.owlsoft.shared.di
 import com.owlsoft.shared.UUIDRepository
 import com.owlsoft.shared.remote.EncounterAPI
 import com.owlsoft.shared.remote.RemoteEncounterTracker
-import com.owlsoft.shared.usecases.CreateEncounterUseCase
-import com.owlsoft.shared.usecases.GetEncounterUseCase
-import com.owlsoft.shared.usecases.JoinEncounterUseCase
-import com.owlsoft.shared.usecases.UpdateEncounterUseCase
+import com.owlsoft.shared.usecases.*
 import io.ktor.client.*
 import io.ktor.client.features.json.*
 import io.ktor.client.features.json.serializer.*
@@ -64,6 +61,7 @@ private fun Module.useCases() {
     single { JoinEncounterUseCase(get(), get()) }
     single { GetEncounterUseCase(get()) }
     single { UpdateEncounterUseCase(get()) }
+    single { RollDiceUseCase() }
 }
 
 fun DefinitionParameters.pairedComponent() = component1<Pair<String, String>>()

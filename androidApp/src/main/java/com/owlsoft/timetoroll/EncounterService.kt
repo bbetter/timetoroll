@@ -28,6 +28,8 @@ import java.util.*
 class EncounterService : Service() {
 
     companion object {
+        const val SERVICE_TAG = "SERVICE_TAG"
+
         const val ENCOUNTER_CHANNEL_ID = "encounter_channel_id"
         const val ENCOUNTER_CHANNEL_NAME = "Encounter Service"
 
@@ -52,7 +54,7 @@ class EncounterService : Service() {
             encounterTracker
                 .data()
                 .catch {
-                    Log.e("error", "EncounterService. Tracker Failed")
+                    Log.e(SERVICE_TAG, "Tracker failed $it. Stopping foreground service")
                     stopForeground(true)
                 }
                 .collectLatest {
@@ -94,7 +96,10 @@ class EncounterService : Service() {
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
-    private fun createNotificationChannel(channelId: String, channelName: String): String {
+    private fun createNotificationChannel(
+        channelId: String,
+        channelName: String
+    ): String {
         val channel = NotificationChannel(
             channelId,
             channelName,

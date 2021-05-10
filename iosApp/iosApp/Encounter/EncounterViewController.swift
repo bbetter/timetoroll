@@ -14,7 +14,7 @@ class EncounterViewController: UIViewController,UITableViewDataSource, UITableVi
         static let ROW_MARGIN = CGFloat(10)
     }
     
-    lazy var viewModel = EncounterViewModel()
+    private let viewModel = EncounterViewModel()
     
     @IBOutlet weak var nameTextField: UITextField!
     
@@ -104,12 +104,14 @@ class EncounterViewController: UIViewController,UITableViewDataSource, UITableVi
         
         viewModel.create(onSuccess: successHandler, onError: errorHandler)
     }
+    @IBAction func onDiceTouch(_ sender: Any) {
+        let initiative = viewModel.rollInitiative()
+        initiativeTextField.text = "\(initiative)"
+    }
     
     private func setupSubscriptions(){
         self.viewModel.data.watch { [weak self] _ in
-            NSLog("%", "DATA RECEIVED")
             guard let self = self else { return }
-            NSLog("%", "RELOADING TABLE")
             
             self.participantsTable.reloadData()
         }

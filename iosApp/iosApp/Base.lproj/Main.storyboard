@@ -55,7 +55,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2826" y="-228"/>
+            <point key="canvasLocation" x="-2832" y="-181"/>
         </scene>
         <!--Encounter View Controller-->
         <scene sceneID="Osg-14-Dcl">
@@ -66,15 +66,15 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="RmP-u8-xyH">
-                                <rect key="frame" x="16" y="104" width="382" height="34"/>
+                                <rect key="frame" x="16" y="104" width="326" height="34"/>
                                 <subviews>
                                     <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" horizontalCompressionResistancePriority="800" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="NAME" textAlignment="natural" minimumFontSize="18" translatesAutoresizingMaskIntoConstraints="NO" id="eYI-xg-pHe" userLabel="Name Field">
-                                        <rect key="frame" x="0.0" y="0.0" width="246" height="34"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="190" height="34"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits"/>
                                     </textField>
                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="INI" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="5Iv-of-lm6" userLabel="Iniative Field">
-                                        <rect key="frame" x="250" y="0.0" width="64" height="34"/>
+                                        <rect key="frame" x="194" y="0.0" width="64" height="34"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="64" id="Q1Q-8B-yOO"/>
                                         </constraints>
@@ -82,7 +82,7 @@
                                         <textInputTraits key="textInputTraits"/>
                                     </textField>
                                     <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="DEX" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="WQ9-ka-FKG" userLabel="Dexterity Field">
-                                        <rect key="frame" x="318" y="0.0" width="64" height="34"/>
+                                        <rect key="frame" x="262" y="0.0" width="64" height="34"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="64" id="VyB-cq-BPz"/>
                                         </constraints>
@@ -105,6 +105,17 @@
                                     <action selector="onAddTouch:" destination="E1x-3O-adv" eventType="touchUpInside" id="l79-aH-nQv"/>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1sl-d9-dVe" userLabel="ROLL">
+                                <rect key="frame" x="358" y="103" width="36" height="36"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="36" id="VQk-hg-aPS"/>
+                                    <constraint firstAttribute="width" secondItem="1sl-d9-dVe" secondAttribute="height" multiplier="1:1" id="oh0-KY-Age"/>
+                                </constraints>
+                                <state key="normal" image="icosahedron"/>
+                                <connections>
+                                    <action selector="onDiceTouch:" destination="E1x-3O-adv" eventType="touchUpInside" id="ir3-xA-laq"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="OZL-JE-k4K"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -113,11 +124,13 @@
                             <constraint firstItem="OZL-JE-k4K" firstAttribute="bottom" secondItem="ETI-Im-EMO" secondAttribute="bottom" id="O4i-6K-dxk"/>
                             <constraint firstItem="OZL-JE-k4K" firstAttribute="trailing" secondItem="ETI-Im-EMO" secondAttribute="trailing" constant="20" id="PBR-m8-t4h"/>
                             <constraint firstItem="ETI-Im-EMO" firstAttribute="leading" secondItem="OZL-JE-k4K" secondAttribute="leading" constant="20" id="Q6m-Cs-ix8"/>
-                            <constraint firstItem="OZL-JE-k4K" firstAttribute="trailing" secondItem="RmP-u8-xyH" secondAttribute="trailing" constant="16" id="RrZ-iK-NVl"/>
+                            <constraint firstItem="OZL-JE-k4K" firstAttribute="trailing" secondItem="1sl-d9-dVe" secondAttribute="trailing" constant="20" id="TSR-4Z-TtT"/>
                             <constraint firstItem="RmP-u8-xyH" firstAttribute="top" secondItem="OZL-JE-k4K" secondAttribute="top" constant="16" id="dih-Ne-THC"/>
                             <constraint firstItem="ETI-Im-EMO" firstAttribute="top" secondItem="LgF-Sv-sWd" secondAttribute="bottom" constant="8" symbolic="YES" id="eVc-5M-oZf"/>
+                            <constraint firstItem="1sl-d9-dVe" firstAttribute="centerY" secondItem="RmP-u8-xyH" secondAttribute="centerY" id="joj-R6-G4P"/>
                             <constraint firstItem="LgF-Sv-sWd" firstAttribute="centerX" secondItem="OZL-JE-k4K" secondAttribute="centerX" id="mMY-H1-Tzd"/>
                             <constraint firstItem="LgF-Sv-sWd" firstAttribute="top" secondItem="eYI-xg-pHe" secondAttribute="bottom" constant="8" symbolic="YES" id="pKM-VP-bbQ"/>
+                            <constraint firstItem="RmP-u8-xyH" firstAttribute="trailing" secondItem="1sl-d9-dVe" secondAttribute="leading" constant="-16" id="rTR-Jg-23a"/>
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="Create Encounter" id="RRT-xl-LFB" userLabel="Create Encounter">
@@ -169,15 +182,15 @@
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <stackView opaque="NO" contentMode="scaleToFill" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="Dw5-Dv-E19">
-                                <rect key="frame" x="20" y="138" width="374" height="34"/>
+                                <rect key="frame" x="20" y="138" width="322" height="34"/>
                                 <subviews>
                                     <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" horizontalCompressionResistancePriority="800" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="NAME" textAlignment="natural" minimumFontSize="18" translatesAutoresizingMaskIntoConstraints="NO" id="bDP-vN-q0S" userLabel="Name Field">
-                                        <rect key="frame" x="0.0" y="0.0" width="238" height="34"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="186" height="34"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits"/>
                                     </textField>
                                     <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="INI" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="CXp-xV-o6u" userLabel="Iniative Field">
-                                        <rect key="frame" x="242" y="0.0" width="64" height="34"/>
+                                        <rect key="frame" x="190" y="0.0" width="64" height="34"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="64" id="sEo-3t-YLT"/>
                                         </constraints>
@@ -185,7 +198,7 @@
                                         <textInputTraits key="textInputTraits"/>
                                     </textField>
                                     <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="249" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="DEX" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Td1-kb-zBS" userLabel="Dexterity Field">
-                                        <rect key="frame" x="310" y="0.0" width="64" height="34"/>
+                                        <rect key="frame" x="258" y="0.0" width="64" height="34"/>
                                         <constraints>
                                             <constraint firstAttribute="width" constant="64" id="Vc8-K0-SBq"/>
                                         </constraints>
@@ -194,6 +207,18 @@
                                     </textField>
                                 </subviews>
                             </stackView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3bs-b1-Ud4" userLabel="ROLL">
+                                <rect key="frame" x="358" y="137" width="36" height="36"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" secondItem="3bs-b1-Ud4" secondAttribute="height" multiplier="1:1" id="cBw-kR-goC"/>
+                                    <constraint firstAttribute="width" constant="36" id="oI4-Ci-irG"/>
+                                </constraints>
+                                <state key="normal" image="icosahedron"/>
+                                <connections>
+                                    <action selector="onDiceTouch:" destination="E1x-3O-adv" eventType="touchUpInside" id="ehV-Yb-Kpd"/>
+                                    <action selector="onRollTouch:" destination="QNG-zL-Uv4" eventType="touchUpInside" id="ERA-Jg-ABY"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="AzG-gN-qrm"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -201,12 +226,14 @@
                             <constraint firstItem="Dw5-Dv-E19" firstAttribute="leading" secondItem="AzG-gN-qrm" secondAttribute="leading" constant="20" id="4Td-oE-hSe"/>
                             <constraint firstItem="AzG-gN-qrm" firstAttribute="trailing" secondItem="FEz-6c-Iuj" secondAttribute="trailing" constant="20" id="DAe-na-f2V"/>
                             <constraint firstItem="FEz-6c-Iuj" firstAttribute="leading" secondItem="AzG-gN-qrm" secondAttribute="leading" constant="20" id="FkJ-OA-uIx"/>
+                            <constraint firstItem="3bs-b1-Ud4" firstAttribute="centerY" secondItem="Td1-kb-zBS" secondAttribute="centerY" id="IOw-1F-c6y"/>
                             <constraint firstItem="AzG-gN-qrm" firstAttribute="trailing" secondItem="D4s-y4-0fo" secondAttribute="trailing" constant="20" id="J3v-L6-Rry"/>
+                            <constraint firstItem="AzG-gN-qrm" firstAttribute="trailing" secondItem="3bs-b1-Ud4" secondAttribute="trailing" constant="20" id="N0u-U9-g5S"/>
                             <constraint firstItem="Dw5-Dv-E19" firstAttribute="top" secondItem="ndX-h9-0pA" secondAttribute="bottom" constant="8" symbolic="YES" id="RNt-iE-YCJ"/>
                             <constraint firstItem="AzG-gN-qrm" firstAttribute="bottom" secondItem="D4s-y4-0fo" secondAttribute="bottom" id="aqU-Vz-09w"/>
                             <constraint firstItem="D4s-y4-0fo" firstAttribute="leading" secondItem="AzG-gN-qrm" secondAttribute="leading" constant="20" id="g8N-BJ-OSo"/>
                             <constraint firstItem="ndX-h9-0pA" firstAttribute="top" secondItem="AzG-gN-qrm" secondAttribute="top" constant="8" id="okm-Ai-eyh"/>
-                            <constraint firstItem="AzG-gN-qrm" firstAttribute="trailing" secondItem="Dw5-Dv-E19" secondAttribute="trailing" constant="20" id="rVI-k8-GuL"/>
+                            <constraint firstItem="Td1-kb-zBS" firstAttribute="trailing" secondItem="3bs-b1-Ud4" secondAttribute="leading" constant="-16" id="roH-o0-Rmu"/>
                             <constraint firstItem="AzG-gN-qrm" firstAttribute="trailing" secondItem="ndX-h9-0pA" secondAttribute="trailing" constant="20" id="saz-FD-hUs"/>
                             <constraint firstItem="FEz-6c-Iuj" firstAttribute="top" secondItem="bDP-vN-q0S" secondAttribute="bottom" constant="1" id="uG6-pp-L6x"/>
                             <constraint firstItem="D4s-y4-0fo" firstAttribute="top" secondItem="FEz-6c-Iuj" secondAttribute="bottom" constant="8" symbolic="YES" id="x5T-3q-rH5"/>
@@ -232,7 +259,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6AU-7i-JjP" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1881" y="-193"/>
+            <point key="canvasLocation" x="-2026" y="-181"/>
         </scene>
         <!--Encounter Session View Controller-->
         <scene sceneID="Xf8-OS-2Ks">
@@ -298,7 +325,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="teR-Gv-AKJ" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-871" y="-194"/>
+            <point key="canvasLocation" x="-1184" y="-181"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="QtU-fd-YdP">
@@ -322,6 +349,7 @@
     </inferredMetricsTieBreakers>
     <color key="tintColor" red="0.4039215686" green="0.2274509804" blue="0.71764705880000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
     <resources>
+        <image name="icosahedron" width="512.02099609375" height="512.02099609375"/>
         <image name="play.fill" catalog="system" width="116" height="128"/>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

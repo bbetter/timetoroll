@@ -24,7 +24,7 @@ class JoinEncounterViewController: UIViewController, UITableViewDataSource, UITa
     
     @IBOutlet weak var dexTextField: UITextField!
     
-    lazy var viewModel = EncounterJoinViewModel()
+    private let viewModel = EncounterJoinViewModel()
     
     override func viewWillAppear(_ animated: Bool) {
         self.navigationController?.setNavigationBarHidden(false, animated: true)
@@ -100,6 +100,11 @@ class JoinEncounterViewController: UIViewController, UITableViewDataSource, UITa
         nameTextField.text = ""
         initiativeTextField.text = ""
         dexTextField.text = ""
+    }
+    
+    @IBAction func onRollTouch(_ sender: Any) {
+        let initiative = viewModel.rollInitiative()
+        initiativeTextField.text = "\(initiative)"
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {

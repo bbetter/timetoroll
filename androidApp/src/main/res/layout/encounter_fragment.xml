@@ -93,6 +93,16 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
+            <ImageButton
+                android:layout_marginStart="2dp"
+                android:layout_gravity="center_vertical"
+                android:id="@+id/roll_dice_button"
+                android:padding="16dp"
+                android:background="@drawable/ic_dice"
+                android:tint="?colorAccent"
+                android:layout_width="48dp"
+                android:layout_height="48dp"/>
+
         </LinearLayout>
 
 

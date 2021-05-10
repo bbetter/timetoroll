@@ -57,13 +57,13 @@ class EncounterFragment : Fragment(R.layout.encounter_fragment) {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         if (item.itemId == R.id.action_menu_item) {
             if (code != null) {
-                viewModel.update(
+                viewModel.updateEncounter(
                     code!!,
                     onSuccess = { findNavController().popBackStack() },
                     onError = { showError(it) }
                 )
             } else {
-                viewModel.create(
+                viewModel.createEncounter(
                     onSuccess = { findNavController().goToEncounter(it) },
                     onError = { showError(it) }
                 )
@@ -95,6 +95,11 @@ class EncounterFragment : Fragment(R.layout.encounter_fragment) {
             LinearLayoutManager.VERTICAL,
             false
         )
+
+        rollDiceButton.setOnClickListener {
+            val initiative = viewModel.rollInitiative()
+            initiativeEditText.setText(initiative.toString())
+        }
 
         addButton.setOnClickListener {
             val name = nameEditText.text.toString()

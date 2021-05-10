@@ -87,6 +87,11 @@ class EncounterJoinFragment : Fragment(R.layout.encounter_join_fragment) {
 
         encounterCodeEditText.setText(code ?: "")
 
+        rollDiceButton.setOnClickListener {
+            val initiative = viewModel.rollInitiative   ()
+            initiativeEditText.setText(initiative.toString())
+        }
+
         addButton.setOnClickListener {
             val name = nameEditText.text.toString()
             val initiative = initiativeEditText.text.toString().toIntOrNull() ?: 0

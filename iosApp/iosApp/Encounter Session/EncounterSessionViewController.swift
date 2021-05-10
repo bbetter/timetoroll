@@ -40,6 +40,8 @@ class EncounterSessionViewController: UIViewController, UITableViewDataSource, U
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        participantsTable.allowsSelection = false
+        
         viewModel.data.watch { data in
             guard let data = data else { return }
             
@@ -179,8 +181,9 @@ class EncounterSessionViewController: UIViewController, UITableViewDataSource, U
     private func updateTrackerButton(_ data: TickData){
         self.actionButton.isHidden = !data.isPlayPauseAllowed
       
-        let image = data.isPaused ? "play.fill" : "pause.fill"
-        self.actionButton.setImage(UIImage(systemName: image), for: .normal)
+        let imageName = data.isPaused ? "play.fill" : "pause.fill"
+        let image = UIImage(systemName: imageName)
+        self.actionButton.setImage(image, for: .normal)
     }
     
     private func updateTrackerTime(_ data: TickData){
