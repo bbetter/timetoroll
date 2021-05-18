@@ -28,6 +28,8 @@ class EncounterViewController: UIViewController,UITableViewDataSource, UITableVi
     
     var code: String = ""
     
+    let spinner = UIActivityIndicatorView(style: .large)
+    
     override func viewWillAppear(_ animated: Bool) {
         self.navigationController?.setNavigationBarHidden(false, animated: true)
     }
@@ -93,17 +95,30 @@ class EncounterViewController: UIViewController,UITableViewDataSource, UITableVi
     }
     
     @IBAction func onActionTouch(_ sender: UIBarButtonItem) {
-        let successHandler: (String) -> Void = { code in
-            self.code = code
-            self.performSegue(withIdentifier: "encounter_segue", sender: self)
+    
+        LiveFlowKt.asLiveFlow(
+            viewModel.createEncounter(),
+            scope: viewModel.scope
+        ).watch { result in
+            if result != nil {
+                switch result! {
+                case is CreateEncounterResult.Loading:
+                    self.showSpinner(onView: self.view)
+                case let error as CreateEncounterResult.Error:
+                    self.removeSpinner()
+                    self.showErrorDialog(msg: error.message)
+                case let succRes as CreateEncounterResult.Success:
+                    self.removeSpinner()
+                    self.code = succRes.code
+                    self.performSegue(withIdentifier: "encounter_segue", sender: self)
+                default:
+                    NSLog("%s", "Unknown error ")
+                }
+            }
+
         }
-        
-        let errorHandler: (String) -> Void = { errorMsg in
-            self.showErrorDialog(msg: errorMsg)
-        }
-        
-        viewModel.create(onSuccess: successHandler, onError: errorHandler)
     }
+    
     @IBAction func onDiceTouch(_ sender: Any) {
         let initiative = viewModel.rollInitiative()
         initiativeTextField.text = "\(initiative)"

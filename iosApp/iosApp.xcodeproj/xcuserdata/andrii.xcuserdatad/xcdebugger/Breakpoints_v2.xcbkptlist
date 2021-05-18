@@ -7,54 +7,6 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            uuid = "8E9EE3D0-020E-44E0-BCA0-1794590CA2F5"
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "iosApp/Encounter/EncounterViewController.swift"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "105"
-            endingLineNumber = "105"
-            landmarkName = "onActionTouch(_:)"
-            landmarkType = "7">
-            <Locations>
-               <Location
-                  uuid = "8E9EE3D0-020E-44E0-BCA0-1794590CA2F5 - 8c46a4cc6c90b6b0"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "iosApp.EncounterViewController.onActionTouch(__C.UIBarButtonItem) -&gt; ()"
-                  moduleName = "iosApp"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/andrii/AndroidStudioProjects/timetoroll/iosApp/iosApp/Encounter/EncounterViewController.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "113"
-                  endingLineNumber = "113"
-                  offsetFromSymbolStart = "32">
-               </Location>
-               <Location
-                  uuid = "8E9EE3D0-020E-44E0-BCA0-1794590CA2F5 - ef07fcdd1ac36e79"
-                  shouldBeEnabled = "Yes"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "closure #1 (Swift.String) -&gt; () in iosApp.EncounterViewController.onActionTouch(__C.UIBarButtonItem) -&gt; ()"
-                  moduleName = "iosApp"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/andrii/AndroidStudioProjects/timetoroll/iosApp/iosApp/Encounter/EncounterViewController.swift"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "114"
-                  endingLineNumber = "114"
-                  offsetFromSymbolStart = "41">
-               </Location>
-            </Locations>
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             uuid = "D3A01243-B4D4-4096-8EBD-781AA07BF3E3"
             shouldBeEnabled = "Yes"
             ignoreCount = "0"

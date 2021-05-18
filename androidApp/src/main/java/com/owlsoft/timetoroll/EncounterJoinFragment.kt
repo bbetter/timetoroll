@@ -1,5 +1,6 @@
 package com.owlsoft.timetoroll
 
+import android.app.ProgressDialog
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
@@ -9,14 +10,21 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.owlsoft.shared.usecases.JoinEncounterResult
 import com.owlsoft.shared.viewmodel.EncounterJoinViewModel
 import com.owlsoft.timetoroll.databinding.EncounterJoinFragmentBinding
+import kotlinx.coroutines.flow.collect
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class EncounterJoinFragment : Fragment(R.layout.encounter_join_fragment) {
+
+    private val progressDialog by lazy { ProgressDialog(requireContext()).apply {
+        setTitle("Processing")
+    }}
 
     private lateinit var binding: EncounterJoinFragmentBinding
 
@@ -42,11 +50,24 @@ class EncounterJoinFragment : Fragment(R.layout.encounter_join_fragment) {
         if (item.itemId == R.id.encounterDetailsActionButton) {
             val encounterCode = binding.encounterCodeEditText.text.toString()
 
-            viewModel.join(
-                encounterCode,
-                onSuccess = { findNavController().goToEncounter(encounterCode) },
-                onError = { errorMessage -> showError(errorMessage) }
-            )
+            lifecycleScope.launchWhenResumed {
+                viewModel.join(encounterCode)
+                    .collect {
+                        when (it) {
+                            is JoinEncounterResult.Loading -> {
+                                progressDialog.show()
+                            }
+                            is JoinEncounterResult.Success -> {
+                                progressDialog.hide()
+                                findNavController().goToEncounter(encounterCode)
+                            }
+                            is JoinEncounterResult.Error -> {
+                                progressDialog.hide()
+                                showError(it.message)
+                            }
+                        }
+                    }
+            }
         }
         return true
     }

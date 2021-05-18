@@ -77,17 +77,26 @@ class JoinEncounterViewController: UIViewController, UITableViewDataSource, UITa
         
         guard let code = self.codeTextField.text else { return }
         
-        let successHandler: () -> Void = { [weak self] in
-            guard let self = self else { return }
-            self.performSegue(withIdentifier: "join_encounter_segue", sender: self)
+        LiveFlowKt.asLiveFlow(
+            viewModel.join(code: code),
+            scope: viewModel.scope
+        ).watch { result in
+            if result != nil {
+                switch result! {
+                case is JoinEncounterResult.Loading:
+                    self.showSpinner(onView: self.view)
+                case let error as JoinEncounterResult.Error:
+                    self.removeSpinner()
+                    self.showErrorDialog(msg: error.message)
+                case is CreateEncounterResult.Success:
+                    self.removeSpinner()
+                    self.performSegue(withIdentifier: "join_encounter_segue", sender: self)
+                default:
+                    NSLog("%s", "Unknown error ")
+                }
+            }
+
         }
-        
-        let errorHandler: (String) -> Void = { [weak self] errMsg in
-            guard let self = self else { return }
-            self.showErrorDialog(msg: errMsg)
-        }
-        
-        viewModel.join(code: code, onSuccess: successHandler, onError: errorHandler)
     }
     
     @IBAction func onAddTouch(_ sender: Any) {
