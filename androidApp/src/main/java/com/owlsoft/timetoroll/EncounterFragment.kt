@@ -1,5 +1,6 @@
 package com.owlsoft.timetoroll
 
+import android.app.ProgressDialog
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
@@ -9,15 +10,22 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.owlsoft.shared.model.Participant
+import com.owlsoft.shared.usecases.CreateEncounterResult
 import com.owlsoft.shared.viewmodel.EncounterViewModel
 import com.owlsoft.timetoroll.databinding.EncounterFragmentBinding
+import kotlinx.coroutines.flow.collect
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class EncounterFragment : Fragment(R.layout.encounter_fragment) {
+
+    private val progressDialog by lazy { ProgressDialog(requireContext()).apply {
+        setTitle("Processing")
+    }}
 
     lateinit var binding: EncounterFragmentBinding
 
@@ -63,10 +71,26 @@ class EncounterFragment : Fragment(R.layout.encounter_fragment) {
                     onError = { showError(it) }
                 )
             } else {
-                viewModel.createEncounter(
-                    onSuccess = { findNavController().goToEncounter(it) },
-                    onError = { showError(it) }
-                )
+                lifecycleScope.launchWhenResumed {
+                    viewModel.createEncounter().collect {
+                        when (it) {
+                            is CreateEncounterResult.Loading -> {
+                                item.isEnabled = false
+                                progressDialog.show()
+                            }
+                            is CreateEncounterResult.Success -> {
+                                item.isEnabled = true
+                                progressDialog.hide()
+                                findNavController().goToEncounter(it.code)
+                            }
+                            is CreateEncounterResult.Error -> {
+                                item.isEnabled = true
+                                progressDialog.hide()
+                                showError(it.message)
+                            }
+                        }
+                    }
+                }
             }
         }
         return true

@@ -2,12 +2,11 @@ package com.owlsoft.shared.viewmodel
 
 import com.owlsoft.shared.model.Participant
 import com.owlsoft.shared.model.RequestResult
-import com.owlsoft.shared.usecases.CreateEncounterUseCase
-import com.owlsoft.shared.usecases.GetEncounterUseCase
-import com.owlsoft.shared.usecases.RollDiceUseCase
-import com.owlsoft.shared.usecases.UpdateEncounterUseCase
+import com.owlsoft.shared.usecases.*
 import com.owlsoft.shared.utils.asLiveFlow
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.koin.core.component.KoinComponent
 import org.koin.core.component.inject
@@ -64,18 +63,8 @@ class EncounterViewModel : BaseViewModel(), KoinComponent {
         }
     }
 
-    fun createEncounter(onSuccess: (String) -> Unit, onError: (String) -> Unit) {
-
-        scope.launch {
-            when (val result = createEncounterUseCase.execute(_data.value)) {
-                is RequestResult.Success -> {
-                    onSuccess(result.code)
-                }
-                is RequestResult.Error -> {
-                    onError(result.message)
-                }
-            }
-        }
+    fun createEncounter(): Flow<CreateEncounterResult> {
+        return createEncounterUseCase.execute(_data.value)
     }
 
     fun rollInitiative() = rollDiceUseCase.execute()
