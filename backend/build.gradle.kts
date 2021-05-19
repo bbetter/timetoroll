@@ -17,7 +17,7 @@ dependencies {
     implementation(Libs.KtorServer.serialization)
     implementation(Libs.KtorServer.websockets)
 
-    implementation(Libs.kotlinSerialization) // JVM dependency
+    implementation(Libs.kotlinSerialization) // JVM  dependency
 
     implementation("ch.qos.logback:logback-classic:1.2.3")
 

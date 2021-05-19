@@ -1,7 +1,6 @@
 package com.owlsoft.shared.viewmodel
 
 import com.owlsoft.shared.model.Participant
-import com.owlsoft.shared.usecases.JoinEncounterResult
 import com.owlsoft.shared.usecases.JoinEncounterUseCase
 import com.owlsoft.shared.usecases.RollDiceUseCase
 import com.owlsoft.shared.utils.asLiveFlow
@@ -40,20 +39,8 @@ class EncounterJoinViewModel : BaseViewModel(), KoinComponent {
 
     fun dataCount() = _data.value.size
 
-    fun join(code: String, onSuccess: () -> Unit, onError: (String) -> Unit) {
-        scope.launch {
-            when (val result = joinEncounterUseCase.execute(code, _data.value)) {
-                is JoinEncounterResult.Success -> {
-                    onSuccess()
-                }
-                is JoinEncounterResult.Error -> {
-                    onError(result.message)
-                }
-                else -> {
-                }
-            }
-        }
-    }
+    fun join(code: String) = joinEncounterUseCase.execute(code, _data.value)
+        .asLiveFlow(scope)
 
     fun rollInitiative() = rollDiceUseCase.execute()
 }

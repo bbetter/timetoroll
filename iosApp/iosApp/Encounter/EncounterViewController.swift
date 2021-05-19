@@ -95,11 +95,7 @@ class EncounterViewController: UIViewController,UITableViewDataSource, UITableVi
     }
     
     @IBAction func onActionTouch(_ sender: UIBarButtonItem) {
-    
-        LiveFlowKt.asLiveFlow(
-            viewModel.createEncounter(),
-            scope: viewModel.scope
-        ).watch { result in
+        viewModel.createEncounter().watch { result in
             if result != nil {
                 switch result! {
                 case is CreateEncounterResult.Loading:

@@ -77,10 +77,7 @@ class JoinEncounterViewController: UIViewController, UITableViewDataSource, UITa
         
         guard let code = self.codeTextField.text else { return }
         
-        LiveFlowKt.asLiveFlow(
-            viewModel.join(code: code),
-            scope: viewModel.scope
-        ).watch { result in
+        viewModel.join(code: code).watch { result in
             if result != nil {
                 switch result! {
                 case is JoinEncounterResult.Loading:
@@ -88,7 +85,7 @@ class JoinEncounterViewController: UIViewController, UITableViewDataSource, UITa
                 case let error as JoinEncounterResult.Error:
                     self.removeSpinner()
                     self.showErrorDialog(msg: error.message)
-                case is CreateEncounterResult.Success:
+                case is JoinEncounterResult.Success:
                     self.removeSpinner()
                     self.performSegue(withIdentifier: "join_encounter_segue", sender: self)
                 default:
