@@ -64,15 +64,11 @@ class EncounterTurnTracker(
         trackerData: TrackerData
     ) {
         val participants = encounter.participants
-
-        if (participants.isEmpty()) {
-            return
-        }
-
+        
         val isAdminSession = deviceID == encounter.ownerID
 
         val isCurrentSession =
-            participants[trackerData.turnIndex].ownerID == deviceID
+            if (participants.isEmpty()) false else participants[trackerData.turnIndex].ownerID == deviceID
 
         val data = TickData(
             trackerData.timerTick,
