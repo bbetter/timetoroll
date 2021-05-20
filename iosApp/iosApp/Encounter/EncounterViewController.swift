@@ -7,12 +7,9 @@
 
 import UIKit
 import shared
+import MBProgressHUD
 
 class EncounterViewController: UIViewController,UITableViewDataSource, UITableViewDelegate {
-  
-    private struct Constants{
-        static let ROW_MARGIN = CGFloat(10)
-    }
     
     private let viewModel = EncounterViewModel()
     
@@ -39,35 +36,15 @@ class EncounterViewController: UIViewController,UITableViewDataSource, UITableVi
         setupParticipantsTable()
         setupSubscriptions()
     }
-
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return Int(viewModel.dataCount())
-    }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-       return 1
-    }
-    
-    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        let headerview =  UIView(
-            frame: CGRect(
-                x: 0,
-                y: 0,
-                width: tableView.bounds.size.width,
-                height: Constants.ROW_MARGIN
-            )
-        )
-        return headerview
-    }
-    
-    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return Constants.ROW_MARGIN
+        return Int(viewModel.dataCount())
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "participant_cell", for: indexPath) as! ParticipantCell
         
-        let index = indexPath.section
+        let index = indexPath.row
         let participant = viewModel.dataAt(index: Int32(index))
         
         bindCell(cell: cell, participant: participant, index: index)
@@ -99,12 +76,12 @@ class EncounterViewController: UIViewController,UITableViewDataSource, UITableVi
             if result != nil {
                 switch result! {
                 case is CreateEncounterResult.Loading:
-                    self.showSpinner(onView: self.view)
+                    MBProgressHUD.showAdded(to: self.view, animated: true)
                 case let error as CreateEncounterResult.Error:
-                    self.removeSpinner()
+                    MBProgressHUD.hide(for: self.view, animated: true)
                     self.showErrorDialog(msg: error.message)
                 case let succRes as CreateEncounterResult.Success:
-                    self.removeSpinner()
+                    MBProgressHUD.hide(for: self.view, animated: true)
                     self.code = succRes.code
                     self.performSegue(withIdentifier: "encounter_segue", sender: self)
                 default:

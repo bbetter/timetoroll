@@ -117,8 +117,15 @@ class EncounterSessionFragment : Fragment(R.layout.encounter_session_fragment) {
     }
 
     private fun updateParticipantsList(participants: List<Participant>, turnIndex: Int) {
-        adapter.updateParticipants(participants)
-        adapter.updateActiveParticipant(turnIndex)
+        if(participants.isEmpty()){
+            binding.participantsList.visibility = View.GONE
+            binding.noParticipantsBanner.visibility = View.VISIBLE
+        } else{
+            binding.noParticipantsBanner.visibility = View.GONE
+            binding.participantsList.visibility = View.VISIBLE
+            adapter.updateParticipants(participants)
+            adapter.updateActiveParticipant(turnIndex)
+        }
     }
 
     private fun updateSkipTurnButton(skipTurnAllowed: Boolean) {

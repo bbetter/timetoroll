@@ -55,10 +55,28 @@
 
     </LinearLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/participants_list"
+    <FrameLayout android:id="@+id/participants_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:listitem="@layout/encounter_participant_item" />
+        android:layout_height="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/participants_list"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:listitem="@layout/encounter_participant_item" />
+
+        <TextView
+            android:id="@+id/no_participants_banner"
+            android:textSize="24sp"
+            android:visibility="gone"
+            android:textColor="@color/primary_text"
+            android:text="@string/no_one_is_here_yet"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"/>
+
+    </FrameLayout>
+
 
 </LinearLayout>

@@ -9,12 +9,9 @@ import UIKit
 import shared
 
 class ParticipantCell: UITableViewCell {
+    private var shadowLayer: CAShapeLayer!
     
-    enum Constants{
-        static let BOTTOM_SPACE = CGFloat(10.0)
-    }
-    
-    @IBOutlet weak var deleteConstraint: NSLayoutConstraint!
+    @IBOutlet weak var cardView: UIView!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var initiativeLabel: UILabel!
     @IBOutlet weak var deleteButton: UIButton!
@@ -26,15 +23,23 @@ class ParticipantCell: UITableViewCell {
     var allowDelete: Bool = false{
         didSet{
             deleteButton.isHidden = !allowDelete
-            if(allowDelete){
-                deleteConstraint.constant = 33
-            }
-            else{
-                deleteConstraint.constant = 0
-            }
         }
     }
     
     var onDeleteRowClick: (Int) -> Void = { _ in }
     
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        // just use the layer's shadow... adding the Bezier
+        //let shadowPath = UIBezierPath(roundedRect: innerView.bounds, cornerRadius: cornerRadius)
+        //innerView.layer.shadowPath = shadowPath.cgPath
+        
+        cardView.layer.cornerRadius = 6
+        cardView.layer.masksToBounds = false
+        cardView.layer.shadowColor = UIColor.lightGray.cgColor
+        cardView.layer.shadowOffset = CGSize(width: 1, height: 1);
+        cardView.layer.shadowOpacity = 0.7
+        cardView.layer.borderWidth = 1.0
+        cardView.layer.borderColor =  UIColor.lightGray.cgColor
+    }
 }

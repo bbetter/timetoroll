@@ -37,4 +37,5 @@
 
     <string name="encounter_notification_title">Encounter %s</string>
     <string name="encounter_notification_message">%1$s turn. %2$s</string>
+    <string name="no_one_is_here_yet">NO ONE IS HERE YET</string>
 </resources>

@@ -6,14 +6,11 @@
 //
 
 import UIKit
+import MBProgressHUD
 import shared
 
 class JoinEncounterViewController: UIViewController, UITableViewDataSource, UITableViewDelegate{
-    
-    private struct Constants{
-        static let ROW_MARGIN = CGFloat(10)
-    }
-    
+   
     @IBOutlet weak var participantsTable: UITableView!
     
     @IBOutlet weak var codeTextField: UITextField!
@@ -36,35 +33,15 @@ class JoinEncounterViewController: UIViewController, UITableViewDataSource, UITa
         setupSubscriptions()
     }
     
-    func numberOfSections(in tableView: UITableView) -> Int {
-        return Int(self.viewModel.dataCount())
-    }
-    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
-    }
-    
-    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        let headerview =  UIView(
-            frame: CGRect(
-                x: 0,
-                y: 0,
-                width: tableView.bounds.size.width,
-                height: Constants.ROW_MARGIN
-            )
-        )
-        return headerview
-    }
-    
-    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return Constants.ROW_MARGIN
+        return Int(self.viewModel.dataCount())
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "participant_cell", for: indexPath) as! ParticipantCell
         
-        let index = indexPath.section
+        let index = indexPath.row
         
         let participant = self.viewModel.dataAt(index: Int32(index))
         
@@ -81,12 +58,12 @@ class JoinEncounterViewController: UIViewController, UITableViewDataSource, UITa
             if result != nil {
                 switch result! {
                 case is JoinEncounterResult.Loading:
-                    self.showSpinner(onView: self.view)
+                    MBProgressHUD.showAdded(to: self.view, animated: true)
                 case let error as JoinEncounterResult.Error:
-                    self.removeSpinner()
+                    MBProgressHUD.hide(for: self.view, animated: true)
                     self.showErrorDialog(msg: error.message)
                 case is JoinEncounterResult.Success:
-                    self.removeSpinner()
+                    MBProgressHUD.hide(for: self.view, animated: true)
                     self.performSegue(withIdentifier: "join_encounter_segue", sender: self)
                 default:
                     NSLog("%s", "Unknown error ")

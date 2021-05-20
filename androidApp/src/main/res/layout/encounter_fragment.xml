@@ -38,9 +38,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.6"
-                android:hint="@string/participant_name_hint"
-                app:boxCornerRadiusTopEnd="16dp"
-                app:boxCornerRadiusTopStart="16dp">
+                android:hint="@string/participant_name_hint">
 
                 <EditText
                     android:id="@+id/nameEditText"
@@ -58,8 +56,7 @@
                 android:layout_marginStart="4dp"
                 android:layout_weight="0.2"
                 android:hint="@string/participant_initiative_hint"
-                app:boxCornerRadiusTopEnd="16dp"
-                app:boxCornerRadiusTopStart="16dp">
+                >
 
                 <EditText
                     android:id="@+id/initiativeEditText"
@@ -79,8 +76,7 @@
                 android:layout_marginStart="4dp"
                 android:layout_weight="0.2"
                 android:hint="@string/participant_dexterity_hint"
-                app:boxCornerRadiusTopEnd="16dp"
-                app:boxCornerRadiusTopStart="16dp">
+                >
 
                 <EditText
                     android:id="@+id/dexterityEditText"

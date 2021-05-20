@@ -93,7 +93,8 @@
                             </stackView>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="ETI-Im-EMO" userLabel="Participants Table">
                                 <rect key="frame" x="20" y="190" width="374" height="672"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="sectionIndexBackgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </tableView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LgF-Sv-sWd">
                                 <rect key="frame" x="185.5" y="146" width="43" height="36"/>
@@ -163,7 +164,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FEz-6c-Iuj" userLabel="Add Button">
-                                <rect key="frame" x="20" y="173" width="374" height="36"/>
+                                <rect key="frame" x="20" y="186" width="374" height="36"/>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
                                 <state key="normal" title="ADD">
                                     <color key="titleColor" red="0.4039215686" green="0.2274509804" blue="0.71764705880000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -172,9 +173,10 @@
                                     <action selector="onAddTouch:" destination="QNG-zL-Uv4" eventType="touchUpInside" id="bjR-JS-th4"/>
                                 </connections>
                             </button>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="D4s-y4-0fo" userLabel="Participants Table">
-                                <rect key="frame" x="20" y="217" width="374" height="645"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="100" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="D4s-y4-0fo" userLabel="Participants Table">
+                                <rect key="frame" x="20" y="230" width="374" height="632"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="sectionIndexBackgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             </tableView>
                             <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="ENCOUNTER CODE" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="ndX-h9-0pA" userLabel="Code Field">
                                 <rect key="frame" x="20" y="96" width="374" height="34"/>
@@ -182,7 +184,7 @@
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <stackView opaque="NO" contentMode="scaleToFill" spacing="4" translatesAutoresizingMaskIntoConstraints="NO" id="Dw5-Dv-E19">
-                                <rect key="frame" x="20" y="138" width="322" height="34"/>
+                                <rect key="frame" x="20" y="151" width="322" height="34"/>
                                 <subviews>
                                     <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" horizontalCompressionResistancePriority="800" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="NAME" textAlignment="natural" minimumFontSize="18" translatesAutoresizingMaskIntoConstraints="NO" id="bDP-vN-q0S" userLabel="Name Field">
                                         <rect key="frame" x="0.0" y="0.0" width="186" height="34"/>
@@ -208,7 +210,7 @@
                                 </subviews>
                             </stackView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3bs-b1-Ud4" userLabel="ROLL">
-                                <rect key="frame" x="358" y="137" width="36" height="36"/>
+                                <rect key="frame" x="358" y="150" width="36" height="36"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="3bs-b1-Ud4" secondAttribute="height" multiplier="1:1" id="cBw-kR-goC"/>
                                     <constraint firstAttribute="width" constant="36" id="oI4-Ci-irG"/>
@@ -219,6 +221,13 @@
                                     <action selector="onRollTouch:" destination="QNG-zL-Uv4" eventType="touchUpInside" id="ERA-Jg-ABY"/>
                                 </connections>
                             </button>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="jQX-j4-jns">
+                                <rect key="frame" x="20" y="140" width="374" height="1"/>
+                                <color key="backgroundColor" red="0.4039215686" green="0.2274509804" blue="0.71764705880000002" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="1" id="yc2-7O-MIw"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="AzG-gN-qrm"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -226,10 +235,13 @@
                             <constraint firstItem="Dw5-Dv-E19" firstAttribute="leading" secondItem="AzG-gN-qrm" secondAttribute="leading" constant="20" id="4Td-oE-hSe"/>
                             <constraint firstItem="AzG-gN-qrm" firstAttribute="trailing" secondItem="FEz-6c-Iuj" secondAttribute="trailing" constant="20" id="DAe-na-f2V"/>
                             <constraint firstItem="FEz-6c-Iuj" firstAttribute="leading" secondItem="AzG-gN-qrm" secondAttribute="leading" constant="20" id="FkJ-OA-uIx"/>
+                            <constraint firstItem="jQX-j4-jns" firstAttribute="centerX" secondItem="ndX-h9-0pA" secondAttribute="centerX" id="H2M-5l-WNa"/>
                             <constraint firstItem="3bs-b1-Ud4" firstAttribute="centerY" secondItem="Td1-kb-zBS" secondAttribute="centerY" id="IOw-1F-c6y"/>
                             <constraint firstItem="AzG-gN-qrm" firstAttribute="trailing" secondItem="D4s-y4-0fo" secondAttribute="trailing" constant="20" id="J3v-L6-Rry"/>
                             <constraint firstItem="AzG-gN-qrm" firstAttribute="trailing" secondItem="3bs-b1-Ud4" secondAttribute="trailing" constant="20" id="N0u-U9-g5S"/>
-                            <constraint firstItem="Dw5-Dv-E19" firstAttribute="top" secondItem="ndX-h9-0pA" secondAttribute="bottom" constant="8" symbolic="YES" id="RNt-iE-YCJ"/>
+                            <constraint firstItem="Dw5-Dv-E19" firstAttribute="top" secondItem="jQX-j4-jns" secondAttribute="bottom" constant="10" id="RNt-iE-YCJ"/>
+                            <constraint firstItem="jQX-j4-jns" firstAttribute="width" secondItem="ndX-h9-0pA" secondAttribute="width" id="U2D-UI-rNI"/>
+                            <constraint firstItem="jQX-j4-jns" firstAttribute="top" secondItem="ndX-h9-0pA" secondAttribute="bottom" constant="10" id="XfM-Mr-VrL"/>
                             <constraint firstItem="AzG-gN-qrm" firstAttribute="bottom" secondItem="D4s-y4-0fo" secondAttribute="bottom" id="aqU-Vz-09w"/>
                             <constraint firstItem="D4s-y4-0fo" firstAttribute="leading" secondItem="AzG-gN-qrm" secondAttribute="leading" constant="20" id="g8N-BJ-OSo"/>
                             <constraint firstItem="ndX-h9-0pA" firstAttribute="top" secondItem="AzG-gN-qrm" secondAttribute="top" constant="8" id="okm-Ai-eyh"/>
@@ -259,7 +271,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="6AU-7i-JjP" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2026" y="-181"/>
+            <point key="canvasLocation" x="-2026.0869565217392" y="-181.47321428571428"/>
         </scene>
         <!--Encounter Session View Controller-->
         <scene sceneID="Xf8-OS-2Ks">
@@ -287,7 +299,7 @@
                             </button>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" alwaysBounceHorizontal="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Wi0-Lh-mz8" userLabel="Participants Table">
                                 <rect key="frame" x="24" y="165" width="366" height="697"/>
-                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="sectionIndexBackgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <sections/>
                             </tableView>

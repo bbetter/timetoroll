@@ -3,13 +3,13 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
 		B504743325D985E60069E2AD /* ParticipantCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = B504743225D985E60069E2AD /* ParticipantCell.xib */; };
 		B504743725D986240069E2AD /* ParticipantCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B504743625D986240069E2AD /* ParticipantCell.swift */; };
-		B50B2E74265483AA008E4051 /* ViewController+Spinner.swift in Sources */ = {isa = PBXBuildFile; fileRef = B50B2E73265483AA008E4051 /* ViewController+Spinner.swift */; };
+		B50B2E772656DB54008E4051 /* MBProgressHUD in Frameworks */ = {isa = PBXBuildFile; productRef = B50B2E762656DB54008E4051 /* MBProgressHUD */; };
 		B51982F02626018C00A16095 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B51982EF2626018C00A16095 /* SceneDelegate.swift */; };
 		B5592FFA25CF587200985547 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5592FF925CF587200985547 /* AppDelegate.swift */; };
 		B5592FFE25CF587200985547 /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5592FFD25CF587200985547 /* MenuViewController.swift */; };
@@ -60,7 +60,6 @@
 /* Begin PBXFileReference section */
 		B504743225D985E60069E2AD /* ParticipantCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ParticipantCell.xib; sourceTree = "<group>"; };
 		B504743625D986240069E2AD /* ParticipantCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ParticipantCell.swift; sourceTree = "<group>"; };
-		B50B2E73265483AA008E4051 /* ViewController+Spinner.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ViewController+Spinner.swift"; sourceTree = "<group>"; };
 		B51982EF2626018C00A16095 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		B5592FF625CF587200985547 /* iosApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iosApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B5592FF925CF587200985547 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -87,6 +86,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B50B2E772656DB54008E4051 /* MBProgressHUD in Frameworks */,
 				B559303125CF5A8300985547 /* shared.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -153,7 +153,6 @@
 				B559304825CF900800985547 /* DI.swift */,
 				B504742725D97ED00069E2AD /* Cells */,
 				B51982EF2626018C00A16095 /* SceneDelegate.swift */,
-				B50B2E73265483AA008E4051 /* ViewController+Spinner.swift */,
 			);
 			path = iosApp;
 			sourceTree = "<group>";
@@ -234,6 +233,9 @@
 			dependencies = (
 			);
 			name = iosApp;
+			packageProductDependencies = (
+				B50B2E762656DB54008E4051 /* MBProgressHUD */,
+			);
 			productName = iosApp;
 			productReference = B5592FF625CF587200985547 /* iosApp.app */;
 			productType = "com.apple.product-type.application";
@@ -305,6 +307,9 @@
 				Base,
 			);
 			mainGroup = B5592FED25CF587200985547;
+			packageReferences = (
+				B50B2E752656DB54008E4051 /* XCRemoteSwiftPackageReference "MBProgressHUD" */,
+			);
 			productRefGroup = B5592FF725CF587200985547 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -376,7 +381,6 @@
 				B559304925CF900800985547 /* DI.swift in Sources */,
 				B5592FFA25CF587200985547 /* AppDelegate.swift in Sources */,
 				B5FB9D8C25D35DED00860B44 /* EncounterViewController.swift in Sources */,
-				B50B2E74265483AA008E4051 /* ViewController+Spinner.swift in Sources */,
 				B51982F02626018C00A16095 /* SceneDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -712,6 +716,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		B50B2E752656DB54008E4051 /* XCRemoteSwiftPackageReference "MBProgressHUD" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/jdg/MBProgressHUD.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.2.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		B50B2E762656DB54008E4051 /* MBProgressHUD */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = B50B2E752656DB54008E4051 /* XCRemoteSwiftPackageReference "MBProgressHUD" */;
+			productName = MBProgressHUD;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = B5592FEE25CF587200985547 /* Project object */;
 }

@@ -9,11 +9,7 @@ import UIKit
 import shared
 
 class EncounterSessionViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
-    
-    private struct Constants{
-        static let ROW_MARGIN = CGFloat(10)
-    }
-    
+
     //MARK: widgets
     @IBOutlet weak var actionButton: UIButton!
     
@@ -67,26 +63,13 @@ class EncounterSessionViewController: UIViewController, UITableViewDataSource, U
     
     //MARK: table
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
-    }
-    
-    func numberOfSections(in tableView: UITableView) -> Int {
         return tickData?.participants.count ?? 0
-    }
-    
-    func tableView(_ tableView: UITableView, viewForFooterInSection section: Int) -> UIView? {
-        let headerview =  UIView(frame: CGRect(x: 0, y: 0, width: tableView.bounds.size.width, height: Constants.ROW_MARGIN))
-        return headerview
-    }
-    
-    func tableView(_ tableView: UITableView, heightForFooterInSection section: Int) -> CGFloat {
-        return Constants.ROW_MARGIN
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "participant_cell", for: indexPath) as! ParticipantCell
     
-        let participantIndex = indexPath.section
+        let participantIndex = indexPath.row
         
         guard let participant = tickData?.participants[participantIndex] else {
             return cell
@@ -94,14 +77,14 @@ class EncounterSessionViewController: UIViewController, UITableViewDataSource, U
         
         if let turnIndex = tickData?.turnIndex {
             if(turnIndex == participantIndex){
-                cell.backgroundColor = UIColor.yellow
+                cell.cardView.backgroundColor = UIColor.yellow
             } else{
-                cell.backgroundColor = UIColor.white
+                cell.cardView.backgroundColor = UIColor.white
             }
         } else {
-            cell.backgroundColor = UIColor.white
+            cell.cardView.backgroundColor = UIColor.white
         }
-        
+     
         cell.allowDelete = false
         cell.nameLabel?.text = participant.name
         cell.initiativeLabel?.text = "\(participant.initiative).\(participant.dexterity)"
