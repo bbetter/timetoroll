@@ -66,6 +66,8 @@ kotlin {
                 implementation(Libs.KtorClient.ios)
             }
         }
+        val iosTest by getting
+
         val jvmMain by getting
     }
 }

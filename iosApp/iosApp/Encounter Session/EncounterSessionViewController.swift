@@ -74,20 +74,16 @@ class EncounterSessionViewController: UIViewController, UITableViewDataSource, U
         guard let participant = tickData?.participants[participantIndex] else {
             return cell
         }
+    
+        let isSelected = tickData?.turnIndex ?? -1 == participantIndex
         
-        if let turnIndex = tickData?.turnIndex {
-            if(turnIndex == participantIndex){
-                cell.cardView.backgroundColor = UIColor.yellow
-            } else{
-                cell.cardView.backgroundColor = UIColor.white
-            }
-        } else {
-            cell.cardView.backgroundColor = UIColor.white
-        }
+        cell.configureWith(
+            participant: participant,
+            allowDelete: false,
+            isSelected: isSelected
+        )
      
-        cell.allowDelete = false
-        cell.nameLabel?.text = participant.name
-        cell.initiativeLabel?.text = "\(participant.initiative).\(participant.dexterity)"
+    
         return cell
     }
     

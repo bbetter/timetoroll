@@ -22,9 +22,11 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class EncounterJoinFragment : Fragment(R.layout.encounter_join_fragment) {
 
-    private val progressDialog by lazy { ProgressDialog(requireContext()).apply {
-        setTitle("Processing")
-    }}
+    private val progressDialog by lazy {
+        ProgressDialog(requireContext()).apply {
+            setTitle("Processing")
+        }
+    }
 
     private lateinit var binding: EncounterJoinFragmentBinding
 
@@ -109,7 +111,7 @@ class EncounterJoinFragment : Fragment(R.layout.encounter_join_fragment) {
         encounterCodeEditText.setText(code ?: "")
 
         rollDiceButton.setOnClickListener {
-            val initiative = viewModel.rollInitiative   ()
+            val initiative = viewModel.rollInitiative()
             initiativeEditText.setText(initiative.toString())
         }
 
@@ -128,6 +130,13 @@ class EncounterJoinFragment : Fragment(R.layout.encounter_join_fragment) {
 
     private fun setupSubscription() {
         viewModel.data.watch {
+            if (it.isEmpty()) {
+                binding.noParticipantsBanner.visibility = View.VISIBLE
+                binding.participantsList.visibility = View.GONE
+            } else {
+                binding.noParticipantsBanner.visibility = View.GONE
+                binding.participantsList.visibility = View.VISIBLE
+            }
             adapter.updateParticipants(it)
         }
     }

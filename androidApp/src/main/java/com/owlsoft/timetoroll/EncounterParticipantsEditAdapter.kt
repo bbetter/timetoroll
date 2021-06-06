@@ -45,14 +45,13 @@ class EncounterParticipantsEditAdapter(
 
         fun bind(participant: Participant) {
             with(binding) {
-                val initiative = root.context.resources.getString(
-                    R.string.initiative,
-                    participant.initiative,
-                    participant.dexterity
-                )
-
-                initiativeView.text = initiative
                 nameTextView.text = participant.name
+                initiativeView.text = participant.initiative.toString()
+                dexView.text = when {
+                    participant.dexterity > 0 -> "+${participant.dexterity}"
+                    participant.dexterity < 0 -> "${participant.dexterity}"
+                    else -> "0"
+                }
             }
         }
     }

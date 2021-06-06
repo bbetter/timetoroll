@@ -29,7 +29,12 @@ class EncounterViewModel : BaseViewModel(), KoinComponent {
         }
     }
 
+    @Throws(Exception::class)
     fun addParticipant(name: String, ini: Int, dex: Int) {
+        if(name.isEmpty()){
+            throw Exception("Name should not be empty.")
+        }
+
         scope.launch {
             val participant = Participant(
                 "",

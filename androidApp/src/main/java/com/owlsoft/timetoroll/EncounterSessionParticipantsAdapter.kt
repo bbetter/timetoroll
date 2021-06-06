@@ -45,39 +45,34 @@ class EncounterSessionParticipantsAdapter(
     inner class EncounterParticipantViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         private val binding = EncounterParticipantItemBinding.bind(view)
 
-        private val yellowColor =
-            ContextCompat.getColor(binding.root.context, android.R.color.holo_orange_light)
-        private val whiteColor = ContextCompat.getColor(binding.root.context, android.R.color.white)
-
         fun bind(participant: Participant, index: Int) {
             with(binding) {
+                nameTextView.text = participant.name
                 setupActiveParticipant(index)
                 setupParticipantInitiative(participant)
-                nameTextView.text = participant.name
             }
         }
 
         private fun EncounterParticipantItemBinding.setupParticipantInitiative(
             participant: Participant
         ) {
-            val initiative = root.context.resources.getString(
-                R.string.initiative,
-                participant.initiative,
-                participant.dexterity
-            )
 
-            initiativeView.text = initiative
+            initiativeView.text = participant.initiative.toString()
+            dexView.text = when {
+                participant.dexterity > 0 -> "+${participant.dexterity}"
+                participant.dexterity < 0 -> "${participant.dexterity}"
+                else -> "0"
+            }
         }
 
         private fun EncounterParticipantItemBinding.setupActiveParticipant(
             participantIndex: Int
         ) {
-            val color = if (participantIndex == activeParticipantIndex) {
-                yellowColor
+            activeIndicator.visibility = if (participantIndex == activeParticipantIndex) {
+                View.VISIBLE
             } else {
-                whiteColor
+                View.GONE
             }
-            root.setCardBackgroundColor(color)
         }
     }
 }

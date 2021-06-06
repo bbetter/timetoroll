@@ -1,3 +1,7 @@
+plugins {
+    id("com.louiscad.complete-kotlin") version "1.0.0"
+}
+
 rootProject.name = "timetoroll"
 enableFeaturePreview("GRADLE_METADATA")
 

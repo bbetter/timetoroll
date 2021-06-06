@@ -25,8 +25,6 @@ class EncounterViewController: UIViewController,UITableViewDataSource, UITableVi
     
     var code: String = ""
     
-    let spinner = UIActivityIndicatorView(style: .large)
-    
     override func viewWillAppear(_ animated: Bool) {
         self.navigationController?.setNavigationBarHidden(false, animated: true)
     }
@@ -47,7 +45,15 @@ class EncounterViewController: UIViewController,UITableViewDataSource, UITableVi
         let index = indexPath.row
         let participant = viewModel.dataAt(index: Int32(index))
         
-        bindCell(cell: cell, participant: participant, index: index)
+        cell.configureWith(participant: participant, allowDelete: true, isSelected: false)
+        
+        cell.deleteButton.tag = index
+        
+        cell.onDeleteRowClick = { [weak self] index in
+            guard let self = self else { return }
+            
+            self.viewModel.removeParticiapant(participant: participant)
+        }
         return cell
     }
     
@@ -64,11 +70,18 @@ class EncounterViewController: UIViewController,UITableViewDataSource, UITableVi
         let ini = Int32(initiativeTextField.text ?? "") ?? 0
         let dex = Int32(dexterityField.text ?? "") ?? 0
         
-        viewModel.addParticipant(name: name, ini: ini, dex: dex)
-    
-        nameTextField.text = ""
-        initiativeTextField.text = ""
-        dexterityField.text = ""
+
+        do {
+            try viewModel.addParticipant(name: name, ini: ini, dex: dex)
+            
+            nameTextField.text = ""
+            initiativeTextField.text = ""
+            dexterityField.text = ""
+        }
+        catch let error as NSError{
+            showErrorDialog(msg: error.localizedDescription)
+        }
+       
     }
     
     @IBAction func onActionTouch(_ sender: UIBarButtonItem) {
@@ -98,9 +111,14 @@ class EncounterViewController: UIViewController,UITableViewDataSource, UITableVi
     }
     
     private func setupSubscriptions(){
-        self.viewModel.data.watch { [weak self] _ in
+        self.viewModel.data.watch { [weak self] data in
             guard let self = self else { return }
             
+            if(data?.count ?? 0 == 0){
+                self.participantsTable.setNoDataPlaceholder("No participants yet")
+            } else{
+                self.participantsTable.removeNoDataPlaceholder()
+            }
             self.participantsTable.reloadData()
         }
     }
@@ -111,20 +129,6 @@ class EncounterViewController: UIViewController,UITableViewDataSource, UITableVi
         
         let nib = UINib(nibName: "ParticipantCell", bundle: nil)
         self.participantsTable.register(nib, forCellReuseIdentifier: "participant_cell")
-    }
-    
-    private func bindCell(cell: ParticipantCell, participant: Participant, index: Int){
-        cell.allowDelete = true
-        cell.nameLabel.text = participant.name
-        cell.initiativeLabel.text = "\(participant.initiative).\(participant.dexterity)"
-        
-        cell.deleteButton.tag = index
-        
-        cell.onDeleteRowClick = { [weak self] index in
-            guard let self = self else { return }
-            
-            self.viewModel.removeParticiapant(participant: participant)
-        }
     }
     
     private func showErrorDialog(msg: String){

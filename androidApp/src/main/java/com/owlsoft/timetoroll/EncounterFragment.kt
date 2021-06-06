@@ -130,11 +130,15 @@ class EncounterFragment : Fragment(R.layout.encounter_fragment) {
             val initiative = initiativeEditText.text.toString().toIntOrNull() ?: 0
             val dexterity = dexterityEditText.text.toString().toIntOrNull() ?: 0
 
-            viewModel.addParticipant(name, initiative, dexterity)
-
-            nameEditText.text.clear()
-            initiativeEditText.text.clear()
-            dexterityEditText.text.clear()
+            try {
+                viewModel.addParticipant(name, initiative, dexterity)
+                nameEditText.text.clear()
+                initiativeEditText.text.clear()
+                dexterityEditText.text.clear()
+            }
+            catch (ex: Exception){
+                showError(ex.message ?: "Unknown error")
+            }
         }
     }
 
@@ -144,6 +148,13 @@ class EncounterFragment : Fragment(R.layout.encounter_fragment) {
 
     private fun setupSubscription() {
         viewModel.data.watch {
+            if (it.isEmpty()) {
+                binding.noParticipantsBanner.visibility = View.VISIBLE
+                binding.participantsList.visibility = View.GONE
+            } else {
+                binding.noParticipantsBanner.visibility = View.GONE
+                binding.participantsList.visibility = View.VISIBLE
+            }
             adapter.updateParticipants(it)
         }
     }

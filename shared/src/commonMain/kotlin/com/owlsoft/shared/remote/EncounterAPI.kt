@@ -16,7 +16,7 @@ class EncounterAPI(
             jsonHeader()
         }
     }
-
+    
     suspend fun createEncounter(
         ownerID: String,
         participants: List<Participant>

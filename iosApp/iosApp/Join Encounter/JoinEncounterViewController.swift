@@ -44,9 +44,14 @@ class JoinEncounterViewController: UIViewController, UITableViewDataSource, UITa
         let index = indexPath.row
         
         let participant = self.viewModel.dataAt(index: Int32(index))
+        cell.configureWith(participant: participant, allowDelete: true, isSelected: false)
+    
+        cell.deleteButton.tag = index
         
-        bindCell(cell: cell, participant: participant, index: index)
-        
+        cell.onDeleteRowClick = { [weak self] index in
+            guard let self = self else { return }
+            self.viewModel.removeParticipant(participant: participant)
+        }
         return cell
     }
     
@@ -118,18 +123,6 @@ class JoinEncounterViewController: UIViewController, UITableViewDataSource, UITa
     
         let nib = UINib(nibName: "ParticipantCell", bundle: nil)
         participantsTable.register(nib, forCellReuseIdentifier: "participant_cell")
-    }
-    
-    private func bindCell(cell: ParticipantCell, participant: Participant, index: Int){
-        cell.allowDelete = true
-        cell.nameLabel.text = participant.name
-        cell.initiativeLabel.text = "\(participant.initiative).\(participant.dexterity)"
-        
-        cell.deleteButton.tag = index
-        cell.onDeleteRowClick = { [weak self] index in
-            guard let self = self else { return }
-            self.viewModel.removeParticipant(participant: participant)
-        }
     }
     
     private func setupSubscriptions(){

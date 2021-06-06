@@ -9,6 +9,13 @@
     app:cardCornerRadius="4dp"
     app:cardElevation="4dp">
 
+    <View
+        android:id="@+id/active_indicator"
+        android:layout_width="6dp"
+        android:layout_gravity="start"
+        android:background="@color/primary"
+        android:layout_height="wrap_content"/>
+
     <LinearLayout
         android:layout_gravity="center"
         android:gravity="end"
@@ -33,18 +40,31 @@
             tools:text="Archie" />
 
         <TextView
-            android:id="@+id/initiativeView"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
+            android:id="@+id/initiative_view"
+            android:layout_gravity="center"
+            android:textStyle="bold"
+            android:textSize="16sp"
             android:gravity="center"
-            android:textSize="24sp"
-            android:textColor="@android:color/black"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="8" />
+            android:backgroundTint="@color/accent"
+            android:textColor="@android:color/white"
+            android:background="@drawable/ic_circle"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            tools:text="20"/>
+
+        <TextView
+            android:layout_marginStart="8dp"
+            android:id="@+id/dex_view"
+            android:layout_gravity="center"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:gravity="center"
+            android:textColor="@android:color/white"
+            android:backgroundTint="@color/accent"
+            android:background="@drawable/ic_circle"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            tools:text="+1"/>
 
     </LinearLayout>
 
